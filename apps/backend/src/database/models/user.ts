@@ -1,6 +1,7 @@
 /* eslint-disable spaced-comment */
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
 import { UnifiedUserObject } from '../../lib/oauth-strat'
+import { randomBytes } from 'node:crypto'
 
 
 export namespace UserModel {
@@ -37,7 +38,10 @@ export namespace UserModel {
   // ===== MONGO SCHEMA ===== //
 
   export const Schema = new MongooseSchema({
-    _id: String,
+    _id: {
+      type: String,
+      default: () => Date.now().toString(16) + randomBytes(3).toString('hex').padStart(6, '0')
+    },
     uuid: {
       type: String,
       required: true

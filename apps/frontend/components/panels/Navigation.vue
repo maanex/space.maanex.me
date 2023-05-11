@@ -7,6 +7,7 @@
         userselect
         :style="handleDirectionCss"
         :data-grabbed="moveHandle === 'direction'"
+        :data-nograb="!moveHandle"
         @mousedown="moveHandle = 'direction'"
       />
       <div
@@ -14,6 +15,7 @@
         userselect
         :style="handleAcclCss"
         :data-grabbed="moveHandle === 'accl'"
+        :data-nograb="!moveHandle"
         @mousedown="moveHandle = 'accl'"
       />
       <div
@@ -21,6 +23,7 @@
         userselect
         :style="handleScanCss"
         :data-grabbed="moveHandle === 'scan'"
+        :data-nograb="!moveHandle"
         @mousedown="moveHandle = 'scan'"
       />
     </div>
@@ -147,7 +150,7 @@ watch(handleScan, updateScan)
   background-color: $color-beige;
   background-image: url('~/assets/img/noise-10p.png');
   animation: bg-jitter 1s steps(1) forwards infinite;
-  padding: $gap;
+  padding: calc($gap * 2);
   display: flex;
   flex-direction: column;
 
@@ -169,9 +172,16 @@ watch(handleScan, updateScan)
     background-color: $color-beige;
     border-radius: 999pt;
     transform: translate(-50%, -50%);
-    cursor: grab;
 
-    &:hover, &[data-grabbed=true] {
+    &[data-nograb=true] {
+      cursor: grab;
+    }
+
+    &[data-grabbed=true] {
+      cursor: grabbing;
+    }
+
+    &[data-nograb=true]:hover, &[data-grabbed=true] {
       border-color: #000000;
     }
 
@@ -184,6 +194,15 @@ watch(handleScan, updateScan)
       display: block;
       position: absolute;
       border-radius: 999pt;
+    }
+
+    &[data-grabbed=true]::after {
+      cursor: grabbing;
+      z-index: 999;
+      width: 300vw;
+      height: 300vh;
+      top: -100vw;
+      left: -100vh;
     }
   }
 }

@@ -16,6 +16,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  runtimeConfig: {
+    public: {
+      isDev: (process.env.IS_DEV === 'true')
+    }
+  },
   app: {
     head: {
       title: 'Tude',

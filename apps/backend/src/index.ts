@@ -8,9 +8,8 @@ import Modules from './modules'
 
 
 async function run() {
-  console.log('Starting...')
-
-  Modules.startServer()
+  await Modules.connectMongo()
+  await Modules.startServer()
 }
 
 run().catch((err) => {

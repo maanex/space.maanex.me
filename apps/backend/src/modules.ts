@@ -1,11 +1,19 @@
 import * as express from 'express'
 import { config } from "."
 import V1Router from './routes/v1/router'
+import Mongo from './database/mongo'
 
 
 export default class Modules {
 
+  public static async connectMongo() {
+    console.log('Connecting to MongoDB')
+    await Mongo.connect(config.databases.mongoUrl)
+    console.log('MongoDB connected')
+  }
+  
   public static async startServer() {
+    console.log('Launching server')
     const app = express()
 
     app.set('trust proxy', 1)

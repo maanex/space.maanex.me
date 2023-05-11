@@ -39,9 +39,13 @@ export namespace UserAuth {
       return [ await JWT.signAuth({ id: found._id }), found, false ]
     }
 
+    const authn = { ...user }
+    delete authn.uuid
+    delete authn.data
+
     const create = new Mongo.User({
       uuid: user.uuid,
-      authn: user,
+      authn,
     })
     const obj = await create.save()
     return [ await JWT.signAuth({ id: obj._id }), create, true ]

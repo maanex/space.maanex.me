@@ -2,46 +2,56 @@
   <div class="container">
     <h2>Lexicon</h2>
     <div
-      v-for="doc,i of documents"
+      v-for="doc,i of visibleDocs"
       :key="i"
       :data-open="i === open"
-      @click="(i === open) ? (open = -1) : (open = i)"
+      @click="clicked(i)"
     >
-      <span v-text="doc.title" />
+      <span :data-read="doc.read" v-text="doc.title" />
       <p v-text="doc.text" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useStorage } from '@vueuse/core'
+
 const open = useState(() => -1)
 
-type Category = {
-  title: string
-  text: string
+const docs = useDocuments()
+const docData = useDocumentData()
+const storage = useStorage<any>('documents', [ ['intro', false] ])
+
+watch(docs, (val) => (storage.value = [...val.entries()]), { deep: true })
+onMounted(() => docs.value = new Map(storage.value))
+
+function clicked(index: number) {
+  if (index === open.value) open.value = -1
+  else open.value = index
+
+  const key = visibleDocs.value[index].key
+  if (!docs.value.get(key))
+    docs.value.set(key, true)
 }
 
-const documents: Category[] = [
-  {
-    title: 'How to game',
-    text: 'Start gaming.'
-  },
-  {
-    title: 'How to un-game',
-    text: 'Do not ungame.\nSerious warning.'
-  },
-  {
-    title: 'What are bananas',
-    text: 'Bananas are long curved yellow objects commonly used to feed monkeys and monkey-like creatures such as bongumas. Bananas are not to be messed with as bananas have quite the tactical advantage with areal attacks ranging up to 15km in their prime age.'
-  }
-]
+const visibleDocs = computed(() => docData.value
+  .filter(d => docs.value.has(d.key))
+  .map(d => ({ ...d, read: !!docs.value.get(d.key) }))
+)
 </script>
 
 <style scoped lang="scss">
 .container {
-  background-color: #444444;
-  color: #dddddd;
+  background-color: $color-beige;
+  background-image: url('~/assets/img/noise-10p.png');
+  animation: bg-jitter 1s steps(1) forwards infinite;
+  // background-color: #444444;
+  color: #000000;
   padding: 1vw 0;
+
+  & > * {
+    opacity: .7;
+  }
 
   h2 {
     font-family: $font-major;
@@ -54,22 +64,48 @@ const documents: Category[] = [
   
   & > div {
     padding: .5vw 1vw;
-    border-left: 0px solid #777777;
-    transition: border-width .1s ease;
+    padding-right: 1vw;
+    border-left: 0px solid #000000;
+    box-sizing: border-box;
     cursor: pointer;
+    transition:
+      border-width .1s ease,
+      padding-right .1s ease;
 
     &:hover {
       border-left-width: .5vw !important;
+      padding-right: .5vw;
     }
 
     &:not(:last-child) {
-      border-bottom: 1px solid #777777;
+      border-bottom: 1px solid #000000;
     }
 
     span {
       font-family: $font-major;
       font-size: 12pt;
       margin: 0;
+
+      &::before {
+        content: 'NEW';
+        display: inline-block;
+        background-color: #000000;
+        color: $color-beige;
+        padding: 0 5pt;
+        border-radius: 3pt;
+        font-size: 10pt;
+        margin-right: 10pt;
+        transition: all .2s ease;
+      }
+
+      &[data-read=true]::before {
+        width: 0px;
+        margin-right: 0px;
+        padding: 0px;
+        opacity: 0;
+        color: #000000;
+        border-radius: 0;
+      }
     }
 
     p {
@@ -86,9 +122,9 @@ const documents: Category[] = [
     }
 
     @keyframes flash {
-      0% { background-color: #444444; }
-      1% { background-color: #555555; }
-      100% { background-color: #444444; }
+      0% { background-color: #00000000; }
+      1% { background-color: #00000033; }
+      100% { background-color: #00000000; }
     }
   }
 }

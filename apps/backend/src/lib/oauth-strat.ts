@@ -86,7 +86,7 @@ export type UnifiedUserObject = {
 export default class OAuthStrat {
 
   public static DISCORD_SCOPE = config.auth.requireEmail ? 'email identify' : 'identify'
-  public static DISCORD_REDIRECT = 'http://localhost:3000/callback/discord'
+  public static DISCORD_REDIRECT = config.auth.callbackUrl + '/discord'
   public static DISCORD_URL = 'https://discord.com/oauth2/authorize?' + encode({
     response_type: 'code',
     client_id: config.auth.discord.client_id,
@@ -95,7 +95,7 @@ export default class OAuthStrat {
   })
 
   public static GITHUB_SCOPE = config.auth.requireEmail ? 'read:user user:email' : 'read:user'
-  public static GITHUB_REDIRECT = 'http://localhost:3000/callback/github'
+  public static GITHUB_REDIRECT = config.auth.callbackUrl + '/github'
   public static GITHUB_URL = 'https://github.com/login/oauth/authorize?' + encode({
     client_id: config.auth.github.client_id,
     redirect_uri: OAuthStrat.GITHUB_REDIRECT,
@@ -131,9 +131,9 @@ export default class OAuthStrat {
     if (status2 !== 200)
       return { error: 'bad_gateway' }
 
-    if (!user.email)
+    if (config.auth.requireEmail && !user.email)
       return { error: 'no_email' }
-    if (!user.verified)
+    if (config.auth.requireEmail && !user.verified)
       return { error: 'unverified' }
 
     const out: UnifiedUserObject = {
@@ -141,8 +141,8 @@ export default class OAuthStrat {
       uuid: `discord:${user.id}`,
       avatar: user.avatar,
       locale: user.locale,
-      email: user.email,
-      email_verified: user.verified,
+      email: user.email ?? '',
+      email_verified: user.verified ?? false,
       platform: 'discord',
       discord_id: user.id,
       data: user
@@ -179,30 +179,32 @@ export default class OAuthStrat {
     if (status2 !== 200)
       return { error: 'bad_gateway' }
 
-    const { data: emails, status: status3 } = await Axios.get('https://api.github.com/user/emails', {
-      headers: {
-        Authorization: `${data.token_type} ${data.access_token}`
-      },
-      validateStatus: () => true
-    })
+    if (config.auth.requireEmail) {
+      const { data: emails, status: status3 } = await Axios.get('https://api.github.com/user/emails', {
+        headers: {
+          Authorization: `${data.token_type} ${data.access_token}`
+        },
+        validateStatus: () => true
+      })
 
-    if (status3 !== 200)
-      return { error: 'bad_gateway' }
+      if (status3 !== 200)
+        return { error: 'bad_gateway' }
 
-    user.emails = emails
-    const primary = user.emails.find(e => e.primary)
-    if (!primary.email)
-      return { error: 'no_email' }
-    if (!primary.verified)
-      return { error: 'unverified' }
+      user.emails = emails
+      const primary = user.emails.find(e => e.primary)
+      if (!primary.email)
+        return { error: 'no_email' }
+      if (!primary.verified)
+        return { error: 'unverified' }
+    }
 
     const out: UnifiedUserObject = {
       username: user.login || user.name,
       uuid: `github:${user.id}`,
       avatar: user.avatar_url,
       locale: null,
-      email: primary.email,
-      email_verified: primary.verified,
+      email: user.emails?.find(e => e.primary).email ?? '',
+      email_verified: user.emails?.find(e => e.primary).verified ?? false,
       platform: 'github',
       github_id: user.id,
       data: user

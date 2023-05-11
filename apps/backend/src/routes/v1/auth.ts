@@ -20,6 +20,9 @@ export function getLogin(req: Request, res: Response) {
 }
 
 export async function postCode(req: Request, res: Response) {
+  console.log('HEYYYY')
+  console.log(req.params)
+
   const provider = req.params.provider
   if (!provider)
     return ReqError.badRequest(res, 'missing_provider', 'Missing Provider')
