@@ -4,7 +4,6 @@ import Mongo from '../database/mongo'
 import { UserManager } from '../database/user-manager'
 import JWT from './jwt'
 import { UnifiedUserObject } from './oauth-strat'
-import TokenGen from './tokengen'
 
 
 export namespace UserAuth {

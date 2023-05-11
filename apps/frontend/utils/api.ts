@@ -42,6 +42,7 @@ function handleResponseUpdateCall(data: any) {
   if (!data) return
 
   if (data.token) localStorage.setItem('token', data.token)
+  if (data.account) useAccount().value = data.account
 }
 
 async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {

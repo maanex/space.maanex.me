@@ -51,7 +51,12 @@ export async function postCode(req: Request, res: Response) {
     token,
     user,
     initial,
-    $update: { token }
+    $update: {
+      token,
+      account: {
+        name: authUser.username
+      }
+    }
   })
 }
 
@@ -62,7 +67,10 @@ export async function getMe(_req: Request, res: Response) {
   return res.status(200).json({
     ...UserModel.sanitize(res.locals.user),
     $update: {
-      token: await JWT.signAuth({ id: res.locals.user._id })
+      token: await JWT.signAuth({ id: res.locals.user._id }),
+      account: {
+        name: res.locals.user.authn.username
+      }
     }
   })
 }
