@@ -3,6 +3,7 @@ import OAuthStrat, { UnifiedUserObject } from '../../lib/oauth-strat'
 import ReqError from '../../lib/req-error'
 import { UserAuth } from '../../lib/user-auth'
 import { UserModel } from '../../database/models/user'
+import JWT from '../../lib/jwt'
 
 
 export function getLogin(req: Request, res: Response) {
@@ -20,9 +21,6 @@ export function getLogin(req: Request, res: Response) {
 }
 
 export async function postCode(req: Request, res: Response) {
-  console.log('HEYYYY')
-  console.log(req.params)
-
   const provider = req.params.provider
   if (!provider)
     return ReqError.badRequest(res, 'missing_provider', 'Missing Provider')
@@ -52,7 +50,8 @@ export async function postCode(req: Request, res: Response) {
   res.status(200).send({
     token,
     user,
-    initial
+    initial,
+    $update: { token }
   })
 }
 
@@ -60,5 +59,10 @@ export async function getMe(_req: Request, res: Response) {
   if (!res.locals.user)
     return ReqError.invalidAuth(res)
 
-  return res.status(200).json(UserModel.sanitize(res.locals.user))
+  return res.status(200).json({
+    ...UserModel.sanitize(res.locals.user),
+    $update: {
+      token: await JWT.signAuth({ id: res.locals.user._id })
+    }
+  })
 }

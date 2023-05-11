@@ -38,6 +38,12 @@ async function buildConnRefError(): Promise<AxiosResponse & ErrorData> {
   })
 }
 
+function handleResponseUpdateCall(data: any) {
+  if (!data) return
+
+  if (data.token) localStorage.setItem('token', data.token)
+}
+
 async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
   try {
     const res: any = await axios.request({
@@ -47,6 +53,9 @@ async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', u
     })
     if (res.status < 200 || res.status >= 300)
       res.error = res.data.error ?? `http ${res.status}`
+    handleResponseUpdateCall(res.data?.$update)
+    if (res.data)
+      delete res.data.$update
     return res
   } catch (ex) {
     return buildConnRefError()

@@ -8,3 +8,5 @@ node_modules
 dist
 .yarn/cache
 .yarn/*.gz
+.turbo
+config.js

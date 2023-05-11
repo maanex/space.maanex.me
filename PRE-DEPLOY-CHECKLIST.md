@@ -1,0 +1,1 @@
+[ ] Create / install proper keypair for JWT or else everyone can issue stuff for other players
