@@ -1,11 +1,9 @@
 import { Response, Router } from 'express'
 import * as cors from 'cors'
 import ReqError from '../../lib/req-error'
-import { apiGateway } from '../../middleware/api-gateway'
-import { rateLimiter as limit } from '../../middleware/rate-limits'
-import { postCreateGame } from './create-game'
-import { postJoinGame } from './join-game'
+import gateway from '../../middleware/gateway'
 import { config } from '../..'
+import { getLogin, getMe, postCode } from './auth'
 
 
 export default class V1Router {
@@ -24,8 +22,6 @@ export default class V1Router {
 
     /* GATEWAY */
 
-    r.all('*', apiGateway())
-
     r.use(cors({
       origin: config.frontend.url ?? 'http://localhost:3000'
     }))
@@ -33,13 +29,10 @@ export default class V1Router {
 
     /* ENDPOINTS */
 
-    // create game, 10 in 5 minutes
-    // r.post('/create-game', limit(10, 5 * 60), postCreateGame)
-    r.post('/create-game', postCreateGame)
-
-    // join game, 5 in 20 seconds
-    // r.post('/join-game', limit(5, 20), postJoinGame)
-    r.post('/join-game', postJoinGame)
+    // auth
+    r.get(  '/auth/login/:provider',  gateway(false),  getLogin )
+    r.post( '/auth/code/:provider',   gateway(false),  postCode )
+    r.get(  '/auth/me',               gateway(false),  getMe    )
 
 
 

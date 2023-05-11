@@ -8,4 +8,18 @@ export type configjs = {
   keys: {
     privateKeyUri: string
   }
+  caches: {
+    usersTtl: number
+  }
+  auth: {
+    requireEmail: boolean
+    discord: {
+      client_id: string
+      client_secret: string
+    }
+    github: {
+      client_id: string
+      client_secret: string
+    }
+  }
 }

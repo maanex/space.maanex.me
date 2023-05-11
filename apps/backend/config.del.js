@@ -9,6 +9,20 @@ module.exports = {
   },
   keys: {
     privateKeyUri: ''
+  },
+  caches: {
+    usersTtl: 1000 * 60
+  },
+  auth: {
+    requireEmail: false,
+    discord: {
+      client_id: '',
+      client_secret: ''
+    },
+    github: {
+      client_id: '',
+      client_secret: ''
+    }
   }
 }
 

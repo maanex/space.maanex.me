@@ -6,6 +6,7 @@
 import { readFileSync } from 'fs'
 import * as jwtlib from 'jsonwebtoken'
 import { config } from '..'
+import type { UserAuth } from './user-auth'
 
 
 export default class JWT {
@@ -31,10 +32,10 @@ export default class JWT {
     return new Promise(res => jwtlib.verify(token, JWT.privateKey, {}, (_, decoded) => res(decoded)))
   }
 
-  // 
+  //
 
-  public static encodeUserToken(userId: string): Promise<string> {
-    return this.signRaw({ t: 'user', id: userId }, { expiresIn: '14d' })
+  public static signAuth(user: UserAuth.Payload): Promise<string> {
+    return this.signRaw(user, { expiresIn: '14d' })
   }
 
 }
