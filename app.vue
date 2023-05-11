@@ -1,19 +1,19 @@
 <template>
   <div class="cockpit">
     <div class="radar">
-      <!-- <FramesRadar /> -->
+      <!-- <PanelsRadar /> -->
     </div>
     <div class="info">
-      <!-- <FramesInfo /> -->
+      <!-- <PanelsInfo /> -->
     </div>
     <div class="location">
-      <FramesLocation />
+      <PanelsLocation />
     </div>
     <div class="navigation">
-      <FramesNavigation />
+      <PanelsNavigation />
     </div>
     <div class="tool">
-      <!-- <FramesTool /> -->
+      <!-- <PanelsTool /> -->
     </div>
   </div>
 </template>
