@@ -4,7 +4,7 @@
       <!-- <PanelsRadar /> -->
     </div>
     <div class="info">
-      <!-- <PanelsInfo /> -->
+      <PanelsInfo />
     </div>
     <div class="location">
       <PanelsLocation />
