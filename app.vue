@@ -20,7 +20,6 @@
 
 <style scoped lang="scss">
 .cockpit {
-  padding: 0;
   margin: 0;
   display: grid;
   grid-template-columns: 3fr 3fr 3fr 2fr;
@@ -75,7 +74,7 @@ p {
   }
 }
 
-::selection {
+:not([userselect]) {
   user-select: none;
 }
 </style>
