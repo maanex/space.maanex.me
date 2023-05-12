@@ -8,7 +8,7 @@
       <div class="left">
         <p><b>{{ toCoords(position.x, 'W', 'E') }}</b></p>
         <p><b>{{ toCoords(position.y, 'S', 'N') }}</b></p>
-        <p>SECTOR 3</p>
+        <p v-text="sector" />
       </div>
       <div class="right">
         <p>RESOURCES- <b>24,525</b> ok</p>
@@ -23,9 +23,17 @@ const position = usePosition()
 const map = ref(null)
 const markerCss = useState<any>(() => {})
 const mapRadius = 1_000_000
-// const ring1 =   200_000
-// const ring2 =   600_000
-// const ring3 = 1_000_000
+const ring1 =   200_000
+const ring2 =   600_000
+const ring3 = 1_000_000
+
+const sector = computed(() => {
+  const distance = Math.sqrt(position.value.x ** 2 + position.value.y ** 2)
+  if (distance <= ring1) return 'SECTOR 1'
+  if (distance <= ring2) return 'SECTOR 2'
+  if (distance <= ring3) return 'SECTOR 3'
+  return 'SECTOR 4'
+})
 
 function toCoords(v: number, neg: string, pos: string) {
   if (v < 0) return `${toTime(-v)}${neg}`
@@ -36,8 +44,8 @@ function toTime(v: number) {
   const hours = ~~(v / 10000)
   const hourParts = v % 10000
   const minutes = ~~(hourParts / 10000 * 60)
-  const minuteParts = v % 100
-  const seconds = ~~(minuteParts / 100 * 60)
+  const minuteParts = hourParts % (10000 / 60)
+  const seconds = ~~(minuteParts / 10000 * 60 * 60)
   return `${hours}'${minutes.toString().padStart(2, '0')}'${seconds.toString().padStart(2, '0')}`
 }
 

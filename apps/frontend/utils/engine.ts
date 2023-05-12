@@ -23,7 +23,6 @@ export const useEngine = () => {
     // if (Math.abs(newAcclY) < 0.002) newAcclY *= 0.98
     accl.value.y = newAcclY
 
-
     position.value.x = ~~(position.value.x + accl.value.x)
     position.value.y = ~~(position.value.y + accl.value.y)
   }
