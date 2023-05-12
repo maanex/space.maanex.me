@@ -13,6 +13,7 @@
     </div>
     <div
       :data-open="-2 === open"
+      :key="-2"
       @click="clicked(-2)"
     >
       <span :data-read="true">My Account</span>
@@ -39,6 +40,7 @@ function clicked(index: number) {
   if (index === open.value) open.value = -1
   else open.value = index
 
+  if (index < 0) return
   const key = visibleDocs.value[index].key
   if (!docs.value.get(key))
     docs.value.set(key, true)

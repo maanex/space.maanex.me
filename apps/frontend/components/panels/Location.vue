@@ -7,7 +7,7 @@
     <div class="textcontainer">
       <div class="left">
         <p><b>{{ toCoords(position.x, 'W', 'E') }}</b></p>
-        <p><b>{{ toCoords(position.y, 'N', 'S') }}</b></p>
+        <p><b>{{ toCoords(position.y, 'S', 'N') }}</b></p>
         <p>SECTOR 3</p>
       </div>
       <div class="right">
@@ -38,7 +38,7 @@ function toTime(v: number) {
   const minutes = ~~(hourParts / 10000 * 60)
   const minuteParts = v % 100
   const seconds = ~~(minuteParts / 100 * 60)
-  return `${hours}'${minutes}'${seconds}`
+  return `${hours}'${minutes.toString().padStart(2, '0')}'${seconds.toString().padStart(2, '0')}`
 }
 
 function update() {
@@ -51,7 +51,7 @@ function update() {
 
   const vCenter = bounds.height/2
   const vRadius = bounds.height/40*13
-  const vPos = vCenter + position.value.y/mapRadius*vRadius
+  const vPos = vCenter + -position.value.y/mapRadius*vRadius
   const vPosAdjusted = vPos - bounds.width*0.02/2
 
   markerCss.value = {

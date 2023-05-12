@@ -56,6 +56,8 @@ onMounted(() => {
     handleAuthCallback()
   else
     testAuth()
+
+  useEngine().init()
 })
 
 </script>

@@ -26,6 +26,7 @@
         :data-nograb="!moveHandle"
         @mousedown="moveHandle = 'scan'"
       />
+      <ElementsAccelerometer />
     </div>
   </div>
 </template>
@@ -38,7 +39,7 @@ const { pressed } = useMousePressed()
 const moveHandle = useState<null | 'direction' | 'accl' | 'scan'>(() => null)
 watch(pressed, (val) => { if (!val) moveHandle.value = null })
 
-const handleDirection = useState(() => 0)
+const handleDirection = useState('handle-direction', () => 0)
 const handleDirectionCss = useState<any>(() => {})
 function handleMoveDirection() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -53,7 +54,7 @@ function handleMoveDirection() {
   handleDirection.value = radDeg
 }
 
-const handleAccl = useState(() => 0)
+const handleAccl = useState('handle-accl', () => 0)
 const handleAcclCss = useState<any>(() => {})
 function handleMoveAccl() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -70,7 +71,7 @@ function handleMoveAccl() {
   handleAccl.value = outVal
 }
 
-const handleScan = useState(() => 0)
+const handleScan = useState('handle-scan', () => 0)
 const handleScanCss = useState<any>(() => {})
 function handleMoveScan() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -162,6 +163,12 @@ watch(handleScan, updateScan)
     width: 100%;
     aspect-ratio: 100/50;
     opacity: .7;
+  }
+
+  .accelerometer {
+    position: absolute;
+    top: 50%;
+    left: 25%;
   }
 
   .handle {
