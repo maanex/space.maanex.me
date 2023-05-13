@@ -1,8 +1,7 @@
 <template>
   <div v-if="authorized === true" class="cockpit">
     <div class="radar">
-      <!-- <PanelsRadar /> -->
-      <PanelsTest />
+      <PanelsRadar />
     </div>
     <div class="info">
       <PanelsInfo />
@@ -15,7 +14,7 @@
     </div>
     <div class="tool">
       <!-- <PanelsTool /> -->
-      <p style="color: #fff;margin:20pt">{{ test }}</p>
+      <PanelsTest />
     </div>
   </div>
   <div v-else-if="authorized === false" class="auth">
@@ -32,7 +31,6 @@
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
-const test = useState(() => '')
 const api = useApi()
 
 /** null = pending, true = authorized, false = unauthorized */

@@ -32,9 +32,9 @@ async function buildConnRefError(): Promise<AxiosResponse & ErrorData> {
     data: {
       success: false,
       error: 'connection refused',
-      message: 'Unable to connect to FreeStuff servers. Please try again.'
+      message: 'Unable to connect to servers. Please try again.'
     },
-    error: 'Unable to connect to FreeStuff servers. Please try again.'
+    error: 'Unable to connect to servers. Please try again.'
   })
 }
 

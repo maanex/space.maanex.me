@@ -15,16 +15,18 @@ export const useEngine = () => {
     const xDelta = Math.sin(handleDirection.value / 180 * Math.PI) * acclSpeed
     const yDelta = Math.cos(handleDirection.value / 180 * Math.PI) * acclSpeed
 
-    let newAcclX = (accl.value.x + xDelta) * 0.98
-    // if (Math.abs(newAcclX) < 0.002) newAcclX *= 0.98
+    let newAcclX = (accl.value.x + xDelta) * 0.96
+    if (Math.abs(newAcclX) < 0.002) newAcclX *= 0.96
+    if (Math.abs(newAcclX) < 0.00002) newAcclX = 0
     accl.value.x = newAcclX
 
-    let newAcclY = (accl.value.y + yDelta) * 0.98
-    // if (Math.abs(newAcclY) < 0.002) newAcclY *= 0.98
+    let newAcclY = (accl.value.y + yDelta) * 0.96
+    if (Math.abs(newAcclY) < 0.002) newAcclY *= 0.96
+    if (Math.abs(newAcclY) < 0.00002) newAcclY = 0
     accl.value.y = newAcclY
 
-    position.value.x = ~~(position.value.x + accl.value.x)
-    position.value.y = ~~(position.value.y + accl.value.y)
+    position.value.x = position.value.x + newAcclX
+    position.value.y = position.value.y + newAcclY
   }
 
   const timer = useState<any>(() => null)

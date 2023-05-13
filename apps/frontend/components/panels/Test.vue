@@ -3,7 +3,7 @@
     <p>cool</p>
     <button @click="test">test</button>
     <hr>
-    <p>Pos: (x {{ pos.x }}) (y {{ pos.y }})</p>
+    <p>Pos: (x {{ ~~pos.x }}) (y {{ ~~pos.y }})</p>
   </div>
 </template>
 
