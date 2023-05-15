@@ -15,6 +15,7 @@
         <p>RADIATION- <b>02.00%</b> ok</p>
       </div>
     </div>
+    <ElementsPanelswitcher @click="void 0" />
   </div>
 </template>
 
@@ -82,13 +83,11 @@ useResizeObserver(map, update)
   padding: $gap;
   display: flex;
   flex-direction: column;
-
-  & > div {
-    opacity: .7;
-  }
+  position: relative;
 
   .mapcontainer {
     position: relative;
+    opacity: .7;
   }
 
   .worldmap {
@@ -106,6 +105,7 @@ useResizeObserver(map, update)
     gap: calc($gap * 3);
     flex-grow: 1;
     justify-content: center;
+    opacity: .7;
 
     .left {
       text-align: right;

@@ -15,14 +15,15 @@
       />
     </div>
     <div class="ship">
-      <p>hi</p>
+      <p>&bullet;</p>
     </div>
+    {{ TEMPDIR }}
   </div>
 </template>
 
 <script setup lang="ts">
-const GRID_SIZE = 10
-const MAP_ZOOM = 10
+const GRID_SIZE = 16
+const TEMPDIR = useState('handle-direction', () => 0)
 
 const container = ref(null)
 const position = usePosition()
@@ -31,17 +32,26 @@ const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
 
 function update() {
+  const zoom = TEMPDIR.value
   const bounds = (container.value! as Element)?.getBoundingClientRect()
-  const realZoom = (bounds.width / GRID_SIZE)
+  const smallerEdge = Math.min(bounds.width, bounds.height)
+  const pixelsPerTile = (smallerEdge / zoom)
+  const pixelsPerGridLine = pixelsPerTile * GRID_SIZE
+
+  const edgeOffsetX = (bounds.width / 2) % pixelsPerGridLine
+  const edgeOffsetY = (bounds.height / 2) % pixelsPerGridLine
+
+  const startX = (edgeOffsetX - position.value.x * pixelsPerTile) % pixelsPerGridLine
+  const startY = (edgeOffsetY + position.value.y * pixelsPerTile) % pixelsPerGridLine
 
   const newV = []
-  for (let i = (-position.value.x / MAP_ZOOM) % realZoom; i < bounds.width; i += realZoom)
-    newV.push(i)
+  for (let i = startX; i < bounds.width; i += pixelsPerGridLine)
+    if (i > 0) newV.push(i)
   vLines.value = newV
 
   const newH = []
-  for (let i = (position.value.y / MAP_ZOOM) % realZoom; i < bounds.height; i += realZoom)
-    newH.push(i)
+  for (let i = startY; i < bounds.height; i += pixelsPerGridLine)
+    if (i > 0) newH.push(i)
   hLines.value = newH
 }
 
@@ -49,6 +59,7 @@ onMounted(update)
 onUpdated(update)
 useResizeObserver(container, update)
 watch(position.value, update)
+watch(TEMPDIR, update)
 </script>
 
 <style scoped lang="scss">
@@ -89,6 +100,9 @@ watch(position.value, update)
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 2vw;
   }
 }
 </style>

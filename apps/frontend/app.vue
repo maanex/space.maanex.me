@@ -91,7 +91,7 @@ onMounted(() => {
   }
 
   & > * {
-    border-radius: 2vw;
+    border-radius: 1.2vw;
     overflow: hidden;
     background-color: #1f1b16;
 

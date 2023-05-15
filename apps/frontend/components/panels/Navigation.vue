@@ -28,6 +28,7 @@
       />
       <ElementsAccelerometer />
     </div>
+    <ElementsPanelswitcher @click="void 0" />
   </div>
 </template>
 
@@ -154,6 +155,7 @@ watch(handleScan, updateScan)
   padding: calc($gap * 2);
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .pilotcontainer {
     position: relative;
