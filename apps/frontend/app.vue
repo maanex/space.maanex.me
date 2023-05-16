@@ -6,15 +6,14 @@
     <div class="info">
       <PanelsInfo />
     </div>
-    <div class="location">
-      <PanelsLocation />
-    </div>
-    <div class="navigation">
-      <PanelsNavigation />
+    <div class="tool">
+      <PanelsUniversal :state="0" />
     </div>
     <div class="tool">
-      <!-- <PanelsTool /> -->
-      <PanelsTest />
+      <PanelsUniversal :state="1" />
+    </div>
+    <div class="tool">
+      <PanelsUniversal :state="2" />
     </div>
   </div>
   <div v-else-if="authorized === false" class="auth">
@@ -86,8 +85,9 @@ onMounted(() => {
     grid-row: 1 / span 2;
   }
 
-  .location, .navigation, .tool {
+  .tool {
     aspect-ratio: 3/2;
+    position: relative;
   }
 
   & > * {

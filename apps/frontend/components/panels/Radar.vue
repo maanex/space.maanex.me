@@ -1,6 +1,6 @@
 <template>
   <div ref="container" class="container">
-    <div class="lines">
+    <div class="grid">
       <div
         v-for="line,i of vLines"
         :key="i"
@@ -14,25 +14,39 @@
         :style="{ top: `${line}px` }"
       />
     </div>
+    <div class="entities" :style="{ '--zoom': .1 + (1-zoomHandle)**2 }">
+      <div
+        v-for="e of entities"
+        :key="e.id"
+        :style="{ top: `${e.y}px`, left: `${e.x}px` }"
+        :data-type="e.type"
+      >
+        <div class="inner" />
+      </div>
+    </div>
     <div class="ship">
       <p>&bullet;</p>
     </div>
-    {{ TEMPDIR }}
   </div>
 </template>
 
 <script setup lang="ts">
-const GRID_SIZE = 16
-const TEMPDIR = useState('handle-direction', () => 0)
+import { Entity } from '../../composables/world'
+
+const GRID_SIZE = 128
+const zoomHandle = useState('handle-zoom', () => 0)
 
 const container = ref(null)
 const position = usePosition()
+const worldEntities = useWorldEntities()
 
 const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
+/** entities but their x and y pos are screen coords and not world coords */
+const entities = useState<Entity[]>(() => ([]))
 
 function update() {
-  const zoom = TEMPDIR.value
+  const zoom = (zoomHandle.value + 0.1) * GRID_SIZE * 30
   const bounds = (container.value! as Element)?.getBoundingClientRect()
   const smallerEdge = Math.min(bounds.width, bounds.height)
   const pixelsPerTile = (smallerEdge / zoom)
@@ -53,13 +67,20 @@ function update() {
   for (let i = startY; i < bounds.height; i += pixelsPerGridLine)
     if (i > 0) newH.push(i)
   hLines.value = newH
+
+  const newEntities = []
+  for (const e of worldEntities.value) {
+    const x = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
+    const y = bounds.height / 2 + (e.y + position.value.y) * pixelsPerTile
+    newEntities.push({ ...e, x, y })
+  }
+  entities.value = newEntities
 }
 
 onMounted(update)
-onUpdated(update)
 useResizeObserver(container, update)
 watch(position.value, update)
-watch(TEMPDIR, update)
+watch(zoomHandle, update)
 </script>
 
 <style scoped lang="scss">
@@ -77,7 +98,7 @@ watch(TEMPDIR, update)
   }
 }
 
-.lines {
+.grid {
   .v {
     position: absolute;
     top: 0;
@@ -103,6 +124,34 @@ watch(TEMPDIR, update)
     transform: translate(-50%, -50%);
     color: #ffffff;
     font-size: 2vw;
+  }
+}
+
+.entities {
+  & > div {
+    position: absolute;
+    transform: translate(-50%, -50%) scale(var(--zoom));
+
+    &:hover::before {
+      content: '';
+      display: block;
+      top: -2vw;
+      left: -2vw;
+    }
+
+    .inner {
+      display: block;
+    }
+
+    &[data-type="2"] .inner {
+      // message
+      width: 1vw;
+      height: 1vw;
+      background-color: #169b64;
+      border: .2vw solid #ffffff;
+      transform: rotate(45deg);
+      border-radius: .3vw;
+    }
   }
 }
 </style>

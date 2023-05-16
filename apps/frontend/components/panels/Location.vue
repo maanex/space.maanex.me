@@ -15,7 +15,6 @@
         <p>RADIATION- <b>02.00%</b> ok</p>
       </div>
     </div>
-    <ElementsPanelswitcher @click="void 0" />
   </div>
 </template>
 
@@ -70,7 +69,6 @@ function update() {
 }
 
 onMounted(update)
-onUpdated(update)
 watch(position, update)
 useResizeObserver(map, update)
 </script>
@@ -80,6 +78,8 @@ useResizeObserver(map, update)
   background-color: $color-beige;
   background-image: url('~/assets/img/noise-10p.png');
   animation: bg-jitter 1s steps(1) forwards infinite;
+  height: 100%;
+  box-sizing: border-box;
   padding: $gap;
   display: flex;
   flex-direction: column;
@@ -88,6 +88,7 @@ useResizeObserver(map, update)
   .mapcontainer {
     position: relative;
     opacity: .7;
+    overflow: hidden;
   }
 
   .worldmap {

@@ -18,6 +18,7 @@ const emit = defineEmits([ 'click' ])
   border-top-right-radius: 1.2vw;
   border-top: .2vw solid mix($color-beige, #000000, 30%);
   border-right: .2vw solid mix($color-beige, #000000, 30%);
+  z-index: 99;
   cursor: pointer;
   display: grid;
   place-items: center;

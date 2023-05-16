@@ -43,7 +43,7 @@ export default defineAppConfig({
     },
     look: {
       borderRadiusRegular: '12pt',
-      borderRadiusLoose: '999pt'
+      borderRadiusLoose: '100vw'
     }
   } satisfies SmaragdConfig
 })

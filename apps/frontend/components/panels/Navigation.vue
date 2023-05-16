@@ -28,16 +28,26 @@
       />
       <ElementsAccelerometer />
     </div>
-    <ElementsPanelswitcher @click="void 0" />
+    <div ref="zoom" class="zoom">
+      <div
+        class="handle zoom"
+        userselect
+        :style="handleZoomCss"
+        :data-grabbed="moveHandle === 'zoom'"
+        :data-nograb="!moveHandle"
+        @mousedown="moveHandle = 'zoom'"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const pilot = ref(null)
+const zoom = ref(null)
 const { x, y } = useMouse()
 const { pressed } = useMousePressed()
 
-const moveHandle = useState<null | 'direction' | 'accl' | 'scan'>(() => null)
+const moveHandle = useState<null | 'direction' | 'accl' | 'scan' | 'zoom'>(() => null)
 watch(pressed, (val) => { if (!val) moveHandle.value = null })
 
 const handleDirection = useState('handle-direction', () => 0)
@@ -90,12 +100,24 @@ function handleMoveScan() {
   handleScan.value = outVal
 }
 
+const handleZoom = useState('handle-zoom', () => 0)
+const handleZoomCss = useState<any>(() => {})
+function handleMoveZoom() {
+  const bounds = (zoom.value! as Element)?.getBoundingClientRect()
+
+  const raw = (x.value - bounds.left) / bounds.width
+  const outVal = Math.min(Math.max(raw, 0), 1)
+
+  handleZoom.value = outVal
+}
+
 function handleMove() {
   switch (moveHandle.value) {
     case null: return
     case 'direction': return handleMoveDirection()
     case 'accl': return handleMoveAccl()
     case 'scan': return handleMoveScan()
+    case 'zoom': return handleMoveZoom()
   }
 }
 watch(x, handleMove)
@@ -133,18 +155,26 @@ function updateScan() {
   handleScanCss.value = { top: `${dirY}px`, left: `${dirX}px` }
 }
 
+function updateZoom() {
+  const bounds = (zoom.value! as Element)?.getBoundingClientRect()
+  const xval = handleZoom.value * bounds.width
+
+  handleZoomCss.value = { top: '50%', left: `${xval}px` }
+}
+
 function updateAll() {
   updateDirection()
   updateAccl()
   updateScan()
+  updateZoom()
 }
 
 onMounted(updateAll)
-onUpdated(updateAll)
 useResizeObserver(pilot, updateAll)
 watch(handleDirection, updateDirection)
 watch(handleAccl, updateAccl)
 watch(handleScan, updateScan)
+watch(handleZoom, updateZoom)
 </script>
 
 <style scoped lang="scss">
@@ -152,6 +182,8 @@ watch(handleScan, updateScan)
   background-color: $color-beige;
   background-image: url('~/assets/img/noise-10p.png');
   animation: bg-jitter 1s steps(1) forwards infinite;
+  height: 100%;
+  box-sizing: border-box;
   padding: calc($gap * 2);
   display: flex;
   flex-direction: column;
@@ -173,13 +205,24 @@ watch(handleScan, updateScan)
     left: 25%;
   }
 
+  .zoom {
+    position: absolute;
+    right: calc($gap * 2 + .5vw);
+    bottom: calc($gap * 2 + .5vw);
+    width: 80%;
+    height: .35vw;
+    background-color: mix($color-beige, #000000, 30%);
+    border-radius: 100vw;
+  }
+
   .handle {
     position: absolute;
     width: 1vw;
     height: 1vw;
-    border: .4vw solid mix($color-beige, #000000, 30%);
+    border: .35vw solid mix($color-beige, #000000, 30%);
     background-color: $color-beige;
-    border-radius: 999pt;
+    // background-color: lightblue;
+    border-radius: 100vw;
     transform: translate(-50%, -50%);
 
     &[data-nograb=true] {
@@ -202,7 +245,7 @@ watch(handleScan, updateScan)
       left: -100%;
       display: block;
       position: absolute;
-      border-radius: 999pt;
+      border-radius: 100vw;
     }
 
     &[data-grabbed=true]::after {

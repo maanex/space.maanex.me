@@ -8,6 +8,7 @@ export const useEngine = () => {
 
   const position = usePosition()
   const accl = useAcceleration()
+  const { shift, w, a, s, d } = useMagicKeys()
 
 
   async function tick() {
@@ -27,6 +28,14 @@ export const useEngine = () => {
 
     position.value.x = position.value.x + newAcclX
     position.value.y = position.value.y + newAcclY
+
+    //
+
+    if (a.value) handleDirection.value = (handleDirection.value - (shift.value ? 2 : 6) + 360) % 360
+    if (d.value) handleDirection.value = (handleDirection.value + (shift.value ? 2 : 6)) % 360
+
+    if (w.value) handleAccl.value = Math.min(handleAccl.value + (shift.value ? 0.01 : 0.05), 1)
+    if (s.value) handleAccl.value = Math.max(handleAccl.value - (shift.value ? 0.01 : 0.05), 0)
   }
 
   const timer = useState<any>(() => null)
