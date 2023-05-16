@@ -1,5 +1,9 @@
 <template>
-  <div ref="container" class="container">
+  <div
+    ref="container"
+    class="container"
+    :style="{ '--zoom': .1 + (1-zoomHandle)**2, '--ambiance': ambianceColor }"
+  >
     <div class="grid">
       <div
         v-for="line,i of vLines"
@@ -14,18 +18,19 @@
         :style="{ top: `${line}px` }"
       />
     </div>
-    <div class="entities" :style="{ '--zoom': .1 + (1-zoomHandle)**2 }">
+    <div class="entities">
       <div
         v-for="e of entities"
         :key="e.id"
-        :style="{ top: `${e.y}px`, left: `${e.x}px` }"
+        :style="{ top: `${~~e.y}px`, left: `${~~e.x}px` }"
         :data-type="e.type"
       >
         <div class="inner" />
+        <div class="data" v-text="e.data" />
       </div>
     </div>
     <div class="ship">
-      <p>&bullet;</p>
+      <div class="s" :style="{ '--rot': `${directionHandle}deg` }" />
     </div>
   </div>
 </template>
@@ -35,6 +40,7 @@ import { Entity } from '../../composables/world'
 
 const GRID_SIZE = 128
 const zoomHandle = useState('handle-zoom', () => 0)
+const directionHandle = useState('handle-direction', () => 0)
 
 const container = ref(null)
 const position = usePosition()
@@ -44,6 +50,7 @@ const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
 /** entities but their x and y pos are screen coords and not world coords */
 const entities = useState<Entity[]>(() => ([]))
+const ambianceColor = useState<string>(() => '#00000000')
 
 function update() {
   const zoom = (zoomHandle.value + 0.1) * GRID_SIZE * 30
@@ -75,6 +82,10 @@ function update() {
     newEntities.push({ ...e, x, y })
   }
   entities.value = newEntities
+
+  const ambianceHue = (Math.sin(position.value.x / 149210) * Math.cos(position.value.y / 44910)) * 0.5 + 0.5
+  const ambianceSat = (Math.sin(position.value.x / 4100 + position.value.y / 24110) * Math.cos(position.value.x / 99990)) * 0.3 + 0.6
+  ambianceColor.value = `#${HSLToRGB(ambianceHue*360, ambianceSat, .8).toString(16).padStart(6, '0')}33`
 }
 
 onMounted(update)
@@ -98,7 +109,12 @@ watch(zoomHandle, update)
   }
 }
 
+.ambiance {
+}
+
 .grid {
+  background-color: var(--ambiance);
+
   .v {
     position: absolute;
     top: 0;
@@ -117,13 +133,22 @@ watch(zoomHandle, update)
 }
 
 .ship {
-  p {
+  pointer-events: none;
+
+  .s {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    font-size: 2vw;
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 3vw;
+    border-top-right-radius: 0.8vw;
+    background-color: #000000;
+    border: .2vw solid #ffffff;
+    transform:
+      translate(-50%, -50%)
+      scale(calc(var(--zoom) * 0.8 + 0.2))
+      rotate(calc(var(--rot) - 45deg));
   }
 }
 
@@ -132,25 +157,39 @@ watch(zoomHandle, update)
     position: absolute;
     transform: translate(-50%, -50%) scale(var(--zoom));
 
-    &:hover::before {
-      content: '';
-      display: block;
-      top: -2vw;
-      left: -2vw;
-    }
+    .inner { display: block; }
+    .data { display: none; }
 
-    .inner {
-      display: block;
-    }
-
-    &[data-type="2"] .inner {
+    &[data-type="2"] {
       // message
-      width: 1vw;
-      height: 1vw;
-      background-color: #169b64;
-      border: .2vw solid #ffffff;
-      transform: rotate(45deg);
-      border-radius: .3vw;
+      .inner {
+        width: 1vw;
+        height: 1vw;
+        background-color: #169b64;
+        border: .2vw solid #ffffff;
+        transform: rotate(45deg);
+        border-radius: .3vw;
+        z-index: 20;
+        position: relative;
+      }
+      &:hover .data {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        top: -1vw;
+        left: -1vw;
+        height: calc(100% + 2vw);
+        padding-left: calc(100% + 2vw);
+        padding-right: 1vw;
+        background-color: #00000044;
+        border-radius: 0.5vw;
+        color: #ffffff;
+        width: max-content;
+        max-width: 30vw;
+        font-family: $font-regular;
+        font-size: 1vw;
+        line-height: 1.2vw;
+      }
     }
   }
 }
