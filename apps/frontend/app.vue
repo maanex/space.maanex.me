@@ -41,11 +41,18 @@ async function handleAuthCallback() {
   router.replace('/')
   const { status } = await api.makeAuthCallback(provider, code)
   authorized.value = (status >= 200 && status <= 300)
+  onAuthCompleted(authorized.value)
 }
 
 async function testAuth() {
   const { status } = await api.makeAuthProbe()
   authorized.value = (status >= 200 && status <= 300)
+  onAuthCompleted(authorized.value)
+}
+
+function onAuthCompleted(success: boolean) {
+  if (success)
+    useSocket().connect()
 }
 
 onMounted(() => {

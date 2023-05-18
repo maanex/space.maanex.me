@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import OAuthStrat, { UnifiedUserObject } from '../../lib/oauth-strat'
-import ReqError from '../../lib/req-error'
-import { UserAuth } from '../../lib/user-auth'
-import { UserModel } from '../../database/models/user'
-import JWT from '../../lib/jwt'
+import OAuthStrat, { UnifiedUserObject } from '../lib/oauth-strat'
+import ReqError from '../lib/req-error'
+import { UserAuth } from '../lib/user-auth'
+import { UserModel } from '../database/models/user'
+import JWT from '../lib/jwt'
 
 
 export function getLogin(req: Request, res: Response) {
@@ -55,6 +55,10 @@ export async function postCode(req: Request, res: Response) {
       token,
       account: {
         name: authUser.username
+      },
+      pos: {
+        x: user.posX,
+        y: user.posY
       }
     }
   })

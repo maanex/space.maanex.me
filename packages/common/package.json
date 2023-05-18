@@ -1,0 +1,14 @@
+{
+  "name": "@maanex/spacelib-common",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ext .ts --ignore-path .gitignore src/**/*.ts"
+  },
+  "dependencies": {
+    "eslint-config-maanex": "^1.1.2",
+    "typescript": "^5.0.4"
+  }
+}

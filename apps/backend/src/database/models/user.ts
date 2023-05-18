@@ -23,6 +23,8 @@ export namespace UserModel {
     _id: string
     uuid: string
     authn: UnifiedUserObject
+    posX: number
+    posY: number
   }
 
   /** The user mongoose object, muteable and saveable */
@@ -32,6 +34,8 @@ export namespace UserModel {
   export type SanitizedType = {
     id: string
     uuid: string
+    posX: number
+    posY: number
   }
 
 
@@ -49,7 +53,15 @@ export namespace UserModel {
     authn: {
       type: Object,
       required: true
-    }
+    },
+    posX: {
+      type: Number,
+      required: true
+    },
+    posY: {
+      type: Number,
+      required: true
+    },
   }, { collection: 'users' })
 
 
@@ -61,7 +73,9 @@ export namespace UserModel {
   export function sanitize(raw: Type): SanitizedType {
     return {
       id: raw._id,
-      uuid: raw.uuid
+      uuid: raw.uuid,
+      posX: raw.posX,
+      posY: raw.posY
     }
   }
 

@@ -1,12 +1,12 @@
 import { Response, Router } from 'express'
 import * as cors from 'cors'
-import ReqError from '../../lib/req-error'
-import gateway from '../../middleware/gateway'
-import { config } from '../..'
+import ReqError from '../lib/req-error'
+import gateway from '../middleware/gateway'
+import { config } from '..'
 import { getLogin, getMe, postCode } from './auth'
 
 
-export default class V1Router {
+export default class Routes {
 
   private static ctx: Router
 

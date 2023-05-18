@@ -4,6 +4,9 @@
     <button @click="test">test</button>
     <hr>
     <p>Pos: (x {{ ~~pos.x }}) (y {{ ~~pos.y }})</p>
+    <hr>
+    <button @click="decon">debug decon</button>
+    <hr>
   </div>
 </template>
 
@@ -13,6 +16,10 @@ const pos = usePosition()
 
 function test() {
   docs.value.set('bananas', false)
+}
+
+function decon() {
+  useSocket().debugDisconnect()
 }
 </script>
 

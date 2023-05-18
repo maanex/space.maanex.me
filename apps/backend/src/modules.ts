@@ -1,7 +1,10 @@
+import * as http from 'http'
 import * as express from 'express'
 import { config } from "."
-import V1Router from './routes/v1/router'
+import Routes from './server/routes'
 import Mongo from './database/mongo'
+import SocketServer from './server/socket'
+import { Session } from './app/session'
 
 
 export default class Modules {
@@ -19,12 +22,20 @@ export default class Modules {
     app.set('trust proxy', 1)
     app.use('*', express.json())
 
-    app.use('/v1', V1Router.init())
+    app.use('/rest', Routes.init())
 
     app.all('*', (_, res) => res.status(400).end())
 
-    await app.listen(config.port)
+    const host = http.createServer(app)
+
+    SocketServer.init(host)
+
+    await host.listen(config.port)
     console.log(`Server launched at port ${config.port}`)
+  }
+
+  public static startWorld() {
+    Session.init()
   }
 
 }

@@ -7,13 +7,23 @@ const isDev = computed(() => useRuntimeConfig().public.isDev)
 
 function getBaseUrl(): string {
   return isDev.value
-    ? 'http://localhost:5050/v1'
+    ? 'http://localhost:5050/rest'
     : 'TODO'
+}
+
+function getSocketHost(): string {
+  return isDev.value
+    ? 'localhost:5050'
+    : 'TODO'
+}
+
+function getToken(): string {
+  return localStorage.getItem('token') + ''
 }
 
 function buildConf(headers?: any, body?: any): AxiosRequestConfig {
   headers = headers || {}
-  headers.Authorization = localStorage.getItem('token')
+  headers.Authorization = getToken()
   const conf: AxiosRequestConfig = {
     headers,
     validateStatus: null
@@ -43,6 +53,7 @@ function handleResponseUpdateCall(data: any) {
 
   if (data.token) localStorage.setItem('token', data.token)
   if (data.account) useAccount().value = data.account
+  if (data.pos) usePosition().value = data.pos
 }
 
 async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
@@ -66,6 +77,10 @@ async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', u
 //
 
 export const useApi = () => ({
+
+  getBaseUrl,
+  getSocketHost,
+  getToken,
 
   makeAuthCallback(provider: string, code: string) {
     return rawRequest('post', `/auth/code/${provider.toLowerCase()}`, { code })
