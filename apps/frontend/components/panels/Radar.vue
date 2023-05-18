@@ -2,7 +2,7 @@
   <div
     ref="container"
     class="container"
-    :style="{ '--zoom': .1 + (1-zoomHandle)**2, '--ambiance': ambianceColor }"
+    :style="{ '--zoom': zoomFactor, '--scale': scaleFactor * 2, '--ambiance': ambianceColor }"
   >
     <div class="grid">
       <div
@@ -31,6 +31,15 @@
     </div>
     <div class="ship">
       <div class="s" :style="{ '--rot': `${directionHandle}deg` }" />
+      <div
+        v-for="[ id, pos ] of Object.entries(crosshairs)"
+        :key="id"
+        class="c"
+        :style="{
+          top: `calc(50% + ${pos.y * pixelsPerTileGlob}px)`,
+          left: `calc(50% + ${pos.x * pixelsPerTileGlob}px)`
+        }"
+      />
     </div>
   </div>
 </template>
@@ -38,27 +47,34 @@
 <script setup lang="ts">
 import { Entity } from '../../composables/world'
 
+/** after how many tiles there is a grid cell drawn */
 const GRID_SIZE = 128
+/** how many tiles together make one chunk. with zoom level 1 exactly two chunks are shown horizontal */
+const BASE_TILE_COUNT = 128
+
 const zoomHandle = useZoomHandle()
 const directionHandle = useDirectionHandle()
+const zoomFactor = computed(() => (1 + zoomHandle.value * 3) ** 2)
+const scaleFactor = computed(() => 1 / zoomFactor.value)
 
 const container = ref(null)
 const position = usePosition()
 const worldEntities = useWorldEntities()
+const crosshairs = useCrosshairs()
 
 const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
 /** entities but their x and y pos are screen coords and not world coords */
 const entities = useState<Entity[]>(() => ([]))
 const ambianceColor = useState<string>(() => '#00000000')
+const pixelsPerTileGlob = useState<number>(() => 1)
 
 function update() {
-  const zoom = (zoomHandle.value + 0.1) * GRID_SIZE * 30
   const bounds = (container.value! as Element)?.getBoundingClientRect()
-  const smallerEdge = Math.min(bounds.width, bounds.height)
-  const pixelsPerTile = (smallerEdge / zoom)
+  const tileCount = 2 * BASE_TILE_COUNT * zoomFactor.value
+  const pixelsPerTile = (bounds.width / tileCount)
+  pixelsPerTileGlob.value = pixelsPerTile
   const pixelsPerGridLine = pixelsPerTile * GRID_SIZE
-  console.log(zoom, pixelsPerTile)
 
   const edgeOffsetX = (bounds.width / 2) % pixelsPerGridLine
   const edgeOffsetY = (bounds.height / 2) % pixelsPerGridLine
@@ -149,15 +165,45 @@ watch(worldEntities.value, update)
     border: .2vw solid #ffffff;
     transform:
       translate(-50%, -50%)
-      scale(calc(var(--zoom) * 0.8 + 0.2))
+      scale(var(--scale))
       rotate(calc(var(--rot) - 45deg));
+  }
+
+  .c {
+    position: absolute;
+    width: calc(.2vw + 1px);
+    height: calc(.2vw + 1px);
+    border-radius: 3vw;
+    background-color: #eeeeee;
+    transform: translate(-50%, -50%);
+    z-index: 18;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -100vh;
+      left: .1vw;
+      width: 1px;
+      height: 200vh;
+      background-color: #bbbbbb;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: -100vw;
+      top: .1vw;
+      height: 1px;
+      width: 200vw;
+      background-color: #bbbbbb;
+    }
   }
 }
 
 .entities {
   & > div {
     position: absolute;
-    transform: translate(-50%, -50%) scale(var(--zoom));
+    transform: translate(-50%, -50%) scale(var(--scale));
 
     &:hover { z-index: 30; }
 

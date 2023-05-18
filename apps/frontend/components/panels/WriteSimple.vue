@@ -9,7 +9,7 @@
       </ElementsTextInput>
     </div>
     <button @click="write()">
-      Write
+      {{ text.length ? 'Write' : (x || y) ? 'Reset' : '-' }}
     </button>
   </div>
 </template>
@@ -21,21 +21,39 @@ const text = useState(`diamondpicker-writesimple-text`, () => '')
 
 const entities = useWorldEntities()
 const pos = usePosition()
+const crosshairs = useCrosshairs()
 
-const cost = computed(() => Math.ceil(text.value.length ** 1.5) + 20)
+const cost = computed(() => Math.ceil(((text.value.length / 5) ** 3) / 6) + 20)
 
 function write() {
-  entities.value.push({
-    id: ~~(Math.random() * 100000),
-    x: ~~(pos.value.x + x.value * 100),
-    y: ~~(pos.value.y + y.value * 100),
-    type: 2,
-    data: text.value
-  })
-  text.value = ''
+  if (text.value.length) {
+    entities.value.push({
+      id: ~~(Math.random() * 100000),
+      x: ~~(pos.value.x + x.value * 64),
+      y: ~~(-pos.value.y + y.value * 64),
+      type: 2,
+      data: text.value
+    })
+    text.value = ''
+  }
+
   x.value = 0
   y.value = 0
+  delete crosshairs.value.writesimple
 }
+
+function updateCrosshair() {
+  if (!x.value && !y.value)
+    return
+  if (!crosshairs.value.writesimple)
+    crosshairs.value.writesimple = { x: 0, y: 0 }
+  crosshairs.value.writesimple.x = x.value * 64
+  crosshairs.value.writesimple.y = y.value * 64
+}
+
+watch(x, updateCrosshair)
+watch(y, updateCrosshair)
+onBeforeUnmount(() => { delete crosshairs.value.writesimple })
 </script>
 
 <style scoped lang="scss">

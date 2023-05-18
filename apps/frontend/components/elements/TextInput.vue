@@ -1,13 +1,12 @@
 <template>
   <div class="textinput">
-    <textbox
+    <textarea 
       class="inner"
       userselect
-      contenteditable="true"
       spellcheck="false"
-      @input="$emit('update:modelValue', ($event.target as any)!.innerText)"
+      :value="modelValue"
+      @input="$emit('update:modelValue', ($event.target as any)!.value)"
       v-bind="$attrs"
-      v-text="modelValue"
     />
     <slot />
   </div>
