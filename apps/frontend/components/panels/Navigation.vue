@@ -50,7 +50,7 @@ const { pressed } = useMousePressed()
 const moveHandle = useState<null | 'direction' | 'accl' | 'scan' | 'zoom'>(() => null)
 watch(pressed, (val) => { if (!val) moveHandle.value = null })
 
-const handleDirection = useState('handle-direction', () => 0)
+const handleDirection = useDirectionHandle()
 const handleDirectionCss = useState<any>(() => {})
 function handleMoveDirection() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -65,7 +65,7 @@ function handleMoveDirection() {
   handleDirection.value = radDeg
 }
 
-const handleAccl = useState('handle-accl', () => 0)
+const handleAccl = useAcclHandle()
 const handleAcclCss = useState<any>(() => {})
 function handleMoveAccl() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -82,7 +82,7 @@ function handleMoveAccl() {
   handleAccl.value = outVal
 }
 
-const handleScan = useState('handle-scan', () => 0)
+const handleScan = useScanHandle()
 const handleScanCss = useState<any>(() => {})
 function handleMoveScan() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()
@@ -100,7 +100,7 @@ function handleMoveScan() {
   handleScan.value = outVal
 }
 
-const handleZoom = useState('handle-zoom', () => 0)
+const handleZoom = useZoomHandle()
 const handleZoomCss = useState<any>(() => {})
 function handleMoveZoom() {
   const bounds = (zoom.value! as Element)?.getBoundingClientRect()

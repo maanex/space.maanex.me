@@ -8,6 +8,7 @@
   <PanelsNavigation v-else-if="showing === 'navigation'" />
   <PanelsTest v-else-if="showing === 'test1'" />
   <PanelsTool v-else-if="showing === 'test2'" />
+  <PanelsWriteSimple v-else-if="showing === 'write-simple'" />
 
   <div v-else class="select">
     <div class="buttons">
@@ -38,11 +39,11 @@ const { state } = defineProps<{
 const availablePanels = [
   [ 'location' ],
   [ 'navigation' ],
-  [ 'test1', 'test2' ]
+  [ 'test1', 'test2', 'write-simple' ]
 ] as const
 type availablePanelsType = typeof availablePanels[number][number]
 
-const defaultPages = [ 'location', 'navigation', 'test1' ] as const
+const defaultPages = [ 'location', 'navigation', 'write-simple' ] as const
 
 const showing = useState<availablePanelsType | 'none'>(`universal-panel-${state}`, () => defaultPages[state])
 const alreadyUsed = computed(() => {

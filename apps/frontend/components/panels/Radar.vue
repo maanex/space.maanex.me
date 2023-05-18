@@ -39,8 +39,8 @@
 import { Entity } from '../../composables/world'
 
 const GRID_SIZE = 128
-const zoomHandle = useState('handle-zoom', () => 0)
-const directionHandle = useState('handle-direction', () => 0)
+const zoomHandle = useZoomHandle()
+const directionHandle = useDirectionHandle()
 
 const container = ref(null)
 const position = usePosition()
@@ -58,6 +58,7 @@ function update() {
   const smallerEdge = Math.min(bounds.width, bounds.height)
   const pixelsPerTile = (smallerEdge / zoom)
   const pixelsPerGridLine = pixelsPerTile * GRID_SIZE
+  console.log(zoom, pixelsPerTile)
 
   const edgeOffsetX = (bounds.width / 2) % pixelsPerGridLine
   const edgeOffsetY = (bounds.height / 2) % pixelsPerGridLine
@@ -92,6 +93,7 @@ onMounted(update)
 useResizeObserver(container, update)
 watch(position.value, update)
 watch(zoomHandle, update)
+watch(worldEntities.value, update)
 </script>
 
 <style scoped lang="scss">
@@ -157,6 +159,8 @@ watch(zoomHandle, update)
     position: absolute;
     transform: translate(-50%, -50%) scale(var(--zoom));
 
+    &:hover { z-index: 30; }
+
     .inner { display: block; }
     .data { display: none; }
 
@@ -189,6 +193,7 @@ watch(zoomHandle, update)
         font-family: $font-regular;
         font-size: 1vw;
         line-height: 1.2vw;
+        backdrop-filter: blur(0.7vw);
       }
     }
   }

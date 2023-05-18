@@ -2,9 +2,9 @@
 export const useEngine = () => {
   const BASE_SPEED = 8
 
-  const handleDirection = useState('handle-direction', () => 0)
-  const handleAccl = useState('handle-accl', () => 0)
-  const handleScan = useState('handle-scan', () => 0)
+  const handleDirection = useDirectionHandle()
+  const handleAccl = useAcclHandle()
+  const handleScan = useScanHandle()
 
   const position = usePosition()
   const accl = useAcceleration()
@@ -31,11 +31,11 @@ export const useEngine = () => {
 
     //
 
-    if (a.value) handleDirection.value = (handleDirection.value - (shift.value ? 2 : 6) + 360) % 360
-    if (d.value) handleDirection.value = (handleDirection.value + (shift.value ? 2 : 6)) % 360
+    // if (a.value) handleDirection.value = (handleDirection.value - (shift.value ? 2 : 6) + 360) % 360
+    // if (d.value) handleDirection.value = (handleDirection.value + (shift.value ? 2 : 6)) % 360
 
-    if (w.value) handleAccl.value = Math.min(handleAccl.value + (shift.value ? 0.01 : 0.05), 1)
-    if (s.value) handleAccl.value = Math.max(handleAccl.value - (shift.value ? 0.01 : 0.05), 0)
+    // if (w.value) handleAccl.value = Math.min(handleAccl.value + (shift.value ? 0.01 : 0.05), 1)
+    // if (s.value) handleAccl.value = Math.max(handleAccl.value - (shift.value ? 0.01 : 0.05), 0)
   }
 
   const timer = useState<any>(() => null)

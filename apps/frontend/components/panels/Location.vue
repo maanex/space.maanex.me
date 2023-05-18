@@ -69,7 +69,7 @@ function update() {
 }
 
 onMounted(update)
-watch(position, update)
+watch(position.value, update)
 useResizeObserver(map, update)
 </script>
 
