@@ -1,5 +1,5 @@
 export * from './config'
-import Modules from './modules'
+import { Modules } from './modules'
 
 
 async function run() {

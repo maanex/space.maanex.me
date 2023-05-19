@@ -74,6 +74,10 @@ export async function getMe(_req: Request, res: Response) {
       token: await JWT.signAuth({ id: res.locals.user._id }),
       account: {
         name: res.locals.user.authn.username
+      },
+      pos: {
+        x: res.locals.user.posX,
+        y: res.locals.user.posY
       }
     }
   })

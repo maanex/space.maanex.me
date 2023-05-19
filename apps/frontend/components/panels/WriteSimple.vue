@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { Formulas } from '@maanex/spacelib-common'
+
 const x = useState(`diamondpicker-writesimple-pos-x`, () => 0)
 const y = useState(`diamondpicker-writesimple-pos-y`, () => 0)
 const text = useState(`diamondpicker-writesimple-text`, () => '')
@@ -23,7 +25,7 @@ const entities = useWorldEntities()
 const pos = usePosition()
 const crosshairs = useCrosshairs()
 
-const cost = computed(() => Math.ceil(((text.value.length / 5) ** 3) / 6) + 20)
+const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
 
 function write() {
   if (text.value.length) {

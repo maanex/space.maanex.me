@@ -7,15 +7,15 @@ import SocketServer from './server/socket'
 import { Session } from './app/session'
 
 
-export default class Modules {
+export namespace Modules {
 
-  public static async connectMongo() {
+  export async function connectMongo() {
     console.log('Connecting to MongoDB')
     await Mongo.connect(config.databases.mongoUrl)
     console.log('MongoDB connected')
   }
   
-  public static async startServer() {
+  export async function startServer() {
     console.log('Launching server')
     const app = express()
 
@@ -34,8 +34,24 @@ export default class Modules {
     console.log(`Server launched at port ${config.port}`)
   }
 
-  public static startWorld() {
+  export function startWorld() {
     Session.init()
   }
 
+}
+
+
+// 
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Response } from 'express'
+import { UserModel } from './database/models/user'
+
+
+declare module 'express' {
+  interface Response {
+    locals: {
+      user: UserModel.Type
+    }
+  }
 }
