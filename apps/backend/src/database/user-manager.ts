@@ -1,7 +1,7 @@
 import { config } from ".."
 import FlipflopCache from "../lib/flipflop-cache"
 import { UserModel } from "./models/user"
-import Mongo from "./mongo"
+import { Mongo } from "./mongo"
 
 
 export namespace UserManager {

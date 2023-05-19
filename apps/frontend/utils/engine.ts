@@ -1,8 +1,7 @@
+import { Const } from "@maanex/spacelib-common"
 
 
 export const useEngine = () => {
-  const BASE_SPEED = 8
-
   const socket = useSocket()
   
   const handleDirection = useDirectionHandle()
@@ -15,7 +14,7 @@ export const useEngine = () => {
   //
   
   function tickMovement(id: number) {
-    const acclSpeed = (handleAccl.value ** 3) * BASE_SPEED
+    const acclSpeed = (handleAccl.value ** 3) * Const.baseSpeed
     const xDelta = Math.sin(handleDirection.value / 180 * Math.PI) * acclSpeed
     const yDelta = Math.cos(handleDirection.value / 180 * Math.PI) * acclSpeed
   
@@ -34,7 +33,7 @@ export const useEngine = () => {
   
     // socket.send(Packet.CS.POS(position.value.x, position.value.y, handleDirection.value))
     if (id % 5 === 0)
-      socket.send([ 'POS', ~~position.value.x, ~~position.value.y, ~~handleDirection.value ])
+      socket.sendMovePacket(~~position.value.x, ~~position.value.y, ~~handleDirection.value)
   }
 
   let tickId = 0

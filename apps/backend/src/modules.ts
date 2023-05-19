@@ -1,8 +1,8 @@
 import * as http from 'http'
-import * as express from 'express'
+import express from 'express'
 import { config } from "."
 import Routes from './server/routes'
-import Mongo from './database/mongo'
+import { Mongo } from './database/mongo'
 import SocketServer from './server/socket'
 import { Session } from './app/session'
 

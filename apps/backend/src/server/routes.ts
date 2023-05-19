@@ -1,5 +1,5 @@
 import { Response, Router } from 'express'
-import * as cors from 'cors'
+import cors from 'cors'
 import ReqError from '../lib/req-error'
 import gateway from '../middleware/gateway'
 import { config } from '..'

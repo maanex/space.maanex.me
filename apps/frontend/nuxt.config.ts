@@ -14,6 +14,11 @@ export default defineNuxtConfig({
           additionalData: '@import "@/assets/style/all.scss";'
         }
       }
+    },
+    optimizeDeps: {
+      exclude: [
+        '@maanex/spacelib-common'
+      ]
     }
   },
   runtimeConfig: {

@@ -5,5 +5,5 @@ export function POS(sender: Session.ActiveUser, x: number, y: number, rot: numbe
   // TODO: cheat detection stuffies
   console.log(sender.data.uuid, x, y, rot)
   sender.data.posX = x
-  sender.data.posY = x
+  sender.data.posY = y
 }

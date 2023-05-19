@@ -97,6 +97,14 @@ function debugDisconnect() {
   client?.disconnect()
 }
 
+//
+
+const packetRedudancyTracker = {
+  posValX: 0,
+  posValY: 0,
+  posValRot: 0,
+}
+
 export const useSocket = () => ({
     connect,
     disconnect,
@@ -104,5 +112,13 @@ export const useSocket = () => ({
       return !!client?.connected
     },
     send,
-    debugDisconnect
+    debugDisconnect,
+    sendMovePacket(x: number, y: number, rot: number) {
+      if (x === packetRedudancyTracker.posValX && y === packetRedudancyTracker.posValY && rot === packetRedudancyTracker.posValRot)
+        return
+      packetRedudancyTracker.posValX = x
+      packetRedudancyTracker.posValY = y
+      packetRedudancyTracker.posValRot = rot
+      send(Packet.CS.POS(x, y, rot))
+    }
 })

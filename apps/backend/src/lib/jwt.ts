@@ -4,7 +4,7 @@
  */
 
 import { readFileSync } from 'fs'
-import * as jwtlib from 'jsonwebtoken'
+import jwtlib from 'jsonwebtoken'
 import { config } from '..'
 import type { UserAuth } from './user-auth'
 

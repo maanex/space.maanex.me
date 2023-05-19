@@ -1,9 +1,4 @@
-/* eslint-disable import/order, import/first */
-import { configjs } from './types/config'
-export const config = require('../config.js') as configjs
-
-//
-
+export * from './config'
 import Modules from './modules'
 
 

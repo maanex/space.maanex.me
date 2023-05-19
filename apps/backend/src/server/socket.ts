@@ -50,6 +50,7 @@ export default class SocketServer {
       socket,
       send: (packet) => SocketServer.sendPacket(socket, packet)
     }
+    Session.activeUsers.set(user.id, activeUser)
 
     // Register basic socket handlers
     for (const key in SocketServer.packetHandlers)

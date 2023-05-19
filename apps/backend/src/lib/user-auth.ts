@@ -1,6 +1,6 @@
 import { config } from '..'
 import { UserModel } from '../database/models/user'
-import Mongo from '../database/mongo'
+import { Mongo } from "../database/mongo"
 import { UserManager } from '../database/user-manager'
 import JWT from './jwt'
 import { UnifiedUserObject } from './oauth-strat'

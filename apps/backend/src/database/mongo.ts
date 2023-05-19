@@ -1,31 +1,31 @@
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 import { UserModel } from './models/user'
 
 
-export default class Mongo {
+export namespace Mongo {
 
-  public static connection: mongoose.Connection;
-
-  public static User = mongoose.model('User', UserModel.Schema)
+  export const User = mongoose.model('User', UserModel.Schema)
 
   //
 
-  public static connect(url?: string): Promise<any> {
+  let connection: mongoose.Connection = null
+
+  export function connect(url?: string): Promise<any> {
     console.info('Connecting to Mongo...')
 
     return new Promise<any>((resolve, reject) => {
-      this.connection = mongoose.connection
+      connection = mongoose.connection
       mongoose.connect(url)
-      this.connection.on('error', reject)
-      this.connection.on('open', () => {
+      connection.on('error', reject)
+      connection.on('open', () => {
         console.info('Mongo connection estabished')
-        resolve(this.connection)
+        resolve(connection)
       })
     })
   }
 
-  public static disconnect(): void {
-    this.connection.close()
+  export function disconnect(): void {
+    connection.close()
   }
 
 }
