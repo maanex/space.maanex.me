@@ -1,10 +1,14 @@
 import { EntityType, Packet } from '@maanex/spacelib-common'
 import * as SocketIO from 'socket.io-client'
 import { POS } from '~/app/packets/pos'
+import { PROPS } from '~/app/packets/props'
+import { EACK } from '~/app/packets/eack'
 
 
 const packetHandlers: Record<string, (...args: any) => void> = {
-  POS
+  EACK,
+  POS,
+  PROPS,
 }
 
 let client: SocketIO.Socket | undefined
@@ -12,8 +16,8 @@ let client: SocketIO.Socket | undefined
 let connectionPromise: ((success: boolean) => void) | null = null
 
 function connect() {
-  if (client && client)
-    disconnect()
+  if (client?.connected)
+    return
 
   const host = useApi().getSocketHost()
   const url = location.protocol.includes('https')
@@ -137,7 +141,7 @@ export const useSocket = () => ({
   sendEntityPacket(type: EntityType, x: number, y: number, data: any): [ number, Promise<number> ] {
     const transaction = transVal++
     const promise = new Promise<number>((res) => eackCallbacks.set(transaction, res))
-    send(Packet.CS.SPAWN(type, transaction, x, y, data))
+    send(Packet.CS.SPAWN(transaction, type, x, y, data))
     return [ transaction, promise ]
   }
 })

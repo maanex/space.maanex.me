@@ -59,6 +59,9 @@ export async function postCode(req: Request, res: Response) {
       pos: {
         x: user.posX,
         y: user.posY
+      },
+      props: {
+        resources: user.resources
       }
     }
   })
@@ -78,6 +81,9 @@ export async function getMe(_req: Request, res: Response) {
       pos: {
         x: res.locals.user.posX,
         y: res.locals.user.posY
+      },
+      props: {
+        resources: res.locals.user.resources
       }
     }
   })

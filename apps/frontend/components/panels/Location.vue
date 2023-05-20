@@ -11,7 +11,7 @@
         <p v-text="sector" />
       </div>
       <div class="right">
-        <p>RESOURCES- <b>24,525</b> ok</p>
+        <p>RESOURCES- <b>{{ props.resources.toLocaleString(undefined, { notation: 'compact' }) }}</b> ok</p>
         <p>RADIATION- <b>02.00%</b> ok</p>
       </div>
     </div>
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 const position = usePosition()
+const props = useProps()
 const map = ref(null)
 const markerCss = useState<any>(() => {})
 const mapRadius = 1_000_000

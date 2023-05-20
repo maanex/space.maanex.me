@@ -93,7 +93,7 @@ function update() {
   hLines.value = newH
 
   const newEntities = []
-  for (const e of worldEntities.value) {
+  for (const e of worldEntities.value.values()) {
     const x = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
     const y = bounds.height / 2 + (e.y + position.value.y) * pixelsPerTile
     newEntities.push({ ...e, x, y })

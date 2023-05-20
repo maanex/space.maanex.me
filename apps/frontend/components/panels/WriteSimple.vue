@@ -5,11 +5,19 @@
     </div>
     <div class="text">
       <ElementsTextInput v-model="text">
-        <span>Cost: {{ text.length ? cost : '-' }}</span>
+        <span :data-tooexp="tooExpensive">Cost: {{ text.length ? cost : '-' }}</span>
       </ElementsTextInput>
     </div>
     <button @click="write()">
-      {{ text.length ? 'Write' : (x || y) ? 'Reset' : '-' }}
+      {{
+        text.length
+          ? tooExpensive
+            ? 'Expen'
+            : 'Write'
+          : (x || y)
+            ? 'Reset'
+            : '-'
+      }}
     </button>
   </div>
 </template>
@@ -24,12 +32,16 @@ const text = useState(`diamondpicker-writesimple-text`, () => '')
 
 const entities = useWorldEntities()
 const pos = usePosition()
+const props = useProps()
 const crosshairs = useCrosshairs()
 const sock = useSocket()
 
 const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
+const tooExpensive = computed(() => (cost.value > props.value.resources))
 
 function write() {
+  if (tooExpensive.value) return
+
   if (text.value.length) {
     const ex = ~~(pos.value.x + x.value * 64)
     const ey = ~~(-pos.value.y + y.value * 64)
@@ -42,11 +54,12 @@ function write() {
       data: text.value
     }
     entities.value.set(tempid, entity)
+    props.value.resources -= cost.value
     text.value = ''
 
     actual.then((val) => {
       entities.value.delete(tempid)
-      if (val) entities.value.set(val, entity)
+      if (typeof val === 'number') entities.value.set(val, entity)
     })
   }
 
@@ -96,6 +109,24 @@ onBeforeUnmount(() => { delete crosshairs.value.writesimple })
     font-size: .9vw;
     font-family: $font-major;
     color: mix($color-beige, #000000, 30%);
+
+    &[data-tooexp=true]::after {
+      content: '!';
+      font-size: .7vw;
+      font-family: $font-regular;
+      background-color: mix($color-beige, #000000, 30%);
+      color: $color-beige;
+      border-radius: 100vw;
+      margin-left: .5vw;
+      padding: 0 .3vw;
+      animation: blink 1s steps(1) infinite;
+
+      @keyframes blink {
+        0% { background-color: mix($color-beige, #000000, 30%); color: $color-beige; }
+        50% { background-color: transparent; color: mix($color-beige, #000000, 30%); }
+        100% { background-color: mix($color-beige, #000000, 30%); color: $color-beige; }
+      }
+    }
   }
 }
 

@@ -38,8 +38,6 @@ export namespace Session {
           activeUsers.delete(user.data.id)
         else
           user.data.save()
-
-        console.log(user.data.id, !!user.socket?.connected)
       }
     }
 

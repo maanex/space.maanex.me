@@ -7,12 +7,14 @@ import { UserModel } from '../database/models/user'
 import { UserManager } from '../database/user-manager'
 import { UserAuth } from '../lib/user-auth'
 import { POS } from '../app/packets/pos'
+import { SPAWN } from '../app/packets/spawn'
 
 
 export default class SocketServer {
 
   private static packetHandlers: Record<string, (sender: Session.ActiveUser, ...args: any) => void> = {
-    POS
+    POS,
+    SPAWN
   }
 
   private static server: Server
@@ -41,12 +43,13 @@ export default class SocketServer {
     if (!userPayload)
       return SocketServer.closeConnection(socket, 'invalid_auth')
 
-    const user = Session.activeUsers.get(userPayload.id)?.data
+    const existingSession = Session.activeUsers.get(userPayload.id)
+    SocketServer.closeConnection(existingSession?.socket, 'new_connection')
+
+    const user = existingSession?.data
       ?? await UserManager.getUser(userPayload.id)
     if (!user)
       return SocketServer.closeConnection(socket, 'socket_hiccup')
-
-    SocketServer.closeConnection(Session.activeUsers.get(user.id)?.socket, 'new_connection')
 
     const activeUser: Session.ActiveUser = {
       data: user,

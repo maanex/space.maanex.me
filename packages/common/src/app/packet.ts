@@ -27,7 +27,7 @@ export namespace Packet {
       return [ 'POS', x, y, rot ]
     }
 
-    /** ACKNOWLEDGES AN ENTITy SPAWN PACKET
+    /** ACKNOWLEDGES AN ENTITY SPAWN PACKET
      * newId can be NULL if the server declines the interaction
      */
     export function EACK(trans: number, newId: number): Data {
@@ -42,6 +42,15 @@ export namespace Packet {
     /** REMOVES AN ENTITY */
     export function REMOVE(id: number): Data {
       return [ 'REMOVE', id ]
+    }
+
+    export type UserPropsUpdate = {
+      resources: number
+    }
+
+    /** UPDATES OWN PROPERTIES */
+    export function PROPS(data: Partial<UserPropsUpdate>): Data {
+      return [ 'PROPS', data ]
     }
 
   }
@@ -59,7 +68,7 @@ export namespace Packet {
     }
 
     /** SPAWNS AN ENTITY */
-    export function SPAWN(type: number, trans: number, x: number, y: number, data: any): Data {
+    export function SPAWN(trans: number, type: number, x: number, y: number, data: any): Data {
       return [ 'SPAWN', trans, type, x, y, data ]
     }
 

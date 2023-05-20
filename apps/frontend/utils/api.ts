@@ -54,6 +54,7 @@ function handleResponseUpdateCall(data: any) {
   if (data.token) localStorage.setItem('token', data.token)
   if (data.account) useAccount().value = data.account
   if (data.pos) usePosition().value = data.pos
+  if (data.props) useProps().value = data.props
 }
 
 async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {

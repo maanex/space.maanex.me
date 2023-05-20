@@ -64,6 +64,10 @@ onMounted(() => {
   useEngine().init()
 })
 
+onBeforeUnmount(() => {
+  useSocket().disconnect()
+})
+
 </script>
 
 <style scoped lang="scss">
