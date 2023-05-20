@@ -1,11 +1,10 @@
 /* eslint-disable spaced-comment */
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
-import { UnifiedUserObject } from '../../lib/oauth-strat'
-import { randomBytes } from 'node:crypto'
-import { Const } from '@maanex/spacelib-common'
+import { EntityType } from '@maanex/spacelib-common'
+import { EntityIds } from '../../lib/entity-ids'
 
 
-export namespace UserModel {
+export namespace EntityModel {
 
   // ===== ARRAY CONSTANTS ===== //
 
@@ -21,12 +20,12 @@ export namespace UserModel {
 
   /** A reduced type to use internally */
   export type DataType = {
-    _id: string
-    uuid: string
-    authn: UnifiedUserObject
+    _id: number
+    creator: string
+    type: EntityType
     posX: number
     posY: number
-    resources: number
+    data: any
   }
 
   /** The user mongoose object, muteable and saveable */
@@ -34,11 +33,12 @@ export namespace UserModel {
 
   /** The sanitized version of the data, gets served out by the api */
   export type SanitizedType = {
-    id: string
-    uuid: string
+    id: number
+    creator: string
+    type: EntityType
     posX: number
     posY: number
-    resources: number
+    data: any
   }
 
 
@@ -46,30 +46,30 @@ export namespace UserModel {
 
   export const Schema = new MongooseSchema({
     _id: {
-      type: String,
-      default: () => Date.now().toString(16) + randomBytes(3).toString('hex').padStart(6, '0')
+      type: Number,
+      default: () => EntityIds.createNew()
     },
-    uuid: {
+    creator: {
       type: String,
       required: true
     },
-    authn: {
-      type: Object,
+    type: {
+      type: Number,
       required: true
     },
     posX: {
       type: Number,
-      default: () => 0 // TODO: find starting pos
+      required: true
     },
     posY: {
       type: Number,
-      default: () => 0 // TODO: find starting pos
+      required: true
     },
-    resources: {
-      type: Number,
-      default: () => Const.startingResources
+    data: {
+      type: {},
+      default: () => null
     },
-  }, { collection: 'users' })
+  }, { collection: 'entities' })
 
 
   // ===== UTILITY FUNCTIONS ===== //
@@ -80,10 +80,11 @@ export namespace UserModel {
   export function sanitize(raw: Type): SanitizedType {
     return {
       id: raw._id,
-      uuid: raw.uuid,
+      creator: raw.creator.slice(-4),
+      type: raw.type,
       posX: raw.posX,
       posY: raw.posY,
-      resources: raw.resources,
+      data: raw.data,
     }
   }
 

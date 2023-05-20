@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
+import { EntityModel } from './models/entity'
 import { UserModel } from './models/user'
 
 
 export namespace Mongo {
 
   export const User = mongoose.model('User', UserModel.Schema)
+  export const Entity = mongoose.model('Entity', EntityModel.Schema)
 
   //
 
