@@ -1,10 +1,9 @@
-import { EntityType, Formulas, Packet } from "@maanex/spacelib-common"
+import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
 import { Session } from "../session"
-import { Mongo } from "../../database/mongo"
-import { EntityModel } from "../../database/models/entity"
+import { EntityManager } from "../../database/entity-manager"
 
 
-export function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
+export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
   const cost = verifyAndGetCost(sender, type, x, y, data)
   if (cost === null)
     return declineInteraction(sender, transaction)
@@ -12,7 +11,7 @@ export function SPAWN(sender: Session.ActiveUser, transaction: number, type: Ent
     return declineInteraction(sender, transaction)
 
   sender.data.resources -= cost
-  const id = putEntity(sender, type, x, y, data)
+  const id = await putEntity(sender, type, x, y, data)
   sender.send(Packet.SC.EACK(transaction, id))
 }
 
@@ -25,6 +24,7 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
   switch (type) {
     case EntityType.MESSAGE:
       if (typeof data !== 'string') return null
+      if (Math.abs(x) >= Const.maxDistance || Math.abs(y) >= Const.maxDistance) return null
       return Formulas.simpleWriteCost(data.length)
     default:
       return null
@@ -32,15 +32,13 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
 }
 
 /** @returns the created entity id */
-function putEntity(sender: Session.ActiveUser, type: EntityType, x: number, y: number, data: any): number {
+async function putEntity(sender: Session.ActiveUser, type: EntityType, x: number, y: number, data: any): Promise<number> {
   console.log(`${sender.data.id} placed a ${type} at ${x} ${y} with data ${data}`)
-  const ent: EntityModel.Type = new Mongo.Entity({
+  const ent = await EntityManager.createEntity({
     creator: sender.data.id,
     type,
-    posX: x,
-    posY: y,
+    pos: [ x, y ],
     data
-  }) as any
-  ent.save()
+  })
   return ent._id
 }

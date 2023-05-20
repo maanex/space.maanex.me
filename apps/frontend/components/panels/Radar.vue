@@ -93,10 +93,13 @@ function update() {
   hLines.value = newH
 
   const newEntities = []
+  const padding = Math.max(bounds.width, bounds.height) * 0.01
   for (const e of worldEntities.value.values()) {
     const x = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
-    const y = bounds.height / 2 + (e.y + position.value.y) * pixelsPerTile
-    newEntities.push({ ...e, x, y })
+    const y = bounds.height / 2 + (-e.y + position.value.y) * pixelsPerTile
+
+    if (x >= -padding && y >= -padding && x <= bounds.width + padding && y <= bounds.height + padding)
+      newEntities.push({ ...e, x, y })
   }
   entities.value = newEntities
 

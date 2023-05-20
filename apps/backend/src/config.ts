@@ -12,6 +12,7 @@ export type configjs = {
   }
   caches: {
     usersTtl: number
+    entitiesTtl: number
   }
   auth: {
     requireEmail: boolean

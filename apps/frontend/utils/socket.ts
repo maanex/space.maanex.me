@@ -3,12 +3,14 @@ import * as SocketIO from 'socket.io-client'
 import { POS } from '~/app/packets/pos'
 import { PROPS } from '~/app/packets/props'
 import { EACK } from '~/app/packets/eack'
+import { UPDATE } from '~/app/packets/update'
 
 
 const packetHandlers: Record<string, (...args: any) => void> = {
   EACK,
   POS,
   PROPS,
+  UPDATE,
 }
 
 let client: SocketIO.Socket | undefined

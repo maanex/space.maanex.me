@@ -44,7 +44,8 @@ function write() {
 
   if (text.value.length) {
     const ex = ~~(pos.value.x + x.value * 64)
-    const ey = ~~(-pos.value.y + y.value * 64)
+    const ey = ~~(pos.value.y - y.value * 64)
+
     const [ tempid, actual ] = sock.sendEntityPacket(EntityType.MESSAGE, ex, ey, text.value)
     const entity: Entity = {
       id: tempid,

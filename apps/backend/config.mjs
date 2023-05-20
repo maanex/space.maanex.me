@@ -14,7 +14,8 @@ export default {
     mongoUrl: 'mongodb://maanexspace:maanexspace@devenv_mongodb:27017/maanexspace'
   },
   caches: {
-    usersTtl: 1000 * 60
+    usersTtl: 1000 * 60,
+    entitiesTtl: 1000 * 60
   },
   auth: {
     requireEmail: false,

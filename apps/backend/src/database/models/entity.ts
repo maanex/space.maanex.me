@@ -1,7 +1,7 @@
 /* eslint-disable spaced-comment */
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
 import { EntityType } from '@maanex/spacelib-common'
-import { EntityIds } from '../../lib/entity-ids'
+import { EntityManager } from '../entity-manager'
 
 
 export namespace EntityModel {
@@ -23,8 +23,7 @@ export namespace EntityModel {
     _id: number
     creator: string
     type: EntityType
-    posX: number
-    posY: number
+    pos: [ number, number ]
     data: any
   }
 
@@ -47,7 +46,7 @@ export namespace EntityModel {
   export const Schema = new MongooseSchema({
     _id: {
       type: Number,
-      default: () => EntityIds.createNew()
+      default: () => EntityManager.createNewId()
     },
     creator: {
       type: String,
@@ -57,12 +56,8 @@ export namespace EntityModel {
       type: Number,
       required: true
     },
-    posX: {
-      type: Number,
-      required: true
-    },
-    posY: {
-      type: Number,
+    pos: {
+      type: [ Number, Number ],
       required: true
     },
     data: {
@@ -82,8 +77,8 @@ export namespace EntityModel {
       id: raw._id,
       creator: raw.creator.slice(-4),
       type: raw.type,
-      posX: raw.posX,
-      posY: raw.posY,
+      posX: raw.pos[0],
+      posY: raw.pos[1],
       data: raw.data,
     }
   }
