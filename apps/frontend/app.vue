@@ -31,6 +31,11 @@
 const route = useRoute()
 const router = useRouter()
 const api = useApi()
+const audioManager = useAudioManager()
+
+const { pressed } = useMousePressed()
+let firstClickDone = false
+watch(pressed, () => (pressed && !firstClickDone) ? onFirstClick() : void 0)
 
 /** null = pending, true = authorized, false = unauthorized */
 const authorized = useState<null | boolean>(() => null)
@@ -51,8 +56,13 @@ async function testAuth() {
 }
 
 function onAuthCompleted(success: boolean) {
-  if (success)
-    useSocket().connect()
+  if (!success) return
+  useSocket().connect()
+}
+
+function onFirstClick() {
+  firstClickDone = true
+  audioManager.init()
 }
 
 onMounted(() => {
@@ -66,6 +76,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   useSocket().disconnect()
+  audioManager.destruct()
 })
 
 </script>

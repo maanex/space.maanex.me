@@ -1,9 +1,9 @@
 import { EntityType, Packet } from '@maanex/spacelib-common'
 import * as SocketIO from 'socket.io-client'
-import { POS } from '~/app/packets/pos'
-import { PROPS } from '~/app/packets/props'
-import { EACK } from '~/app/packets/eack'
-import { UPDATE } from '~/app/packets/update'
+import { POS } from '~/lib/packets/pos'
+import { PROPS } from '~/lib/packets/props'
+import { EACK } from '~/lib/packets/eack'
+import { UPDATE } from '~/lib/packets/update'
 
 
 const packetHandlers: Record<string, (...args: any) => void> = {

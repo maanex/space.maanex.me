@@ -3,6 +3,7 @@
 export const Const = {
 
   baseSpeed: 8,
+  baseFriction: 0.96,
 
   startingResources: 200,
 
