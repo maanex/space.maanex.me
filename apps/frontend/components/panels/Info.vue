@@ -2,8 +2,6 @@
   <div class="container">
     <!-- <h2>Lexicon</h2> -->
     <h2>Journal</h2>
-    <p>{{ usePosition().value.x }}</p>
-    <p>{{ usePosition().value.y }}</p>
     <div
       v-for="doc,i of visibleDocs"
       :key="i"
