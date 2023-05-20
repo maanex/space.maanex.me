@@ -127,9 +127,6 @@ watch(worldEntities.value, update)
   }
 }
 
-.ambiance {
-}
-
 .grid {
   background-color: var(--ambiance);
 

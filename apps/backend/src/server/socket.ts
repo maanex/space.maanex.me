@@ -41,9 +41,12 @@ export default class SocketServer {
     if (!userPayload)
       return SocketServer.closeConnection(socket, 'invalid_auth')
 
-    const user = await UserManager.getUser(userPayload.id)
+    const user = Session.activeUsers.get(userPayload.id)?.data
+      ?? await UserManager.getUser(userPayload.id)
     if (!user)
       return SocketServer.closeConnection(socket, 'socket_hiccup')
+
+    SocketServer.closeConnection(Session.activeUsers.get(user.id)?.socket, 'new_connection')
 
     const activeUser: Session.ActiveUser = {
       data: user,
@@ -74,6 +77,7 @@ export default class SocketServer {
   }
 
   public static closeConnection(socket: Socket, ...args: Parameters<typeof Packet.SC.DISCONNECT>) {
+    if (!socket?.connected) return
     SocketServer.sendPacket(socket, Packet.SC.DISCONNECT(...args))
     socket.disconnect()
     socket.removeAllListeners()

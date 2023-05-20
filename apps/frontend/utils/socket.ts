@@ -1,4 +1,4 @@
-import { Packet } from '@maanex/spacelib-common'
+import { EntityType, Packet } from '@maanex/spacelib-common'
 import * as SocketIO from 'socket.io-client'
 import { POS } from '~/app/packets/pos'
 
@@ -36,8 +36,9 @@ function connect() {
   client.on('disconnect', onDisconnect)
   client.on('connect_error', () => client ? (client.io.opts.transports = [ 'polling', 'websocket' ]) : {})
 
+  const sockObj = useSocket()
   for (const key in packetHandlers)
-    client.on(key, packetHandlers[key])
+    client.on(key, (...args) => packetHandlers[key](sockObj, ...args))
 
   return new Promise((res) => (connectionPromise = res))
 }
@@ -105,20 +106,38 @@ const packetRedudancyTracker = {
   posValRot: 0,
 }
 
+let transVal = ~~(Math.random() * 99999)
+const eackCallbacks: Map<number, (newId: number) => any> = new Map()
+
 export const useSocket = () => ({
-    connect,
-    disconnect,
-    get connected(): boolean {
-      return !!client?.connected
-    },
-    send,
-    debugDisconnect,
-    sendMovePacket(x: number, y: number, rot: number) {
-      if (x === packetRedudancyTracker.posValX && y === packetRedudancyTracker.posValY && rot === packetRedudancyTracker.posValRot)
-        return
-      packetRedudancyTracker.posValX = x
-      packetRedudancyTracker.posValY = y
-      packetRedudancyTracker.posValRot = rot
-      send(Packet.CS.POS(x, y, rot))
+  connect,
+  disconnect,
+  get connected(): boolean {
+    return !!client?.connected
+  },
+  send,
+  debugDisconnect,
+  get _int() {
+    return {
+      packetRedudancyTracker,
+      get transVal() { return transVal },
+      set transVal(val: number) { transVal = val },
+      eackCallbacks
     }
+  },
+  sendMovePacket(x: number, y: number, rot: number) {
+    if (x === packetRedudancyTracker.posValX && y === packetRedudancyTracker.posValY && rot === packetRedudancyTracker.posValRot)
+      return
+    packetRedudancyTracker.posValX = x
+    packetRedudancyTracker.posValY = y
+    packetRedudancyTracker.posValRot = rot
+    send(Packet.CS.POS(x, y, rot))
+  },
+  /** @returns [ a temporary id, the actual id once resolved or null if failed ] */
+  sendEntityPacket(type: EntityType, x: number, y: number, data: any): [ number, Promise<number> ] {
+    const transaction = transVal++
+    const promise = new Promise<number>((res) => eackCallbacks.set(transaction, res))
+    send(Packet.CS.SPAWN(type, transaction, x, y, data))
+    return [ transaction, promise ]
+  }
 })

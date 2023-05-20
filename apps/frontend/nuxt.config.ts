@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Tude',
+      title: '::',
       htmlAttrs: {
         lang: 'en'
       },
@@ -39,7 +39,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
-        { rel: 'icon', type: 'image/png', href: '/favicon.png' }
+        { rel: 'icon', type: 'image/svg', href: '/favicon.svg' }
       ]
     }
   }

@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { Formulas } from '@maanex/spacelib-common'
+import { EntityType, Formulas } from '@maanex/spacelib-common'
+import { Entity } from '~/composables/world';
 
 const x = useState(`diamondpicker-writesimple-pos-x`, () => 0)
 const y = useState(`diamondpicker-writesimple-pos-y`, () => 0)
@@ -24,19 +25,29 @@ const text = useState(`diamondpicker-writesimple-text`, () => '')
 const entities = useWorldEntities()
 const pos = usePosition()
 const crosshairs = useCrosshairs()
+const sock = useSocket()
 
 const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
 
 function write() {
   if (text.value.length) {
-    entities.value.push({
-      id: ~~(Math.random() * 100000),
-      x: ~~(pos.value.x + x.value * 64),
-      y: ~~(-pos.value.y + y.value * 64),
+    const ex = ~~(pos.value.x + x.value * 64)
+    const ey = ~~(-pos.value.y + y.value * 64)
+    const [ tempid, actual ] = sock.sendEntityPacket(EntityType.MESSAGE, ex, ey, text.value)
+    const entity: Entity = {
+      id: tempid,
+      x: ex,
+      y: ey,
       type: 2,
       data: text.value
-    })
+    }
+    entities.value.set(tempid, entity)
     text.value = ''
+
+    actual.then((val) => {
+      entities.value.delete(tempid)
+      if (val) entities.value.set(val, entity)
+    })
   }
 
   x.value = 0

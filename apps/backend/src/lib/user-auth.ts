@@ -1,3 +1,4 @@
+import { Const } from '@maanex/spacelib-common'
 import { config } from '..'
 import { UserModel } from '../database/models/user'
 import { Mongo } from "../database/mongo"
@@ -44,10 +45,8 @@ export namespace UserAuth {
 
     const create = new Mongo.User({
       uuid: user.uuid,
-      authn,
-      posX: 0, // TODO find starting position
-      posY: 0, // TODO find starting position
-    } satisfies Omit<UserModel.DataType, '_id'>)
+      authn
+    })
     const obj = await create.save()
     return [ await JWT.signAuth({ id: obj._id }), create, true ]
   }

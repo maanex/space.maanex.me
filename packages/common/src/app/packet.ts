@@ -27,6 +27,13 @@ export namespace Packet {
       return [ 'POS', x, y, rot ]
     }
 
+    /** ACKNOWLEDGES AN ENTITy SPAWN PACKET
+     * newId can be NULL if the server declines the interaction
+     */
+    export function EACK(trans: number, newId: number): Data {
+      return [ 'EACK', trans, newId ]
+    }
+
     /** CREATES OR UPDATES AN ENTITY */
     export function UPDATE(id: number, type: number, x: number, y: number, data: any): Data {
       return [ 'UPDATE', id, type, x, y, data ]
@@ -52,8 +59,8 @@ export namespace Packet {
     }
 
     /** SPAWNS AN ENTITY */
-    export function SPAWN(type: number, x: number, y: number, data: any): Data {
-      return [ 'SPAWN', type, x, y, data ]
+    export function SPAWN(type: number, trans: number, x: number, y: number, data: any): Data {
+      return [ 'SPAWN', trans, type, x, y, data ]
     }
 
   }

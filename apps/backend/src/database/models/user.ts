@@ -2,6 +2,7 @@
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
 import { UnifiedUserObject } from '../../lib/oauth-strat'
 import { randomBytes } from 'node:crypto'
+import { Const } from '@maanex/spacelib-common'
 
 
 export namespace UserModel {
@@ -25,6 +26,7 @@ export namespace UserModel {
     authn: UnifiedUserObject
     posX: number
     posY: number
+    resources: number
   }
 
   /** The user mongoose object, muteable and saveable */
@@ -36,6 +38,7 @@ export namespace UserModel {
     uuid: string
     posX: number
     posY: number
+    resources: number
   }
 
 
@@ -56,11 +59,15 @@ export namespace UserModel {
     },
     posX: {
       type: Number,
-      required: true
+      default: () => 0 // TODO: find starting pos
     },
     posY: {
       type: Number,
-      required: true
+      default: () => 0 // TODO: find starting pos
+    },
+    resources: {
+      type: Number,
+      default: () => Const.startingResources
     },
   }, { collection: 'users' })
 
@@ -75,7 +82,8 @@ export namespace UserModel {
       id: raw._id,
       uuid: raw.uuid,
       posX: raw.posX,
-      posY: raw.posY
+      posY: raw.posY,
+      resources: raw.resources,
     }
   }
 
