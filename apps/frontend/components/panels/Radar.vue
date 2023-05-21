@@ -221,6 +221,7 @@ watch(worldEntities.value, update)
         border-radius: .3vw;
         z-index: 20;
         position: relative;
+        animation: ent2in .7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
       }
       &:hover .data {
         display: grid;
@@ -243,5 +244,11 @@ watch(worldEntities.value, update)
       }
     }
   }
+}
+
+@keyframes ent2in {
+  0% { transform: rotate(0deg); height: 0; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 0.4; }
+  50% { transform: rotate(0deg); height: 1vw; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 1; }
+  100% { transform: rotate(45deg); height: 1vw; border-width: .2vw; background-color: #169b64; border-radius: .3vw; opacity: 1; }
 }
 </style>
