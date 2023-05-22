@@ -8,6 +8,8 @@ import { UserManager } from '../database/user-manager'
 import { UserAuth } from '../lib/user-auth'
 import { POS } from '../app/packets/pos'
 import { SPAWN } from '../app/packets/spawn'
+import { EntityManager } from '../database/entity-manager'
+import { Realtime } from '../app/realtime'
 
 
 export default class SocketServer {
@@ -54,6 +56,8 @@ export default class SocketServer {
     const activeUser: Session.ActiveUser = {
       data: user,
       socket,
+      sessionId: EntityManager.createNewId(),
+      liveUsers: [],
       send: (packet) => SocketServer.sendPacket(socket, packet)
     }
     Session.activeUsers.set(user.id, activeUser)
@@ -63,14 +67,22 @@ export default class SocketServer {
       socket.on(key, (...data) => SocketServer.packetHandlers[key](activeUser, ...data))
 
     // Lifecycle
-    socket.on('disconnect', () => SocketServer.onDisconnect(user, socket))
-    SocketServer.onConnect(user, socket)
+    socket.on('disconnect', () => SocketServer.onDisconnect(activeUser, socket))
+    SocketServer.onConnect(activeUser, socket)
   }
 
-  private static async onConnect(user: UserModel.Type, socket: Socket) {
+  private static async onConnect(user: Session.ActiveUser, socket: Socket) {
+    Session.activeUsers.forEach(u => {
+      Realtime.introIdlePlacer(user, u)
+    })
   }
 
-  private static async onDisconnect(user: UserModel.Type, socket: Socket) {
+  private static async onDisconnect(user: Session.ActiveUser, socket: Socket) {
+    Session.activeUsers.forEach(u => {
+      if (!u.liveUsers.includes(user.sessionId)) return
+      u.send(Packet.SC.REMOVE(user.sessionId))
+      u.liveUsers.splice(u.liveUsers.indexOf(user.sessionId))
+    })
   }
 
   // 

@@ -210,6 +210,18 @@ watch(worldEntities.value, update)
     .inner { display: block; }
     .data { display: none; }
 
+    &[data-type="1"] {
+      // user
+      .inner {
+        width: 6vw;
+        height: 6vw;
+        background-color: yellow;
+        border-radius: 100vw;
+        z-index: 20;
+        position: relative;
+      }
+    }
+
     &[data-type="2"] {
       // message
       .inner {

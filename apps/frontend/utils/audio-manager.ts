@@ -44,7 +44,12 @@ export const useAudioManager = () => {
     if (timer.value)
       clearInterval(timer.value)
 
-    timer.value = setInterval(tick, 50)
+    let numb = 0
+    timer.value = setInterval(() => {
+      if (++numb > 100)
+        numb = 0
+      tick(numb)
+    }, 50)
   }
 
   function destruct() {
@@ -61,28 +66,27 @@ export const useAudioManager = () => {
     }
   }
   
-  function tick() {
+  function tick(id: number) {
     const acclHandle = useAcclHandle().value
     const veloVal = useAcceleration().value
+    const zoom = useZoomHandle().value
     const velo = Math.sqrt(veloVal.x ** 2 + veloVal.y ** 2)
     const maxVelo = Const.baseSpeed / (1 - Const.baseFriction)
     const veloPercent = velo / maxVelo
     const extraAccl = (acclHandle > veloPercent) ? (acclHandle - veloPercent) : 0
-
+    
     const maxVol = globalVolume.value
     if (!sounds.whiteNoise || !sounds.engineWum1 || !sounds.engineWum2 || !sounds.engineFarts) return
 
-    // sounds.whiteNoise.setGain(0.03 * maxVol, 0)
+    sounds.whiteNoise.setGain(0.02 * maxVol * (veloPercent * .8 + .2) * zoom * (Math.sin(id/25*Math.PI) + 4)/6, 0)
 
-    // TODO: maybe add zoom as well? closer = more engine sounds, further = more ambiance
-
-    sounds.engineWum1.setGain(veloPercent * maxVol * 0.7, 50)
+    sounds.engineWum1.setGain(veloPercent * maxVol * 0.7 * (1 - zoom), 50)
     sounds.engineWum1.setDetune(-2500 + veloPercent * 700, 50)
-    sounds.engineWum2.setGain(veloPercent * maxVol, 50)
+    sounds.engineWum2.setGain(veloPercent * maxVol * (1 - zoom), 50)
     sounds.engineWum2.setFrequency(70 + ~~(Math.random() * 20), 50)
 
-    // sounds.engineFarts.setGain(Math.min(extraAccl * 20, 0.6) * maxVol, 0)
-    // sounds.engineFarts.setFrequency(~~(extraAccl**2 * 520 * (Math.random() * .4 + .6)) + 1, 50)
+    sounds.engineFarts.setGain((Math.min(extraAccl * 20, 0.5) * maxVol + 0.2) * (1 - zoom), 0)
+    sounds.engineFarts.setFrequency(~~(extraAccl**2 * 150 * (Math.random() * .4 + .6)) + 1 + (Math.random() * 10), 50)
 
     // sounds.test!.setGain(maxVol, 0)
     // sounds.test!.setDetune(1200, 0)

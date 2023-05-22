@@ -3,6 +3,7 @@ import * as SocketIO from 'socket.io-client'
 import { POS } from '~/lib/packets/pos'
 import { PROPS } from '~/lib/packets/props'
 import { EACK } from '~/lib/packets/eack'
+import { REMOVE } from '~/lib/packets/remove'
 import { UPDATE } from '~/lib/packets/update'
 
 
@@ -10,6 +11,7 @@ const packetHandlers: Record<string, (...args: any) => void> = {
   EACK,
   POS,
   PROPS,
+  REMOVE,
   UPDATE,
 }
 

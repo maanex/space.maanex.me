@@ -3,6 +3,7 @@ import { Socket } from "socket.io"
 import { UserModel } from "../database/models/user"
 import { EntityManager } from "../database/entity-manager"
 import { GeoUtils } from "../lib/geo-utils"
+import { Realtime } from "./realtime"
 
 
 export namespace Session {
@@ -10,6 +11,8 @@ export namespace Session {
   export type ActiveUser = {
     data: UserModel.Type
     socket: Socket
+    sessionId: number
+    liveUsers: number[]
     send(packet: Packet.Data): any
   }
 
@@ -63,6 +66,8 @@ export namespace Session {
     const ents = await EntityManager.getEntitiesNear(user.data.posX, user.data.posY, 600)
     for (const e of ents)
       user.send(Packet.SC.UPDATE(e._id, e.type, e.pos[0], e.pos[1], e.data))
+
+    activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
   }
 
   /** timer id will go up to 100 before dropping back to 0 (5 second interval) */

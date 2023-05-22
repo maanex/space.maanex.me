@@ -32,18 +32,30 @@ export const useEngine = () => {
     position.value.y = position.value.y + newAcclY
   
     // socket.send(Packet.CS.POS(position.value.x, position.value.y, handleDirection.value))
-    if (id % 5 === 0)
+    // if (id % 5 === 0)
       socket.sendMovePacket(~~position.value.x, ~~position.value.y, ~~handleDirection.value)
   }
 
+  function tickEntityDecay() {
+    const ents = useWorldEntities()
+    const pos = usePosition()
+    const maxDist = 2 * 16 * 128
+    for (const ent of ents.value.values()) {
+      if (Math.abs(ent.x - pos.value.x) > maxDist || Math.abs(ent.y - pos.value.y) > maxDist)
+        ents.value.delete(ent.id)
+    }
+  }
+
   let tickId = 0
-  
   async function tick() {
     if (++tickId >= 60)
       tickId = 0
 
     if (handleAccl.value || accl.value.x || accl.value.y)
       tickMovement(tickId)
+
+    if (tickId === 0)
+      tickEntityDecay()
   
     //
   
