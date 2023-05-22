@@ -184,7 +184,7 @@ watch(handleZoom, updateZoom)
   animation: bg-jitter 1s steps(1) forwards infinite;
   height: 100%;
   box-sizing: border-box;
-  padding: calc($gap * 2);
+  padding: calc($gap * 2 * var(--vws));
   display: flex;
   flex-direction: column;
   position: relative;
@@ -207,19 +207,19 @@ watch(handleZoom, updateZoom)
 
   .zoom {
     position: absolute;
-    right: calc($gap * 2 + .5vw);
-    bottom: calc($gap * 2 + .5vw);
+    right: calc(($gap * 2 + .5vw) * var(--vws));
+    bottom: calc(($gap * 2 + .5vw) * var(--vws));
     width: 80%;
-    height: .35vw;
+    height: calc(.35vw * var(--vws));
     background-color: mix($color-beige, #000000, 30%);
     border-radius: 100vw;
   }
 
   .handle {
     position: absolute;
-    width: 1vw;
-    height: 1vw;
-    border: .35vw solid mix($color-beige, #000000, 30%);
+    width: calc(1vw * var(--vws));
+    height: calc(1vw * var(--vws));
+    border: calc(.35vw * var(--vws)) solid mix($color-beige, #000000, 30%);
     background-color: $color-beige;
     // background-color: lightblue;
     border-radius: 100vw;

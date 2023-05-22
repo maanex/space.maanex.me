@@ -35,6 +35,7 @@ const pos = usePosition()
 const props = useProps()
 const crosshairs = useCrosshairs()
 const sock = useSocket()
+const account = useAccount()
 
 const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
 const tooExpensive = computed(() => (cost.value > props.value.resources))
@@ -52,7 +53,7 @@ function write() {
       x: ex,
       y: ey,
       type: 2,
-      data: text.value
+      data: (account.value?.sig ?? '0000') + text.value
     }
     entities.value.set(tempid, entity)
     props.value.resources -= cost.value
@@ -102,24 +103,24 @@ onBeforeUnmount(() => { delete crosshairs.value.writesimple })
 }
 
 .text {
-  height: 15.6vw;
+  height: calc(15.6vw * var(--vws));
   grid-column: 2;
   grid-row: 1 / span 2;
 
   span {
-    font-size: .9vw;
+    font-size: calc(.9vw * var(--vws));
     font-family: $font-major;
     color: mix($color-beige, #000000, 30%);
 
     &[data-tooexp=true]::after {
       content: '!';
-      font-size: .7vw;
+      font-size: calc(.7vw * var(--vws));
       font-family: $font-regular;
       background-color: mix($color-beige, #000000, 30%);
       color: $color-beige;
-      border-radius: 100vw;
-      margin-left: .5vw;
-      padding: 0 .3vw;
+      border-radius: calc(100vw * var(--vws));
+      margin-left: calc(.5vw * var(--vws));
+      padding: 0 calc(.3vw * var(--vws));
       animation: blink 1s steps(1) infinite;
 
       @keyframes blink {
@@ -133,16 +134,16 @@ onBeforeUnmount(() => { delete crosshairs.value.writesimple })
 
 button {
   width: 60%;
-  border: .35vw solid mix($color-beige, #000000, 30%);
-  border-radius: 100vw;
+  border: calc(.35vw * var(--vws)) solid mix($color-beige, #000000, 30%);
+  border-radius: calc(100vw * var(--vws));
   margin-left: 20%;
   height: fit-content;
-  font-size: .9vw;
+  font-size: calc(.9vw * var(--vws));
   font-family: $font-major;
   text-transform: uppercase;
   text-align: center;
   color: mix($color-beige, #000000, 30%);
-  padding: .3vw;
+  padding: calc(.3vw * var(--vws));
   box-sizing: border-box;
   outline: none;
   background-color: #00000011;

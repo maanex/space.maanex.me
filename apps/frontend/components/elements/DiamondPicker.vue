@@ -62,9 +62,9 @@ const handleCss = computed(() => ({ top: `${(handleY.value + 1) * 50}%`, left: `
     width: 70.71%;
     height: 70.71%;
     box-sizing: border-box;
-    border: .35vw solid mix($color-beige, #000000, 30%);
+    border: calc(.35vw * var(--vws)) solid mix($color-beige, #000000, 30%);
     transform: rotate(45deg);
-    border-radius: .2vw;
+    border-radius: calc(.2vw * var(--vws));
   }
 
   .cross {
@@ -76,32 +76,32 @@ const handleCss = computed(() => ({ top: `${(handleY.value + 1) * 50}%`, left: `
     &::before {
       content: '';
       position: absolute;
-      top: .3vw;
-      left: calc(50% - .03vw);
-      width: .1vw;
-      height: calc(100% - .6vw);
+      top: calc(.3vw * var(--vws));
+      left: calc(50% - .03vw * var(--vws));
+      width: calc(.1vw * var(--vws));
+      height: calc(100% - .6vw * var(--vws));
       background-color: mix($color-beige, #000000, 80%);
     }
 
     &::after {
       content: '';
       position: absolute;
-      left: .3vw;
-      top: calc(50% - .03vw);
-      height: .1vw;
-      width: calc(100% - .6vw);
+      left: calc(.3vw * var(--vws));
+      top: calc(50% - .03vw * var(--vws));
+      height: calc(.1vw * var(--vws));
+      width: calc(100% - .6vw * var(--vws));
       background-color: mix($color-beige, #000000, 80%);
     }
   }
 
   .handle {
     position: absolute;
-    width: 1vw;
-    height: 1vw;
-    border: .35vw solid mix($color-beige, #000000, 30%);
+    width: calc(1vw * var(--vws));
+    height: calc(1vw * var(--vws));
+    border: calc(.35vw * var(--vws)) solid mix($color-beige, #000000, 30%);
     background-color: $color-beige;
     // background-color: lightblue;
-    border-radius: 100vw;
+    border-radius: calc(100vw * var(--vws));
     transform: translate(-50%, -50%);
 
     &[data-nograb=true] {

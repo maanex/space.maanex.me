@@ -19,20 +19,18 @@
 </template>
 
 <script setup lang="ts">
+import { Const } from '@maanex/spacelib-common'
+
 const position = usePosition()
 const props = useProps()
 const map = ref(null)
 const markerCss = useState<any>(() => {})
-const mapRadius = 1_000_000
-const ring1 =   200_000
-const ring2 =   600_000
-const ring3 = 1_000_000
 
 const sector = computed(() => {
   const distance = Math.sqrt(position.value.x ** 2 + position.value.y ** 2)
-  if (distance <= ring1) return 'SECTOR 1'
-  if (distance <= ring2) return 'SECTOR 2'
-  if (distance <= ring3) return 'SECTOR 3'
+  if (distance <= Const.mapRing1) return 'SECTOR 1'
+  if (distance <= Const.mapRing2) return 'SECTOR 2'
+  if (distance <= Const.mapRing3) return 'SECTOR 3'
   return 'SECTOR 4'
 })
 
@@ -55,12 +53,12 @@ function update() {
 
   const hCenter = bounds.width/2
   const hRadius = bounds.width/100*40
-  const hPos = hCenter + position.value.x/mapRadius*hRadius
+  const hPos = hCenter + position.value.x/Const.mapRadius*hRadius
   const hPosAdjusted = hPos - bounds.width*0.02/2
 
   const vCenter = bounds.height/2
   const vRadius = bounds.height/40*13
-  const vPos = vCenter + -position.value.y/mapRadius*vRadius
+  const vPos = vCenter + -position.value.y/Const.mapRadius*vRadius
   const vPosAdjusted = vPos - bounds.width*0.02/2
 
   markerCss.value = {
@@ -81,7 +79,7 @@ useResizeObserver(map, update)
   animation: bg-jitter 1s steps(1) forwards infinite;
   height: 100%;
   box-sizing: border-box;
-  padding: $gap;
+  padding: calc($gap * var(--vws));
   display: flex;
   flex-direction: column;
   position: relative;
@@ -104,10 +102,14 @@ useResizeObserver(map, update)
 
   .textcontainer {
     display: flex;
-    gap: calc($gap * 3);
+    gap: calc($gap * 3 * var(--vws));
     flex-grow: 1;
     justify-content: center;
     opacity: .7;
+
+    p {
+      font-size: calc(1.2vw * var(--vws));
+    }
 
     .left {
       text-align: right;
@@ -117,10 +119,10 @@ useResizeObserver(map, update)
       &::after {
         content: '';
         width: 100%;
-        height: 0.5vw;
+        height: calc(0.5vw * var(--vws));
         background-color: black;
         position: absolute;
-        bottom: calc(-1 * $gap);
+        bottom: calc(-1 * $gap * var(--vws));
       }
     }
 
@@ -128,7 +130,7 @@ useResizeObserver(map, update)
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding-bottom: $gap;
+      padding-bottom: calc($gap * var(--vws));
     }
   }
 }

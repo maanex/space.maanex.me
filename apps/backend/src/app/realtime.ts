@@ -31,7 +31,8 @@ export namespace Realtime {
   }
 
   function sendUpdate(to: Session.ActiveUser, about: Session.ActiveUser) {
-    to.send(Packet.SC.UPDATE(about.sessionId, EntityType.PERSON, about.data.posX, about.data.posY, null))
+    const data = [ `r${~~about.liveData.rot}` ]
+    to.send(Packet.SC.UPDATE(about.sessionId, EntityType.PERSON, about.data.posX, about.data.posY, data.join(' ')))
 
     if (!to.liveUsers.includes(about.sessionId))
       to.liveUsers.push(about.sessionId)

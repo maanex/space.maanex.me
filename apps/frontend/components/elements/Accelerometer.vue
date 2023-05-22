@@ -16,26 +16,26 @@ const dir = computed(() => {
   return Math.floor((180 - radDeg) * 10) / 10
 })
 const css = computed(() => ({
-  transform: `translate(-1vw, -1vw) rotate(${dir.value}deg)`
+  transform: `translate(calc(-1vw * var(--vws)), calc(-1vw * var(--vws))) rotate(${dir.value}deg)`
 }))
 </script>
 
 <style scoped lang="scss">
 svg {
-  width: 2vw;
-  height: 4vw;
+  width: calc(2vw * var(--vws));
+  height: calc(4vw * var(--vws));
   opacity: .7;
   fill-rule: evenodd;
   clip-rule: evenodd;
   stroke-linejoin: round;
   stroke-miterlimit: 2;
-  transform: translate(-1vw, -1vw);
-  transform-origin: 1vw 1vw;
+  transform: translate(calc(-1vw * var(--vws)), calc(-1vw * var(--vws)));
+  transform-origin: calc(1vw * var(--vws)) calc(1vw * var(--vws));
 
   path {
     fill: none;
     stroke: #000000;
-    stroke-width: .06vw;
+    stroke-width: calc(.06vw * var(--vws));
   }
 }
 </style>

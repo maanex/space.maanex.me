@@ -54,7 +54,8 @@ export async function postCode(req: Request, res: Response) {
     $update: {
       token,
       account: {
-        name: authUser.username
+        name: authUser.username,
+        sig: user.id.slice(-4)
       },
       pos: {
         x: user.posX,
@@ -76,7 +77,8 @@ export async function getMe(_req: Request, res: Response) {
     $update: {
       token: await JWT.signAuth({ id: res.locals.user._id }),
       account: {
-        name: res.locals.user.authn.username
+        name: res.locals.user.authn.username,
+        sig: res.locals.user.id.slice(-4)
       },
       pos: {
         x: res.locals.user.posX,

@@ -78,15 +78,15 @@ function dismount() {
   .pages {
     display: flex;
     justify-content: center;
-    padding: .6vw;
-    gap: .6vw;
+    padding: calc(.6vw * var(--vws));
+    gap: calc(.6vw * var(--vws));
 
     button {
       color: #ffffff;
-      border: .2vw solid currentColor;
+      border: calc(.2vw * var(--vws)) solid currentColor;
       background: none;
-      width: 2vw;
-      height: 1vw;
+      width: calc(2vw * var(--vws));
+      height: calc(1vw * var(--vws));
       padding: 0;
       margin: 0;
       display: block;
@@ -97,7 +97,7 @@ function dismount() {
 
       &[data-active=true] {
         background-color: currentColor;
-        box-shadow: inset 0 0 0 .2vw #444444;
+        box-shadow: inset 0 0 0 calc(.2vw * var(--vws)) #444444;
       }
 
       &:hover {

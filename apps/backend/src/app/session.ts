@@ -10,8 +10,15 @@ export namespace Session {
 
   export type ActiveUser = {
     data: UserModel.Type
+    /** data that's only on live environment and does not get saved */
+    liveData: {
+      rot: number
+    }
+    /** user's socket connection */
     socket: Socket
+    /** a all time unique id for this session only */
     sessionId: number
+    /** all other users this user is currently getting real time info about */
     liveUsers: number[]
     send(packet: Packet.Data): any
   }
@@ -65,7 +72,7 @@ export namespace Session {
 
     const ents = await EntityManager.getEntitiesNear(user.data.posX, user.data.posY, 600)
     for (const e of ents)
-      user.send(Packet.SC.UPDATE(e._id, e.type, e.pos[0], e.pos[1], e.data))
+      user.send(Packet.SC.UPDATE(e._id, e.type, e.pos[0], e.pos[1], e.creator.slice(-4) + String(e.data)))
 
     activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
   }

@@ -3,6 +3,7 @@ import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose
 import { UnifiedUserObject } from '../../lib/oauth-strat'
 import { randomBytes } from 'node:crypto'
 import { Const } from '@maanex/spacelib-common'
+import { World } from '../../app/world'
 
 
 export namespace UserModel {
@@ -59,11 +60,11 @@ export namespace UserModel {
     },
     posX: {
       type: Number,
-      default: () => 0 // TODO: find starting pos
+      default: () => World.newInitSpawnPos()[0]
     },
     posY: {
       type: Number,
-      default: () => 0 // TODO: find starting pos
+      default: () => World.newInitSpawnPos()[1]
     },
     resources: {
       type: Number,

@@ -55,6 +55,9 @@ export default class SocketServer {
 
     const activeUser: Session.ActiveUser = {
       data: user,
+      liveData: {
+        rot: 0
+      },
       socket,
       sessionId: EntityManager.createNewId(),
       liveUsers: [],

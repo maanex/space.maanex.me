@@ -1,3 +1,42 @@
+[ ] mineable resources
+  * spawn resources
+  * ui to mine resources
+
+[ ] radar
+  * scanning animation
+  * updated "fetch"/"request" approach to receiving entities
+
+[ ] line entities
+  * render line entities
+  * ui to place line entities
+  * unlock first? unlock colors?
+
+[ ] make it more expensive to write in places where there's already a lot going on
+  * find formula that works
+  * communicate this through the ui
+
+[ ] radiation
+  * calc radiation score
+  * display position offset
+  * add more noise to radar view
+  * add sound
+
+[X] update messages to have support for bigger ones + show author
+[X] render other users properly
+[X] sidebar resizeable
+[X] update world spawn
+[ ] add points of interest (merchant?)
+
+
+
+
+
+
+
+
+
+
+
 /home/coder/repos/space.maanex.me/node_modules/mongoose/lib/model.js:503
     parallelSave = new ParallelSaveError(this);
                    ^

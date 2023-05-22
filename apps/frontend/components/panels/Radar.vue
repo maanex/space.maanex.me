@@ -19,15 +19,13 @@
       />
     </div>
     <div class="entities">
-      <div
+      <component
         v-for="e of entities"
+        :is="renderEntities[e.type]"
         :key="e.id"
         :style="{ top: `${~~e.y}px`, left: `${~~e.x}px` }"
-        :data-type="e.type"
-      >
-        <div class="inner" />
-        <div class="data" v-text="e.data" />
-      </div>
+        :data="e.data"
+      />
     </div>
     <div class="ship">
       <div class="s" :style="{ '--rot': `${directionHandle}deg` }" />
@@ -45,7 +43,16 @@
 </template>
 
 <script setup lang="ts">
+import { EntityType } from '@maanex/spacelib-common'
 import { Entity } from '../../composables/world'
+import EntititesPerson from '~/components/entitites/Person.vue'
+import EntititesMessage from '~/components/entitites/Message.vue'
+
+const renderEntities: Record<EntityType, any> = {
+  [ EntityType.UNKNOWN ]: undefined,
+  [ EntityType.PERSON ]: EntititesPerson,
+  [ EntityType.MESSAGE ]: EntititesMessage,
+}
 
 /** after how many tiles there is a grid cell drawn */
 const GRID_SIZE = 128
@@ -200,67 +207,10 @@ watch(worldEntities.value, update)
   }
 }
 
-.entities {
-  & > div {
-    position: absolute;
-    transform: translate(-50%, -50%) scale(var(--scale));
+.entities  > div {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(var(--scale));
 
-    &:hover { z-index: 30; }
-
-    .inner { display: block; }
-    .data { display: none; }
-
-    &[data-type="1"] {
-      // user
-      .inner {
-        width: 6vw;
-        height: 6vw;
-        background-color: yellow;
-        border-radius: 100vw;
-        z-index: 20;
-        position: relative;
-      }
-    }
-
-    &[data-type="2"] {
-      // message
-      .inner {
-        width: 1vw;
-        height: 1vw;
-        background-color: #169b64;
-        border: .2vw solid #ffffff;
-        transform: rotate(45deg);
-        border-radius: .3vw;
-        z-index: 20;
-        position: relative;
-        animation: ent2in .7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      }
-      &:hover .data {
-        display: grid;
-        place-items: center;
-        position: absolute;
-        top: -1vw;
-        left: -1vw;
-        height: calc(100% + 2vw);
-        padding-left: calc(100% + 2vw);
-        padding-right: 1vw;
-        background-color: #00000044;
-        border-radius: 0.5vw;
-        color: #ffffff;
-        width: max-content;
-        max-width: 30vw;
-        font-family: $font-regular;
-        font-size: 1vw;
-        line-height: 1.2vw;
-        backdrop-filter: blur(0.7vw);
-      }
-    }
-  }
-}
-
-@keyframes ent2in {
-  0% { transform: rotate(0deg); height: 0; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 0.4; }
-  50% { transform: rotate(0deg); height: 1vw; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 1; }
-  100% { transform: rotate(45deg); height: 1vw; border-width: .2vw; background-color: #169b64; border-radius: .3vw; opacity: 1; }
+  &:hover { z-index: 30; }
 }
 </style>
