@@ -46,6 +46,7 @@ export namespace Packet {
 
     export type UserPropsUpdate = {
       resources: number
+      directionOffset: number
     }
 
     /** UPDATES OWN PROPERTIES */

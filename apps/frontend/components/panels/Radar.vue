@@ -4,7 +4,7 @@
     class="container"
     :style="{ '--zoom': zoomFactor, '--scale': scaleFactor * 2, '--ambiance': ambianceColor }"
   >
-    <div class="grid">
+    <div class="grid" :style="{ opacity: 1 - rad }">
       <div
         v-for="line,i of vLines"
         :key="i"
@@ -39,6 +39,7 @@
         }"
       />
     </div>
+    <div v-if="rad" class="extranoise" :style="{ opacity: .3 * rad }" />
   </div>
 </template>
 
@@ -67,6 +68,7 @@ const scaleFactor = computed(() => 1 / zoomFactor.value)
 const container = ref(null)
 const position = usePosition()
 const worldEntities = useWorldEntities()
+const rad = useRadiation()
 const crosshairs = useCrosshairs()
 
 const vLines = useState<number[]>(() => ([]))
@@ -112,7 +114,9 @@ function update() {
 
   const ambianceHue = (Math.sin(position.value.x / 149210) * Math.cos(position.value.y / 44910)) * 0.5 + 0.5
   const ambianceSat = (Math.sin(position.value.x / 4100 + position.value.y / 24110) * Math.cos(position.value.x / 99990)) * 0.3 + 0.6
-  ambianceColor.value = `#${HSLToRGB(ambianceHue*360, ambianceSat, .8).toString(16).padStart(6, '0')}33`
+  const opacity = ~~(51 + 51 * rad.value)
+  const lightness = .8 + rad.value * .2
+  ambianceColor.value = `#${HSLToRGB(ambianceHue*360, ambianceSat, lightness).toString(16).padStart(6, '0')}${opacity.toString(16).padStart(2, '0')}`
 }
 
 onMounted(update)
@@ -205,6 +209,12 @@ watch(worldEntities.value, update)
       background-color: #bbbbbb;
     }
   }
+
+}
+
+.extranoise {
+  background-image: url('~/assets/img/noise.png');
+  animation: bg-jitter 1s steps(1) forwards infinite;
 }
 
 .entities  > div {

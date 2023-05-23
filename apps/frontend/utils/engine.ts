@@ -11,6 +11,7 @@ export const useEngine = () => {
   const position = usePosition()
   const accl = useAcceleration()
   const ents = useWorldEntities()
+  const rad = useRadiation()
 
   let lastDirHandleVal = 0
 
@@ -54,13 +55,18 @@ export const useEngine = () => {
     }
   }
 
+  function clearRadiation() {
+    if (rad.value)
+      rad.value = 0
+  }
+
   function tickRadiation() {
-    if (Math.abs(position.value.x) > Const.mapRing1 * 1.1) return
-    if (Math.abs(position.value.y) > Const.mapRing1 * 1.1) return
+    if (Math.abs(position.value.x) > Const.mapRing1 * 1.1) return clearRadiation()
+    if (Math.abs(position.value.y) > Const.mapRing1 * 1.1) return clearRadiation()
     const distToCenter = Math.sqrt(position.value.x**2 + position.value.y**2)
-    if (distToCenter > Const.mapRing1 * 1.1) return
+    if (distToCenter > Const.mapRing1 * 1.1) return clearRadiation()
     const baseRadiation = Formulas.radiationLevel(distToCenter)
-    console.log(baseRadiation)
+    rad.value = baseRadiation * (Math.random() * .3 + .8)
   }
 
   let tickId = 0

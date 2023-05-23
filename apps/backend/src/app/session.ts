@@ -1,4 +1,4 @@
-import { Packet } from "@maanex/spacelib-common"
+import { Const, Formulas, Packet } from "@maanex/spacelib-common"
 import { Socket } from "socket.io"
 import { UserModel } from "../database/models/user"
 import { EntityManager } from "../database/entity-manager"
@@ -77,6 +77,28 @@ export namespace Session {
     activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
   }
 
+  function tickCenterTeleport(user: ActiveUser) {
+    if (user.data.posX > Const.mapRing1) return
+    if (user.data.posX < -Const.mapRing1) return
+    if (user.data.posY > Const.mapRing1) return
+    if (user.data.posY < -Const.mapRing1) return
+
+    const rad = Formulas.radiationLevel(GeoUtils.distance(user.data.posX, user.data.posY, 0, 0))
+    console.log('yep', rad)
+    if (rad < 0.7) return
+
+    const angle = Math.atan2(user.data.posY, user.data. posX)
+    const mutate = ~~(Math.random() * 120 + 30) * (Math.random() < .5 ? 1 : -1)
+    const outangle = angle + mutate / 180 * Math.PI
+    const newX = Math.cos(outangle) * Const.mapRing1/2
+    const newY = Math.sin(outangle) * Const.mapRing1/2
+    
+    user.send(Packet.SC.PROPS({ directionOffset: mutate }))
+    user.send(Packet.SC.POS(newX, newY, null))
+    user.data.posX = newX
+    user.data.posY = newY
+  }
+
   /** timer id will go up to 100 before dropping back to 0 (5 second interval) */
   function worldTick(id: number) {
     if (id === 0)
@@ -84,6 +106,11 @@ export namespace Session {
 
     for (const user of activeUsers.values())
       tickUserEntityUpdate(user, id)
+
+    if (id === 0) {
+      for (const user of activeUsers.values())
+        tickCenterTeleport(user)
+    }
   }
 
 }

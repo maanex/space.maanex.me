@@ -15,11 +15,25 @@
   * find formula that works
   * communicate this through the ui
 
+[ ] points of interest
+  * show on map
+  * shopping?
+
 [ ] radiation
-  * calc radiation score
-  * display position offset
-  * add more noise to radar view
-  * add sound
+  + calc radiation score
+  + display position offset
+  + add more noise to radar view
+  + add sound
+  * make movement unpredictable
+
+[ ] add more journal hints
+  + basic movement
+  * next: how to read and write messages
+  * when entering ring1: radiation and dangers
+  * when entering ring3: outer world explained
+  * when seeing another person
+  * after some unlocks or time: different ship components
+  * points of interest
 
 [X] update messages to have support for bigger ones + show author
 [X] render other users properly
