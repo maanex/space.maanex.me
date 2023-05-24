@@ -7,12 +7,15 @@
     <hr>
     <button @click="decon">debug decon</button>
     <hr>
+    <p>{{ props }}</p>
+    <hr>
   </div>
 </template>
 
 <script setup lang="ts">
 const docs = useDocuments()
 const pos = usePosition()
+const props = useProps()
 
 function test() {
   docs.value.set('bananas', false)

@@ -46,7 +46,7 @@ export namespace Packet {
 
     export type UserPropsUpdate = {
       resources: number
-      directionOffset: number
+      extraRadiation: number
     }
 
     /** UPDATES OWN PROPERTIES */
@@ -63,9 +63,9 @@ export namespace Packet {
       return [ 'POS', x, y, rot ]
     }
 
-    /** SET SCANNER SPEED */
-    export function SCAN(speed: number): Data {
-      return [ 'SCAN', speed ]
+    /** REQUEST A SCAN OF THE AREA WITH POWER POWER */
+    export function SCAN(power: number): Data {
+      return [ 'SCAN', power ]
     }
 
     /** SPAWNS AN ENTITY */

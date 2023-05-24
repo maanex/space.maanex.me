@@ -147,5 +147,9 @@ export const useSocket = () => ({
     const promise = new Promise<number>((res) => eackCallbacks.set(transaction, res))
     send(Packet.CS.SPAWN(transaction, type, x, y, data))
     return [ transaction, promise ]
+  },
+  /** @returns [ a temporary id, the actual id once resolved or null if failed ] */
+  sendScanPacket(power: number) {
+    useSocket().send(Packet.CS.SCAN(power))
   }
 })

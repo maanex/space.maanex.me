@@ -60,21 +60,17 @@ export namespace Session {
   const userLastEntitySyncPos: Map<string, [ number, number, number ]> = new Map()
 
   async function tickUserEntityUpdate(user: ActiveUser, id: number) {
-    if (id % 20 !== 0) return // TODO make it use the user's scan interval for speed and size
-
-    if (userLastEntitySyncPos.has(user.data.id)) {
-      const [ lx, ly, lr ] = userLastEntitySyncPos.get(user.data.id)
-      // TODO: check if range is larger than prev, if it is continue even if not moved
-      const dist = GeoUtils.distance(lx, ly, user.data.posX, user.data.posY)
-      if (dist < 100) return
-    }
-    userLastEntitySyncPos.set(user.data.id, [ user.data.posX, user.data.posY, 0 /* TODO: user range */ ])
-
-    const ents = await EntityManager.getEntitiesNear(user.data.posX, user.data.posY, 600)
-    for (const e of ents)
-      user.send(Packet.SC.UPDATE(e._id, e.type, e.pos[0], e.pos[1], e.creator.slice(-4) + String(e.data)))
+    if (id % 20 !== 0) return
 
     activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
+
+    // if (userLastEntitySyncPos.has(user.data.id)) {
+    //   const [ lx, ly, lr ] = userLastEntitySyncPos.get(user.data.id)
+    //   // TODO: check if range is larger than prev, if it is continue even if not moved
+    //   const dist = GeoUtils.distance(lx, ly, user.data.posX, user.data.posY)
+    //   if (dist < 100) return
+    // }
+    // userLastEntitySyncPos.set(user.data.id, [ user.data.posX, user.data.posY, 0 /* TODO: user range */ ])
   }
 
   function tickCenterTeleport(user: ActiveUser) {
@@ -84,19 +80,21 @@ export namespace Session {
     if (user.data.posY < -Const.mapRing1) return
 
     const rad = Formulas.radiationLevel(GeoUtils.distance(user.data.posX, user.data.posY, 0, 0))
-    console.log('yep', rad)
     if (rad < 0.7) return
 
     const angle = Math.atan2(user.data.posY, user.data. posX)
-    const mutate = ~~(Math.random() * 120 + 30) * (Math.random() < .5 ? 1 : -1)
+    const mutate = ~~(Math.random() * 270 + 45)
     const outangle = angle + mutate / 180 * Math.PI
-    const newX = Math.cos(outangle) * Const.mapRing1/2
-    const newY = Math.sin(outangle) * Const.mapRing1/2
+    const dist = Const.mapRing2 + Math.random() * (Const.mapRing3 - Const.mapRing2)
+    const newX = Math.cos(outangle) * dist
+    const newY = Math.sin(outangle) * dist
     
-    user.send(Packet.SC.PROPS({ directionOffset: mutate }))
-    user.send(Packet.SC.POS(newX, newY, null))
-    user.data.posX = newX
-    user.data.posY = newY
+    user.send(Packet.SC.PROPS({ extraRadiation: 1 }))
+    setTimeout(() => {
+      user.send(Packet.SC.POS(newX, newY, null))
+      user.data.posX = newX
+      user.data.posY = newY
+    }, 500)
   }
 
   /** timer id will go up to 100 before dropping back to 0 (5 second interval) */

@@ -22,7 +22,7 @@ export namespace EntityManager {
   }
 
   const cache: FlipflopCache<EntityModel.DataType[]> = new FlipflopCache(config.caches.usersTtl)
-  const CACHE_PRECISION = 100
+  const CACHE_PRECISION = 200
 
   export function getCacheKey(x: number, y: number) {
     return `${~~(x/CACHE_PRECISION)}:${~~(y/CACHE_PRECISION)}}`
@@ -47,8 +47,8 @@ export namespace EntityManager {
       pos: {
         $geoWithin: {
           $center: [
-            [ ~~(x/CACHE_PRECISION) + CACHE_PRECISION/2,
-              ~~(y/CACHE_PRECISION) + CACHE_PRECISION/2 ],
+            [ ~~(x/CACHE_PRECISION) * CACHE_PRECISION + CACHE_PRECISION/2,
+              ~~(y/CACHE_PRECISION) * CACHE_PRECISION + CACHE_PRECISION/2 ],
             /* RANGE */ CACHE_PRECISION * 10
           ]
         }

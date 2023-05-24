@@ -3,10 +3,10 @@ import { Packet } from '@maanex/spacelib-common'
 import * as http from 'http'
 import { Server, Socket } from 'socket.io'
 import { Session } from '../app/session'
-import { UserModel } from '../database/models/user'
 import { UserManager } from '../database/user-manager'
 import { UserAuth } from '../lib/user-auth'
 import { POS } from '../app/packets/pos'
+import { SCAN } from '../app/packets/scan'
 import { SPAWN } from '../app/packets/spawn'
 import { EntityManager } from '../database/entity-manager'
 import { Realtime } from '../app/realtime'
@@ -16,6 +16,7 @@ export default class SocketServer {
 
   private static packetHandlers: Record<string, (sender: Session.ActiveUser, ...args: any) => void> = {
     POS,
+    SCAN,
     SPAWN
   }
 

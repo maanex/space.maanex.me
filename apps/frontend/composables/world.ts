@@ -12,3 +12,5 @@ export type Entity = {
 export const useWorldEntities = () => useState<Map<number, Entity>>('world', () => new Map())
 
 export const useRadiation = () => useState<number>('radiation', () => 0)
+
+export const useScanEffects = () => useState<[number, number][]>('scaneffects', () => [])

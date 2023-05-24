@@ -5,6 +5,10 @@ import { EntityManager } from "../../database/entity-manager"
 
 export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
   // TODO: check if distance is justified (e.g. not place with 1k tiles distance to own position)
+
+  if (Math.abs(x) >= Const.maxDistance || Math.abs(y) >= Const.maxDistance)
+    return declineInteraction(sender, transaction)
+
   const cost = verifyAndGetCost(sender, type, x, y, data)
   if (cost === null)
     return declineInteraction(sender, transaction)
@@ -25,7 +29,6 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
   switch (type) {
     case EntityType.MESSAGE:
       if (typeof data !== 'string') return null
-      if (Math.abs(x) >= Const.maxDistance || Math.abs(y) >= Const.maxDistance) return null
       return Formulas.simpleWriteCost(data.length)
     default:
       return null

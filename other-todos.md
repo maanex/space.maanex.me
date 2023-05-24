@@ -2,9 +2,9 @@
   * spawn resources
   * ui to mine resources
 
-[ ] radar
-  * scanning animation
-  * updated "fetch"/"request" approach to receiving entities
+[X] radar
+  + scanning animation
+  + updated "fetch"/"request" approach to receiving entities
 
 [ ] line entities
   * render line entities
@@ -19,21 +19,22 @@
   * show on map
   * shopping?
 
-[ ] radiation
+[X] radiation
   + calc radiation score
   + display position offset
   + add more noise to radar view
   + add sound
-  * make movement unpredictable
+  + make movement unpredictable
 
 [ ] add more journal hints
   + basic movement
-  * next: how to read and write messages
-  * when entering ring1: radiation and dangers
-  * when entering ring3: outer world explained
-  * when seeing another person
+  + next: how to read and write messages
+  + when entering ring1: radiation and dangers
+  + when entering ring3: outer world explained
+  + when seeing another person
   * after some unlocks or time: different ship components
   * points of interest
+  * mining tutorial
 
 [X] update messages to have support for bigger ones + show author
 [X] render other users properly

@@ -8,7 +8,7 @@ export function UPDATE(_sock: ReturnType<typeof useSocket>, id: number, type: nu
   } else {
     const pos = usePosition().value
     const dist = Math.sqrt((pos.x - x)**2 + (pos.y - y)**2)
-    setTimeout(() => doUpdate(id, type, x, y, data), dist * 10)
+    setTimeout(() => doUpdate(id, type, x, y, data), dist * 2)
   }
 }
 

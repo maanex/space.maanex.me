@@ -28,6 +28,12 @@
       />
     </div>
     <div class="ship">
+      <div
+        v-for="[id,strength] of scaneff"
+        :key="id"
+        class="a"
+        :style="{ '--s': strength, '--sa': (strength * 2.8) + .2 }"
+      />
       <div class="s" :style="{ '--rot': `${directionHandle}deg` }" />
       <div
         v-for="[ id, pos ] of Object.entries(crosshairs)"
@@ -70,6 +76,7 @@ const position = usePosition()
 const worldEntities = useWorldEntities()
 const rad = useRadiation()
 const crosshairs = useCrosshairs()
+const scaneff = useScanEffects()
 
 const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
@@ -210,6 +217,21 @@ watch(worldEntities.value, update)
     }
   }
 
+  .a {
+    position: absolute;
+    top: calc(50% - 4.4vw);
+    left: calc(50% - 4.4vw);
+    width: 8vw;
+    height: 8vw;
+    background-color: #00ff0033;
+    border-radius: 100vw;
+    border: .4vw solid #00ff0033;
+    transform:
+      // translate(-50%, -50%)
+      scale(var(--scale));
+    animation: scanner 2s linear forwards;
+  }
+
 }
 
 .extranoise {
@@ -217,10 +239,15 @@ watch(worldEntities.value, update)
   animation: bg-jitter 1s steps(1) forwards infinite;
 }
 
-.entities  > div {
+.entities > div {
   position: absolute;
   transform: translate(-50%, -50%) scale(var(--scale));
 
   &:hover { z-index: 30; }
+}
+
+@keyframes scanner {
+  0% { scale: 0; opacity: 1; }
+  100% { scale: calc(var(--sa) * 40); opacity: 0; border-color: #00ff0000; }
 }
 </style>

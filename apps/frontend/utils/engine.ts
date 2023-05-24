@@ -1,5 +1,7 @@
-import { Const, EntityType, Formulas } from "@maanex/spacelib-common"
+import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
 
+
+const TPS = 1000 / 20
 
 export const useEngine = () => {
   const socket = useSocket()
@@ -61,17 +63,57 @@ export const useEngine = () => {
   }
 
   function tickRadiation() {
-    if (Math.abs(position.value.x) > Const.mapRing1 * 1.1) return clearRadiation()
-    if (Math.abs(position.value.y) > Const.mapRing1 * 1.1) return clearRadiation()
+    const extra = useProps().value.extraRadiation
+    if (!extra && Math.abs(position.value.x) > Const.mapRing1 * 1.1) return clearRadiation()
+    if (!extra && Math.abs(position.value.y) > Const.mapRing1 * 1.1) return clearRadiation()
+
     const distToCenter = Math.sqrt(position.value.x**2 + position.value.y**2)
-    if (distToCenter > Const.mapRing1 * 1.1) return clearRadiation()
-    const baseRadiation = Formulas.radiationLevel(distToCenter)
+    if (!extra && distToCenter > Const.mapRing1 * 1.1) return clearRadiation()
+
+    const baseRadiation = Math.max(extra, Formulas.radiationLevel(distToCenter))
     rad.value = baseRadiation * (Math.random() * .3 + .8)
+
+    if (extra)
+      useProps().value.extraRadiation = extra - 0.1 / TPS
+  }
+
+  function tickJournalUnlocks() {
+    const pos = usePosition().value
+    const accl = useAcceleration().value
+    const docs = useDocuments().value
+
+    const distToCenter = Math.sqrt(pos.x**2 + pos.y**2)
+    if (distToCenter <= Const.mapRing1 && !docs.has('ring1'))
+      docs.set('ring1', false)
+    if (distToCenter >= Const.mapRing2 && !docs.has('ring3'))
+      docs.set('ring3', false)
+    if (distToCenter >= Const.mapRing3 && !docs.has('outerring'))
+      docs.set('outerring', false)
+
+    if (accl.x !== 0 && accl.y !== 0 && !docs.has('readwrite'))
+      docs.set('readwrite', false)
+  }
+
+  let scannerCharge = 0
+
+  function tickScanner() {
+    scannerCharge++
+    const reqCharge = ~~(handleScan.value * 80) + 20
+    if (scannerCharge <= reqCharge) return
+    scannerCharge = 0
+
+    const scaneff = useScanEffects().value
+    scaneff.push([ ~~(Math.random() * 99999999), handleScan.value ])
+    setTimeout(() => scaneff.splice(0, 1), 2000)
+
+    socket.sendScanPacket(handleScan.value)
   }
 
   let tickId = 0
   async function tick() {
-    if (++tickId >= 60)
+    if (document?.visibilityState === 'hidden') return
+
+    if (++tickId >= 100)
       tickId = 0
 
     if (handleAccl.value || accl.value.x || accl.value.y || handleDirection.value !== lastDirHandleVal)
@@ -80,26 +122,30 @@ export const useEngine = () => {
     if (tickId === 0)
       tickEntityDecay()
 
+    if (tickId % 20 === 0)
+      tickJournalUnlocks()
+
     tickRadiation()
-  
+    tickScanner()
+
     //
-  
+
     // if (a.value) handleDirection.value = (handleDirection.value - (shift.value ? 2 : 6) + 360) % 360
     // if (d.value) handleDirection.value = (handleDirection.value + (shift.value ? 2 : 6)) % 360
-  
+
     // if (w.value) handleAccl.value = Math.min(handleAccl.value + (shift.value ? 0.01 : 0.05), 1)
     // if (s.value) handleAccl.value = Math.max(handleAccl.value - (shift.value ? 0.01 : 0.05), 0)
   }
-  
+
   //
-  
+
   const timer = useState<any>('engineTickTimer', () => null)
-  
+
   function init() {
     if (timer.value)
       clearInterval(timer.value)
-  
-    timer.value = setInterval(tick, 50)
+
+    timer.value = setInterval(tick, TPS)
   }
 
   //

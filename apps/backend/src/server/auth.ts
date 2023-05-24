@@ -4,6 +4,7 @@ import ReqError from '../lib/req-error'
 import { UserAuth } from '../lib/user-auth'
 import { UserModel } from '../database/models/user'
 import JWT from '../lib/jwt'
+import { Packet } from '@maanex/spacelib-common'
 
 
 export function getLogin(req: Request, res: Response) {
@@ -62,8 +63,9 @@ export async function postCode(req: Request, res: Response) {
         y: user.posY
       },
       props: {
-        resources: user.resources
-      }
+        resources: user.resources,
+        extraRadiation: 0
+      } satisfies Packet.SC.UserPropsUpdate
     }
   })
 }
@@ -85,8 +87,9 @@ export async function getMe(_req: Request, res: Response) {
         y: res.locals.user.posY
       },
       props: {
-        resources: res.locals.user.resources
-      }
+        resources: res.locals.user.resources,
+        extraRadiation: 0
+      } satisfies Packet.SC.UserPropsUpdate
     }
   })
 }

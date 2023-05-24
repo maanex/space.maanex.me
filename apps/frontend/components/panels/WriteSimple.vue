@@ -36,6 +36,7 @@ const props = useProps()
 const crosshairs = useCrosshairs()
 const sock = useSocket()
 const account = useAccount()
+const docs = useDocuments()
 
 const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
 const tooExpensive = computed(() => (cost.value > props.value.resources))
@@ -63,6 +64,9 @@ function write() {
       entities.value.delete(tempid)
       if (typeof val === 'number') entities.value.set(val, entity)
     })
+
+    if (!docs.value.has('mining'))
+      docs.value.set('mining', false)
   }
 
   x.value = 0
