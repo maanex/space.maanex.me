@@ -98,7 +98,7 @@ export const useEngine = () => {
 
   function tickScanner() {
     scannerCharge++
-    const reqCharge = ~~(handleScan.value * 80) + 20
+    const reqCharge = ~~(handleScan.value * 160) + 40
     if (scannerCharge <= reqCharge) return
     scannerCharge = 0
 

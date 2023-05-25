@@ -25,6 +25,7 @@
         :key="e.id"
         :style="{ top: `${~~e.y}px`, left: `${~~e.x}px` }"
         :data="e.data"
+        :id="e.id"
       />
     </div>
     <div class="ship">
@@ -54,11 +55,13 @@ import { EntityType } from '@maanex/spacelib-common'
 import { Entity } from '../../composables/world'
 import EntititesPerson from '~/components/entitites/Person.vue'
 import EntititesMessage from '~/components/entitites/Message.vue'
+import EntitiesResource from '~/components/entitites/Resource.vue'
 
 const renderEntities: Record<EntityType, any> = {
   [ EntityType.UNKNOWN ]: undefined,
   [ EntityType.PERSON ]: EntititesPerson,
   [ EntityType.MESSAGE ]: EntititesMessage,
+  [ EntityType.RESOURCE ]: EntitiesResource,
 }
 
 /** after how many tiles there is a grid cell drawn */
