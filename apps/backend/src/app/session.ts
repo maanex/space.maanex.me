@@ -51,25 +51,13 @@ export namespace Session {
       }
 
       activeUsers.delete(user.data.id)
-      userLastEntitySyncPos.delete(user.data.id)
     }
   }
-
-  /** last position [ x, y, strength ] of which user received entities */
-  const userLastEntitySyncPos: Map<string, [ number, number, number ]> = new Map()
 
   async function tickUserEntityUpdate(user: ActiveUser, id: number) {
     if (id % 20 !== 0) return
 
     activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
-
-    // if (userLastEntitySyncPos.has(user.data.id)) {
-    //   const [ lx, ly, lr ] = userLastEntitySyncPos.get(user.data.id)
-    //   // TODO: check if range is larger than prev, if it is continue even if not moved
-    //   const dist = GeoUtils.distance(lx, ly, user.data.posX, user.data.posY)
-    //   if (dist < 100) return
-    // }
-    // userLastEntitySyncPos.set(user.data.id, [ user.data.posX, user.data.posY, 0 /* TODO: user range */ ])
   }
 
   function tickCenterTeleport(user: ActiveUser) {

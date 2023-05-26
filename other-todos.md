@@ -1,10 +1,13 @@
-[ ] mineable resources
+[X] mineable resources
   + spawn resources
-  * ui to mine resources
+  + ui to mine resources
 
 [X] radar
   + scanning animation
   + updated "fetch"/"request" approach to receiving entities
+
+[ ] unlockable ship components
+[ ] npc merchants
 
 [ ] line entities
   * render line entities
@@ -32,15 +35,14 @@
   + when entering ring1: radiation and dangers
   + when entering ring3: outer world explained
   + when seeing another person
+  + mining tutorial
   * after some unlocks or time: different ship components
   * points of interest
-  * mining tutorial
 
 [X] update messages to have support for bigger ones + show author
 [X] render other users properly
 [X] sidebar resizeable
 [X] update world spawn
-[ ] add points of interest (merchant?)
 
 
 

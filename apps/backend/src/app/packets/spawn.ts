@@ -4,7 +4,9 @@ import { EntityManager } from "../../database/entity-manager"
 
 
 export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
-  // TODO: check if distance is justified (e.g. not place with 1k tiles distance to own position)
+  const distanceToAuthor = Math.sqrt((sender.data.posX - x)**2 + (sender.data.posY - y)**2)
+  if (distanceToAuthor > 100) // yes. this is "cheat detecition". very professional.
+    return declineInteraction(sender, transaction)
 
   if (Math.abs(x) >= Const.maxDistance || Math.abs(y) >= Const.maxDistance)
     return declineInteraction(sender, transaction)
