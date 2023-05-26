@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=installer /app/ .
 COPY --from=builder /app/out/full/ .
 COPY .gitignore .gitignore
-RUN yarn turbo run build --scope=@maanex/space-backend --include-dependencies --no-deps
+RUN turbo run build --scope=@maanex/space-backend --include-dependencies --no-deps
 
 EXPOSE 80
 ENTRYPOINT [ "yarn", "run-backend" ]
