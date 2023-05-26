@@ -35,7 +35,6 @@ export default class Routes {
     r.get(  '/auth/me',               gateway(false),  getMe    )
 
 
-
     /* Default 404 handler */
 
     r.all('*', (_, res: Response) => ReqError.notFound(res, 'Endpoint Not Found'))
