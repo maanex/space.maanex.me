@@ -10,6 +10,8 @@
 [ ] npc merchants
 [ ] auto reconnect players if socket is lost for longer
 [ ] let users accept tos
+[ ] only start sound once "ingame"
+[ ] add volume options
 
 [ ] line entities
   * render line entities

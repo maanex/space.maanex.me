@@ -4,8 +4,8 @@
 export default {
   port: 5050,
   frontend: {
-    // url: 'https://sussyalien.tude.club'
-    url: 'http://localhost:3000'
+    url: 'https://space.maanex.me'
+    // url: 'http://localhost:3000'
   },
   keys: {
     privateKeyUri: ''
