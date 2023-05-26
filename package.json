@@ -2,13 +2,16 @@
   "name": "@maanex/space",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "yarn@3.3.1",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
+    "build-frontend": "turbo run build --scope=@maanex/space-frontend --include-dependencies --no-deps",
     "dev": "turbo run dev --parallel",
+    "run-backend": "cd ./apps/backend && yarn start",
     "lint": "turbo run lint"
   },
   "devDependencies": {

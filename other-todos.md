@@ -8,6 +8,8 @@
 
 [ ] unlockable ship components
 [ ] npc merchants
+[ ] auto reconnect players if socket is lost for longer
+[ ] let users accept tos
 
 [ ] line entities
   * render line entities
