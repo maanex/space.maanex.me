@@ -11,6 +11,7 @@ import { SCAN } from '../app/packets/scan'
 import { SPAWN } from '../app/packets/spawn'
 import { EntityManager } from '../database/entity-manager'
 import { Realtime } from '../app/realtime'
+import { config } from '../config'
 
 
 export default class SocketServer {
@@ -27,7 +28,7 @@ export default class SocketServer {
   public static init(server: http.Server) {
     SocketServer.server = new Server(server, {
       cors: {
-        origin: '*', // TODO
+        origin: config.frontend.url ?? '*',
         methods: [ 'POST' ]
       }
     })

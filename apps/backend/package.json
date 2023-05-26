@@ -9,7 +9,7 @@
     "dev": "tsc && node --trace-warnings --experimental-specifier-resolution=node ./dist/index.js"
   },
   "dependencies": {
-    "@maanex/spacelib-common": "workspace:^",
+    "@maanex/spacelib-common": "*",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "eslint": "^8.23.0",
