@@ -148,8 +148,10 @@ export const useSocket = () => ({
     send(Packet.CS.SPAWN(transaction, type, x, y, data))
     return [ transaction, promise ]
   },
-  /** @returns [ a temporary id, the actual id once resolved or null if failed ] */
   sendScanPacket(power: number) {
     useSocket().send(Packet.CS.SCAN(power))
+  },
+  sendMinePacket(entity: number, amount: number) {
+    useSocket().send(Packet.CS.MINE(entity, amount))
   }
 })

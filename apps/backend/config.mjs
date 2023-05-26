@@ -15,7 +15,8 @@ export default {
   },
   caches: {
     usersTtl: 1000 * 60,
-    entitiesTtl: 1000 * 60
+    entitiesTtl: 1000 * 60,
+    naturalEntitiesTtl: 1000 * 60 * 3
   },
   auth: {
     requireEmail: false,

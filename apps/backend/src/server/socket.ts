@@ -5,6 +5,7 @@ import { Server, Socket } from 'socket.io'
 import { Session } from '../app/session'
 import { UserManager } from '../database/user-manager'
 import { UserAuth } from '../lib/user-auth'
+import { MINE } from '../app/packets/mine'
 import { POS } from '../app/packets/pos'
 import { SCAN } from '../app/packets/scan'
 import { SPAWN } from '../app/packets/spawn'
@@ -15,6 +16,7 @@ import { Realtime } from '../app/realtime'
 export default class SocketServer {
 
   private static packetHandlers: Record<string, (sender: Session.ActiveUser, ...args: any) => void> = {
+    MINE,
     POS,
     SCAN,
     SPAWN

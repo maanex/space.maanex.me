@@ -24,7 +24,7 @@ export const useDocumentData = () => useState<Document[]>('document-data', () =>
   {
     key: 'mining',
     title: 'Intro: Getting resources',
-    text: 'TODO'
+    text: 'Sooner or later you will run out of resources. To get more you need to harvest them. For that you need to know that each of your panels can be unplugged. Click the icon on the bottom left of a panel to do so. Once unplugged you can plug in a different panel. Switch one panel to the harvester. Fly around and locate a blue entity, those are resources. Use your cursor to focus on the resource and start harvesting.'
   },
   {
     key: 'otherperson',

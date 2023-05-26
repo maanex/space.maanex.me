@@ -5,7 +5,7 @@
     </div>
     <div class="text">
       <ElementsTextInput v-model="text">
-        <span :data-tooexp="tooExpensive">Cost: {{ text.length ? cost : '-' }}</span>
+        <span :data-tooexp="tooExpensive">Cost: {{ text.length ? `${cost}/${props.resources}` : '-' }}</span>
       </ElementsTextInput>
     </div>
     <button @click="write()">
@@ -39,7 +39,7 @@ const account = useAccount()
 const docs = useDocuments()
 
 const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
-const tooExpensive = computed(() => (cost.value > props.value.resources))
+const tooExpensive = computed(() => (text.value.length && cost.value > props.value.resources))
 
 function write() {
   if (tooExpensive.value) return

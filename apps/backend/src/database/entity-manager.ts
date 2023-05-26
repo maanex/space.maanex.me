@@ -70,7 +70,8 @@ export namespace EntityManager {
 
   //
 
-  const naturalsChuckSize = 2000
+  const naturalsChuckSize = 3000
+  export const naturalsRichness: FlipflopCache<number> = new FlipflopCache(config.caches.naturalEntitiesTtl)
 
   function naturalsSeededRandom(seed: number) {
     return 1 - Math.abs(Math.sin(seed * 19.41))
@@ -82,17 +83,24 @@ export namespace EntityManager {
     const density = 1 / (((distFromCenter - Const.mapRing1 - ring2Width/2) / (ring2Width/3))**8 + 1)
 
     if (density < 0.05) return []
-    const ents = ~~(Math.random() * density * 10)
+    const ents = ~~((1 - naturalsSeededRandom(chunkX*1.14 + chunkY*0.914 + 4)) * density * 10)
     const out: EntityModel.DataType[] = []
 
     const maxChunks = (Const.maxDistance / naturalsChuckSize) * 2
 
     for (let nr = 0; nr < ents; nr++) {
       const uuid = ~~((chunkX * maxChunks + chunkY) * 10 + nr)
+      const seenBefore = naturalsRichness.has(String(uuid))
+      const richness = seenBefore
+        ? naturalsRichness.get(String(uuid))
+        : ~~(Math.random() * 100 + 20)
+      if (!seenBefore) naturalsRichness.put(String(uuid), richness)
+      if (richness === 0) continue
+
       out.push({
         _id: uuid,
         creator: '',
-        data: '',
+        data: richness,
         type: EntityType.RESOURCE,
         pos: [
           ~~((chunkX + naturalsSeededRandom(uuid + chunkY*0.821)) * naturalsChuckSize),

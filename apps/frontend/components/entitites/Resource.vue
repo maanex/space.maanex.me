@@ -19,8 +19,9 @@ const backgroundColor = computed(() => {
 })
 
 const scale = computed(() => {
-  const rand = (Math.cos(props.id) + 1) / 2
-  return (rand**3 + .5) * 2
+  // const rand = (Math.cos(props.id) + 1) / 2
+  // return (rand**3 + .5) * 2
+  return Math.log2(Number(props.data)) / 3
 })
 </script>
 
@@ -31,13 +32,13 @@ const scale = computed(() => {
     height: 3vw;
     border-radius: 3vw;
     background-color: #5e5d92;
-    border: .2vw solid #dfe4f5;
+    filter: blur(.6vw);
     z-index: 20;
     position: relative;
     transform:
       translate(-50%, -50%)
       scale(var(--scale));
-    animation: entin .3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: entin 1s ease-out forwards;
   }
 }
 

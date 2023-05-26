@@ -1,7 +1,6 @@
 import { Const, Formulas, Packet } from "@maanex/spacelib-common"
 import { Socket } from "socket.io"
 import { UserModel } from "../database/models/user"
-import { EntityManager } from "../database/entity-manager"
 import { GeoUtils } from "../lib/geo-utils"
 import { Realtime } from "./realtime"
 

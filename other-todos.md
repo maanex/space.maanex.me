@@ -1,5 +1,5 @@
 [ ] mineable resources
-  * spawn resources
+  + spawn resources
   * ui to mine resources
 
 [X] radar

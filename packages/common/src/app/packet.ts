@@ -73,6 +73,11 @@ export namespace Packet {
       return [ 'SPAWN', trans, type, x, y, data ]
     }
 
+    /** SAY YOU MINED SOMETHING */
+    export function MINE(entity: number, amount: number): Data {
+      return [ 'MINE', entity, amount ]
+    }
+
   }
 
 }

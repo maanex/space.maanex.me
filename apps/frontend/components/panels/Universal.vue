@@ -4,11 +4,10 @@
     @click="dismount()"
   />
 
-  <PanelsLocation v-if="showing === 'location'" />
-  <PanelsNavigation v-else-if="showing === 'navigation'" />
-  <PanelsTest v-else-if="showing === 'test1'" />
-  <PanelsTool v-else-if="showing === 'test2'" />
-  <PanelsWriteSimple v-else-if="showing === 'write-simple'" />
+  <component
+    v-if="renderPanel[showing]"
+    :is="renderPanel[showing]"
+  />
 
   <div v-else class="select">
     <div class="buttons">
@@ -17,8 +16,9 @@
         :key="p"
         @click="showing = p"
         :disabled="alreadyUsed.includes(p)"
-        v-text="p"
-      />
+      >
+        <span v-text="panelDisplayName[p]" />
+      </button>
     </div>
     <div class="pages">
       <button
@@ -32,6 +32,13 @@
 </template>
 
 <script setup lang="ts">
+import PanelsLocation from './Location.vue'
+import PanelsNavigation from './Navigation.vue'
+import PanelsTest from './Test.vue'
+import PanelsTool from './Tool.vue'
+import PanelsWriteSimple from './WriteSimple.vue'
+import PanelsMineSimple from './MineSimple.vue'
+
 const { state } = defineProps<{
   state: 0 | 1 | 2
 }>()
@@ -39,9 +46,19 @@ const { state } = defineProps<{
 const availablePanels = [
   [ 'location' ],
   [ 'navigation' ],
-  [ 'test1', 'test2', 'write-simple' ]
+  [ 'test1', 'test2', 'write-simple', 'mine-simple' ]
 ] as const
 type availablePanelsType = typeof availablePanels[number][number]
+
+const renderPanel: Record<availablePanelsType | 'none', any> = {
+  'none': null,
+  'location': PanelsLocation,
+  'navigation': PanelsNavigation,
+  'test1': PanelsTest,
+  'test2': PanelsTool,
+  'write-simple': PanelsWriteSimple,
+  'mine-simple': PanelsMineSimple,
+}
 
 const defaultPages = [ 'location', 'navigation', 'write-simple' ] as const
 
@@ -64,6 +81,15 @@ function dismount() {
   browsingPage.value = getPageFor(showing.value)
   showing.value = 'none'
 }
+
+const panelDisplayName: Record<availablePanelsType, string> = {
+  'location': 'location',
+  'navigation': 'navigation',
+  'test1': 'debug',
+  'test2': 'debug',
+  'write-simple': 'primitive engraver',
+  'mine-simple': 'primitive harvester',
+}
 </script>
 
 <style scoped lang="scss">
@@ -74,6 +100,57 @@ function dismount() {
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
+
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: calc(2vw * var(--vws));
+    padding: calc(2vw * var(--vws));
+
+    button {
+      color: #ffffff;
+      background-color: transparent;
+      border: calc(.2vw * var(--vws)) solid currentColor;
+      border-radius: calc(.2vw * var(--vws));
+      border-top-right-radius: calc(1vw * var(--vws));
+      border-bottom-left-radius: calc(1vw * var(--vws));
+      display: flex;
+      padding: calc(0.4vw * var(--vws));
+      cursor: pointer;
+      transition: color .1s ease-out;
+
+      span {
+        font-family: $font-major;
+        font-size: calc(0.9vw * var(--vws));
+        background-color: #ffffff;
+        color: #000000ee;
+        transition: background-color .1s ease-out;
+        display: block;
+        width: 100%;
+        padding: calc(0.3vw * var(--vws)) calc(0.7vw * var(--vws));
+        box-sizing: border-box;
+        border-radius: calc(0.5vw * var(--vws));
+        border-top-left-radius: 0;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+
+        span {
+          background-color: transparent;
+          color: currentColor;
+        }
+      }
+
+      &:not(:disabled):hover {
+        color: lightblue;
+
+        span { background-color: lightblue }
+      }
+    }
+  }
 
   .pages {
     display: flex;
