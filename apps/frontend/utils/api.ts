@@ -8,13 +8,13 @@ const isDev = computed(() => useRuntimeConfig().public.isDev)
 function getBaseUrl(): string {
   return isDev.value
     ? 'http://localhost:5050/rest'
-    : 'TODO'
+    : 'https://maanexspace-prod-eu01.tude.network/rest'
 }
 
 function getSocketHost(): string {
   return isDev.value
     ? 'localhost:5050'
-    : 'TODO'
+    : 'maanexspace-prod-eu01.tude.network'
 }
 
 function getToken(): string {
