@@ -2,7 +2,8 @@
   "name": "@maanex/space-frontend",
   "packageManager": "yarn@3.3.1",
   "scripts": {
-    "build": "nuxt build",
+    "build-with-backend": "nuxt build",
+    "build": "nuxt generate",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

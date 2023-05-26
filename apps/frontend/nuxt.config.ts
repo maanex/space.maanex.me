@@ -7,6 +7,11 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-icons'
   ],
+  nitro: {
+    prerender: {
+      crawlLinks: true
+    }
+  },
   vite: {
     css: {
       preprocessorOptions: {
