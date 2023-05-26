@@ -47,7 +47,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           #            v ghcr.io       v orga name  v package name  v module name
-          images: ${{ env.REGISTRY }}/FreeStuffBot/fsb-${{ env.MODULE }}
+          images: ${{ env.REGISTRY }}/maanex/space-${{ env.MODULE }}
 
       - name: Add metadata
         run: echo ${{ github.sha }} > version
