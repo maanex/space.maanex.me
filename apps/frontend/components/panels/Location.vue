@@ -128,12 +128,15 @@ function toTime(v: number) {
   }
 
   .poi {
+    --rot: 0deg;
+    --xoff: -50%;
     position: absolute;
     width: calc(0.6vw * var(--vws));
     height: calc(0.6vw * var(--vws));
     box-sizing: border-box;
     box-shadow: 0 0 0 calc(0.1vw * var(--vws)) $color-beige;
     transform: translate(-50%, -50%);
+    animation: poiin .4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 
     &[data-type="1"] { // LANDMARK
       border: calc(0.15vw * var(--vws)) solid black;
@@ -143,11 +146,12 @@ function toTime(v: number) {
       border-top-right-radius: 100vw;
     }
     &[data-type="2"] { // MERCHANT
+      --rot: 45deg;
+      --xoff: -100%;
       background-color: $color-beige;
       border-top-left-radius: 20vw;
       border-top-right-radius: 20vw;
       border-bottom-left-radius: 20vw;
-      transform: translate(-50%, -100%) rotate(45deg);
       border: calc(0.2vw * var(--vws)) solid black;
     }
     &[data-type="3"] { // USER
@@ -207,5 +211,10 @@ function toTime(v: number) {
   0% { color: black; }
   50% { color: $color-beige; }
   100% { color: black; }
+}
+
+@keyframes poiin {
+  0% { transform: translate(-50%, var(--xoff)) rotate(var(--rot)) scale(0); opacity: 0; }
+  100% { transform: translate(-50%, var(--xoff)) rotate(var(--rot)) scale(1); opacity: 1; }
 }
 </style>

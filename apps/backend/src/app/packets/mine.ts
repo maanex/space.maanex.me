@@ -1,5 +1,5 @@
 import { Packet } from "@maanex/spacelib-common"
-import { EntityManager } from "../../database/entity-manager.js"
+import { EntityManager } from "../entity-manager.js"
 import { Session } from "../session.js"
 
 

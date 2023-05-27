@@ -109,6 +109,10 @@ export const useEngine = () => {
     setTimeout(() => scaneff.splice(0, 1), 2000)
 
     socket.sendScanPacket(handleScan.value)
+
+    const docs = useDocuments()
+    if (handleScan.value >= 0.86 && !docs.value.has('poi'))
+      docs.value.set('poi', false)
   }
 
   let tickId = 0

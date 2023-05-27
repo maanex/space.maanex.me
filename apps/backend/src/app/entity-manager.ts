@@ -1,9 +1,10 @@
 import FlipflopCache from "../lib/flipflop-cache.js"
-import { EntityModel } from "./models/entity.js"
-import { Mongo } from "./mongo.js"
+import { EntityModel } from "../database/models/entity.js"
+import { Mongo } from "../database/mongo.js"
 import { config } from "../config.js"
 import { GeoUtils } from "../lib/geo-utils.js"
 import { Const, EntityType } from "@maanex/spacelib-common"
+import { World } from "./world.js"
 
 
 export namespace EntityManager {
@@ -117,7 +118,7 @@ export namespace EntityManager {
     const chunkXmax = ~~((x + range) / naturalsChuckSize)
     const chunkYmax = ~~((y + range) / naturalsChuckSize)
 
-    const out = []
+    const out: EntityModel.DataType[] = [ ...World.worldsEntities ]
     for (let cx = chunkXmin; cx <= chunkXmax; cx++)
       for (let cy = chunkYmin; cy <= chunkYmax; cy++)
         out.push(...getNaturalEntitiesInChunk(cx, cy))

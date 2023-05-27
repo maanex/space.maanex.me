@@ -57,12 +57,14 @@ import { Entity } from '../../composables/world'
 import EntititesPerson from '~/components/entitites/Person.vue'
 import EntititesMessage from '~/components/entitites/Message.vue'
 import EntitiesResource from '~/components/entitites/Resource.vue'
+import EntitiesSpecial from '~/components/entitites/Special.vue'
 
 const renderEntities: Record<EntityType, any> = {
   [ EntityType.UNKNOWN ]: undefined,
   [ EntityType.PERSON ]: EntititesPerson,
   [ EntityType.MESSAGE ]: EntititesMessage,
   [ EntityType.RESOURCE ]: EntitiesResource,
+  [ EntityType.SPECIAL ]: EntitiesSpecial,
 }
 
 /** after how many tiles there is a grid cell drawn */
@@ -130,7 +132,7 @@ function update() {
     const x = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
     const y = bounds.height / 2 + (-e.y + position.value.y) * pixelsPerTile
 
-    if (x >= -padding && y >= -padding && x <= bounds.width + padding && y <= bounds.height + padding)
+    if (e.type === EntityType.SPECIAL || (x >= -padding && y >= -padding && x <= bounds.width + padding && y <= bounds.height + padding))
       newEntities.push({ ...e, x, y })
   }
   entities.value = newEntities
@@ -259,7 +261,7 @@ watch(worldEntities.value, update)
   position: absolute;
   transform: translate(-50%, -50%) scale(var(--scale));
 
-  &:hover { z-index: 30; }
+  &:not(.other):hover { z-index: 30; }
 }
 
 @keyframes scanner {

@@ -4,6 +4,7 @@ export enum EntityType {
   PERSON = 1,
   MESSAGE = 2,
   RESOURCE = 3,
+  SPECIAL = 4,
 }
 
 export enum PoiType {
@@ -11,6 +12,18 @@ export enum PoiType {
   LANDMARK = 1,
   MERCHANT = 2,
   USER = 3
+}
+
+export enum WorldsEntities {
+  MERCHANT_BOUJIN = 1,
+  MERCHANT_WESTSIDE_OUTPOST = 2,
+  LANDMARK_BELOR_RIFT = 3,
+  LANDMARK_VANOR_RIFT = 4,
+  LANDMARK_SMAAR_RIFT = 5,
+  MERCHANT_CENTRAL_MARKET = 6,
+  MERCHANT_BELOR_TOOLS = 7,
+  MERCHANT_EASTSIDE_OUTPOST = 8,
+  MERCHANT_THIRD_SECTOR = 9,
 }
 
 export enum UserUnlocks {

@@ -1,4 +1,5 @@
-import { Packet, PoiType } from "@maanex/spacelib-common"
+import { EntityType, Packet, PoiType, WorldsEntities } from "@maanex/spacelib-common"
+import { EntityModel } from "../database/models/entity.js"
 import { Session } from "./session.js"
 
 
@@ -17,11 +18,93 @@ export namespace World {
 
   //
 
-  const pointsOfInterest: Packet.SC.Poi[] = [
-    [ baseX, baseY, PoiType.LANDMARK, 'spawn' ],
-    [ -baseX, -baseY, PoiType.MERCHANT, 'test' ],
-    [ baseX, -baseY, PoiType.LANDMARK, 'test2' ],
-    [ -baseX, baseY, PoiType.USER, 'test3' ],
+  export const worldsEntities: (EntityModel.DataType & { _poit: PoiType })[] = [
+    {
+      // boujin is an exotic trader selling rare goods. he is far out in the unknown regions
+      _id: WorldsEntities.MERCHANT_BOUJIN,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 900000, 900000 ],
+      data: 'Boujin'
+    },
+    {
+      // the outpost is a larger merchant selling various goods
+      _id: WorldsEntities.MERCHANT_WESTSIDE_OUTPOST,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ -489000, -322000 ],
+      data: 'Westside Outpost'
+    },
+    {
+      // Belor Rift is dark Smudge
+      _id: WorldsEntities.LANDMARK_BELOR_RIFT,
+      _poit: PoiType.LANDMARK,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 541000, -601000 ],
+      data: 'Belor Rift'
+    },
+    {
+      // Vanor Rift is dark Smudge
+      _id: WorldsEntities.LANDMARK_VANOR_RIFT,
+      _poit: PoiType.LANDMARK,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 498000, -662000 ],
+      data: 'Vanor Rift'
+    },
+    {
+      // Smaar Rift is dark Smudge
+      _id: WorldsEntities.LANDMARK_SMAAR_RIFT,
+      _poit: PoiType.LANDMARK,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 144000, 484000 ],
+      data: 'Smaar Rift'
+    },
+    {
+      // Central Market has the biggest sortiment of items
+      _id: WorldsEntities.MERCHANT_CENTRAL_MARKET,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ -84000, 313000 ],
+      data: 'Central Market'
+    },
+    {
+      // Belor Tools is a small indie shop
+      _id: WorldsEntities.MERCHANT_BELOR_TOOLS,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 465000, -541000 ],
+      data: 'Belor Tools'
+    },
+    {
+      // The outpost is a larger merchant
+      _id: WorldsEntities.MERCHANT_EASTSIDE_OUTPOST,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ 489000, 322000 ],
+      data: 'Eastside Outpost'
+    },
+    {
+      // Third sector goods is a small indie shop
+      _id: WorldsEntities.MERCHANT_THIRD_SECTOR,
+      _poit: PoiType.MERCHANT,
+      creator: '',
+      type: EntityType.SPECIAL,
+      pos: [ -424000, 791000 ],
+      data: '3rd Sector Goods'
+    },
+  ]
+
+  export const pointsOfInterest: Packet.SC.Poi[] = [
+    [ baseX, baseY, PoiType.LANDMARK, 'The Spawn' ],
+    ...worldsEntities.map(e => ([ e.pos[0], e.pos[1], e._poit, e.data as String ] as Packet.SC.Poi))
   ]
 
   function activeUsersAsPois(excludeSessionId: number): Packet.SC.Poi[] {
@@ -34,7 +117,7 @@ export namespace World {
   }
 
   export function getPoiNearby(x: number, y: number, scannerPower: number, whoAsked: Session.ActiveUser): Packet.SC.Poi[] {
-    const range = (scannerPower * 35) ** 4
+    const range = (scannerPower * 5) ** 8
     const out = []
     const candidates: Packet.SC.Poi[] = [ ...pointsOfInterest, ...activeUsersAsPois(whoAsked.sessionId) ]
     for (const poi of candidates) {

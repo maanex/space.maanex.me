@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import ReqError from '../lib/req-error.js'
 import JWT from '../lib/jwt.js'
 import { UserAuth } from '../lib/user-auth.js'
-import { UserManager } from '../database/user-manager.js'
+import { UserManager } from '../app/user-manager.js'
 
 
 export default function gateway(needsAuth: boolean): (req: Request, res: Response, next: NextFunction) => any {

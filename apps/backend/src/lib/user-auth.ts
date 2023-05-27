@@ -1,7 +1,7 @@
 import { config } from '../index.js'
 import { UserModel } from '../database/models/user.js'
 import { Mongo } from "../database/mongo.js"
-import { UserManager } from '../database/user-manager.js'
+import { UserManager } from '../app/user-manager.js'
 import JWT from './jwt.js'
 import { UnifiedUserObject } from './oauth-strat.js'
 import { sendDiscordWebhook } from './discord.js'

@@ -1,4 +1,4 @@
-import { EntityType } from "@maanex/spacelib-common"
+import { EntityType, WorldsEntities } from "@maanex/spacelib-common"
 
 
 export function UPDATE(_sock: ReturnType<typeof useSocket>, id: number, type: number, x: number, y: number, data: any) {
@@ -23,4 +23,18 @@ function doUpdate(id: number, type: number, x: number, y: number, data: any) {
   } else {
     worldEntities.set(id, { id, type, x, y, data })
   }
+
+  const docs = useDocuments()
+  if (id === WorldsEntities.MERCHANT_WESTSIDE_OUTPOST && !docs.value.has('worldent_westside_outpost'))
+    docs.value.set('worldent_westside_outpost', false)
+  else if (id === WorldsEntities.MERCHANT_EASTSIDE_OUTPOST && !docs.value.has('worldent_eastside_outpost'))
+    docs.value.set('worldent_eastside_outpost', false)
+  else if (id === WorldsEntities.MERCHANT_CENTRAL_MARKET && !docs.value.has('worldent_central_market'))
+    docs.value.set('worldent_central_market', false)
+  else if (id === WorldsEntities.MERCHANT_BELOR_TOOLS && !docs.value.has('worldent_belor_tools'))
+    docs.value.set('worldent_belor_tools', false)
+  else if (id === WorldsEntities.MERCHANT_THIRD_SECTOR && !docs.value.has('worldent_third_sector'))
+    docs.value.set('worldent_third_sector', false)
+  else if (id === WorldsEntities.MERCHANT_BOUJIN && !docs.value.has('worldent_boujin'))
+    docs.value.set('worldent_boujin', false)
 }

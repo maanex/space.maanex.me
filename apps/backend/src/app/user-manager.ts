@@ -1,7 +1,7 @@
 import { config } from "../index.js"
 import FlipflopCache from "../lib/flipflop-cache.js"
-import { UserModel } from "./models/user.js"
-import { Mongo } from "./mongo.js"
+import { UserModel } from "../database/models/user.js"
+import { Mongo } from "../database/mongo.js"
 
 
 export namespace UserManager {

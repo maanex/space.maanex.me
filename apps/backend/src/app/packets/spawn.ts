@@ -1,6 +1,6 @@
 import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
 import { Session } from "../session.js"
-import { EntityManager } from "../../database/entity-manager.js"
+import { EntityManager } from "../entity-manager.js"
 import { sendDiscordWebhook } from "../../lib/discord.js"
 
 
