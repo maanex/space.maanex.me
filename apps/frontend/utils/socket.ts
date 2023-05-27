@@ -1,14 +1,18 @@
 import { EntityType, Packet } from '@maanex/spacelib-common'
 import * as SocketIO from 'socket.io-client'
+import { EACK } from '~/lib/packets/eack'
+import { JOURNAL } from '~/lib/packets/journal'
+import { POI } from '~/lib/packets/poi'
 import { POS } from '~/lib/packets/pos'
 import { PROPS } from '~/lib/packets/props'
-import { EACK } from '~/lib/packets/eack'
 import { REMOVE } from '~/lib/packets/remove'
 import { UPDATE } from '~/lib/packets/update'
 
 
 const packetHandlers: Record<string, (...args: any) => void> = {
   EACK,
+  JOURNAL,
+  POI,
   POS,
   PROPS,
   REMOVE,

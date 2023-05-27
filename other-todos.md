@@ -12,7 +12,7 @@
 [ ] let users accept tos
 [ ] only start sound once "ingame"
 [ ] add volume options
-[ ] discord webhook when someone writes something
+[X] discord webhook when someone writes something
 [X] only allow ascii on messages
 [X] allow messages to be multiline in rendering
 [X] only activate miner if the target resource is actually mineable

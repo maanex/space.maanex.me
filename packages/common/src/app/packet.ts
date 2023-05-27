@@ -1,3 +1,4 @@
+import { PoiType, UserUnlocks } from "./enums.js"
 
 
 export namespace Packet {
@@ -47,11 +48,25 @@ export namespace Packet {
     export type UserPropsUpdate = {
       resources: number
       extraRadiation: number
+      unlocks: UserUnlocks[]
     }
 
     /** UPDATES OWN PROPERTIES */
     export function PROPS(data: Partial<UserPropsUpdate>): Data {
       return [ 'PROPS', data ]
+    }
+
+    /** [ xpos, ypos, type, name ] */
+    export type Poi = [ number, number, PoiType, string ]
+
+    /** OH A POINT OF INTEREST! INTERESTING! */
+    export function POI(poi: Poi): Data {
+      return [ 'POI', ...poi ]
+    }
+
+    /** UNLOCK JOURNAL THING */
+    export function JOURNAL(name: string): Data {
+      return [ 'JOURNAL', name ]
     }
 
   }

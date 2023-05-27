@@ -15,6 +15,6 @@ export const Const = {
   mapRing2: 600_000,
   mapRing3: 1_000_000,
 
-  charsetAllowedInMessages: `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,;:-_'#*+~?!"=§$%&/()\\{}[]€@\`´öüä<>|°^`,
+  charsetAllowedInMessages: `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,;:-_'#*+~?!"=§$%&/()\\{}[]€@\`´öüä<>|°^•↑↓→←∞`,
 
 }

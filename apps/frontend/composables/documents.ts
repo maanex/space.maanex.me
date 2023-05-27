@@ -46,4 +46,9 @@ export const useDocumentData = () => useState<Document[]>('document-data', () =>
     title: 'The unknown',
     text: 'You have left ring 3. The world beyond is not documented. Be careful.'
   },
+  {
+    key: 'teleport',
+    title: 'Teleportation',
+    text: 'Where the hell did you end up? This is not what the course dictated. Have you been teleported? Maybe we can use this power for good. Go find someone who can help you with that.'
+  },
 ])

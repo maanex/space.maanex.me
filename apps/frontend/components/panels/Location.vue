@@ -2,7 +2,10 @@
   <div class="container">
     <div class="mapcontainer">
       <img ref="map" class="worldmap" src="~/assets/img/worldmap.svg" alt="" draggable="false">
-      <img ref="marker" class="marker" src="~/assets/img/mapmarker.svg" alt="" :style="markerCss" draggable="false">
+      <div class="markercontainer">
+        <div v-for="poi of renderPois" :key="poi.name" class="poi" :style="poi.css" :data-type="poi.type" @mouseenter="hoveredPoi = poi.name" />
+        <img ref="marker" class="marker" src="~/assets/img/mapmarker.svg" alt="" :style="markerCss" draggable="false">
+      </div>
     </div>
     <div class="textcontainer">
       <div />
@@ -12,6 +15,7 @@
         <p v-text="sector" />
       </div>
       <div class="right">
+        <p>POI- <b v-text="hoveredPoi || 'none'" /></p>
         <p>RESOURCES- <b>{{ props.resources.toLocaleString(undefined, { notation: 'compact' }) }}</b> ok</p>
         <p>RADIATION- <b>{{ Math.min(99.99, rad * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2, minimumIntegerDigits: 2 }) }}%</b> <span :data-status="radstatus" v-text="radstatus" /></p>
       </div>
@@ -26,8 +30,9 @@ import { Const } from '@maanex/spacelib-common'
 const position = usePosition()
 const rad = useRadiation()
 const props = useProps()
+const pois = useWorldPois()
 const map = ref(null)
-const markerCss = useState<any>(() => {})
+const hoveredPoi = useState<string>(() => '')
 
 const adjustedPos = computed(() => {
   if (!rad.value) return position.value
@@ -52,6 +57,23 @@ const radstatus = computed(() => {
   return 'alert'
 })
 
+const renderPois = computed(() => {
+  return [ ...pois.value.values() ]
+    .map(p => ({
+      name: p[3],
+      type: p[2],
+      css: {
+        left: ((0.5 + Number(p[0]) / Const.mapRadius / 2) * 100) + '%',
+        top: ((0.5 - Number(p[1]) / Const.mapRadius / 2) * 100) + '%'
+      }
+    }))
+})
+
+const markerCss = computed(() => ({
+  left: ((0.5 + adjustedPos.value.x / Const.mapRadius / 2) * 100) + '%',
+  top: ((0.5 - adjustedPos.value.y / Const.mapRadius / 2) * 100) + '%'
+}))
+
 function toCoords(v: number, neg: string, pos: string) {
   if (v < 0) return `${toTime(-v)}${neg}`
   return `${toTime(v)}${pos}`
@@ -65,30 +87,6 @@ function toTime(v: number) {
   const seconds = ~~(minuteParts / 10000 * 60 * 60)
   return `${hours}'${minutes.toString().padStart(2, '0')}'${seconds.toString().padStart(2, '0')}`
 }
-
-function update() {
-  const bounds = (map.value! as Element)?.getBoundingClientRect()
-
-  const hCenter = bounds.width/2
-  const hRadius = bounds.width/100*40
-  const hPos = hCenter + adjustedPos.value.x/Const.mapRadius*hRadius
-  const hPosAdjusted = hPos - bounds.width*0.02/2
-
-  const vCenter = bounds.height/2
-  const vRadius = bounds.height/40*13
-  const vPos = vCenter + -adjustedPos.value.y/Const.mapRadius*vRadius
-  const vPosAdjusted = vPos - bounds.width*0.02/2
-
-  markerCss.value = {
-    top: `${vPosAdjusted}px`,
-    left: `${hPosAdjusted}px`
-  }
-}
-
-onMounted(update)
-watch(position.value, update)
-watch(rad, update)
-useResizeObserver(map, update)
 </script>
 
 <style scoped lang="scss">
@@ -116,7 +114,48 @@ useResizeObserver(map, update)
 
   .marker {
     width: 2%;
+    transform: translate(-50%, -3%);
     position: absolute;
+  }
+
+  .markercontainer {
+    position: absolute;
+    display: block;
+    width: 80%;
+    left: 10%;
+    height: 65%;
+    top: 16%;
+  }
+
+  .poi {
+    position: absolute;
+    width: calc(0.6vw * var(--vws));
+    height: calc(0.6vw * var(--vws));
+    box-sizing: border-box;
+    box-shadow: 0 0 0 calc(0.1vw * var(--vws)) $color-beige;
+    transform: translate(-50%, -50%);
+
+    &[data-type="1"] { // LANDMARK
+      border: calc(0.15vw * var(--vws)) solid black;
+      width: calc(0.5vw * var(--vws));
+      height: calc(0.5vw * var(--vws));
+      border-top-left-radius: 100vw;
+      border-top-right-radius: 100vw;
+    }
+    &[data-type="2"] { // MERCHANT
+      background-color: $color-beige;
+      border-top-left-radius: 20vw;
+      border-top-right-radius: 20vw;
+      border-bottom-left-radius: 20vw;
+      transform: translate(-50%, -100%) rotate(45deg);
+      border: calc(0.2vw * var(--vws)) solid black;
+    }
+    &[data-type="3"] { // USER
+      background-color: black;
+      border-radius: 100vw;
+      width: calc(0.3vw * var(--vws));
+      height: calc(0.3vw * var(--vws));
+    }
   }
 
   .textcontainer {

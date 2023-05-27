@@ -75,6 +75,8 @@ export const useEngine = () => {
 
     if (extra)
       useProps().value.extraRadiation = extra - 0.1 / TPS
+    if (extra <= 0)
+      useProps().value.extraRadiation = 0
   }
 
   function tickJournalUnlocks() {

@@ -45,6 +45,7 @@
           left: `calc(50% + ${pos.x * pixelsPerTileGlob}px)`
         }"
       />
+      <ElementsPoiPointer v-for="poi of poisToPointAt" :key="poi[3]" :poi="poi" />
     </div>
     <div v-if="rad" class="extranoise" :style="{ opacity: .3 * rad }" />
   </div>
@@ -77,6 +78,7 @@ const scaleFactor = computed(() => 1 / zoomFactor.value)
 const container = ref(null)
 const position = usePosition()
 const worldEntities = useWorldEntities()
+const worldPois = useWorldPois()
 const rad = useRadiation()
 const crosshairs = useCrosshairs()
 const scaneff = useScanEffects()
@@ -87,6 +89,17 @@ const hLines = useState<number[]>(() => ([]))
 const entities = useState<Entity[]>(() => ([]))
 const ambianceColor = useState<string>(() => '#00000000')
 const pixelsPerTileGlob = useState<number>(() => 1)
+
+const poisToPointAt = computed(() => [...worldPois.value.values()].map(p => {
+  const dist = Math.sqrt((position.value.x - p[0])**2 + (position.value.y - p[1])**2)
+  const lower = BASE_TILE_COUNT * 18
+  const upper = 100000
+  return [
+    ...p,
+    (dist - lower) / (upper - lower),
+    dist > lower && dist < upper
+  ] as const
+}))
 
 function update() {
   const bounds = (container.value! as Element)?.getBoundingClientRect()

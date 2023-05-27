@@ -64,7 +64,8 @@ export async function postCode(req: Request, res: Response) {
       },
       props: {
         resources: user.resources,
-        extraRadiation: 0
+        extraRadiation: 0,
+        unlocks: res.locals.user.unlocks
       } satisfies Packet.SC.UserPropsUpdate
     }
   })
@@ -88,7 +89,8 @@ export async function getMe(_req: Request, res: Response) {
       },
       props: {
         resources: res.locals.user.resources,
-        extraRadiation: 0
+        extraRadiation: 0,
+        unlocks: res.locals.user.unlocks
       } satisfies Packet.SC.UserPropsUpdate
     }
   })

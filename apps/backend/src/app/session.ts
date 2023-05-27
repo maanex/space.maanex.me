@@ -1,4 +1,4 @@
-import { Const, Formulas, Packet } from "@maanex/spacelib-common"
+import { Const, Formulas, Packet, UserUnlocks } from "@maanex/spacelib-common"
 import { Socket } from "socket.io"
 import { UserModel } from "../database/models/user.js"
 import { GeoUtils } from "../lib/geo-utils.js"
@@ -60,6 +60,14 @@ export namespace Session {
     activeUsers.forEach(other => Realtime.introIdlePlacer(other, user))
   }
 
+  function unlockUserFeature(user: ActiveUser, unlock: UserUnlocks) {
+    if (user.data.unlocks.includes(unlock))
+      return
+
+    user.data.unlocks.push(unlock)
+    user.send(Packet.SC.PROPS({ unlocks: user.data.unlocks }))
+  }
+
   function tickCenterTeleport(user: ActiveUser) {
     if (user.data.posX > Const.mapRing1) return
     if (user.data.posX < -Const.mapRing1) return
@@ -82,6 +90,10 @@ export namespace Session {
       user.data.posX = newX
       user.data.posY = newY
     }, 500)
+    setTimeout(() => {
+      user.send(Packet.SC.JOURNAL('teleport'))
+      unlockUserFeature(user, UserUnlocks.TELEPORT_KNOWLEDGE)
+    }, 20_000)
   }
 
   /** timer id will go up to 100 before dropping back to 0 (5 second interval) */

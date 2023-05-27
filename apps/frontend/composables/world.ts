@@ -1,4 +1,4 @@
-import { EntityType } from "~/../../packages/common/dist"
+import { EntityType, Packet } from "~/../../packages/common/dist"
 
 
 export type Entity = {
@@ -10,6 +10,8 @@ export type Entity = {
 }
 
 export const useWorldEntities = () => useState<Map<number, Entity>>('world', () => new Map())
+
+export const useWorldPois = () => useState<Map<string, Packet.SC.Poi>>('pois', () => new Map())
 
 export const useRadiation = () => useState<number>('radiation', () => 0)
 

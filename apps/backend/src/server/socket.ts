@@ -95,6 +95,7 @@ export default class SocketServer {
   // 
 
   public static sendPacket(socket: Socket, packet: Packet.Data) {
+    if (!socket?.connected) return
     socket.emit(...packet)
   }
 
