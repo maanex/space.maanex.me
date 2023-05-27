@@ -1,5 +1,5 @@
-import { Realtime } from "../realtime"
-import { Session } from "../session"
+import { Realtime } from "../realtime.js"
+import { Session } from "../session.js"
 
 
 export function POS(sender: Session.ActiveUser, x: number, y: number, rot: number) {

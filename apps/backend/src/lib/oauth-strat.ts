@@ -1,6 +1,6 @@
 import { encode, stringify } from 'querystring'
 import Axios from 'axios'
-import { config } from '../index'
+import { config } from '../index.js'
 
 
 /* eslint-disable camelcase */

@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node ./dist/index.js",
+    "start": "node ./dist/index.js",
     "build": "tsc",
     "lint": "eslint --ext .ts --ignore-path ..\\..\\.gitignore .\\src",
-    "dev": "tsc && node --trace-warnings --experimental-specifier-resolution=node ./dist/index.js"
+    "dev": "tsc && node --trace-warnings ./dist/index.js"
   },
   "dependencies": {
     "@maanex/spacelib-common": "*",

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { EntityModel } from './models/entity'
-import { UserModel } from './models/user'
+import { EntityModel } from './models/entity.js'
+import { UserModel } from './models/user.js'
 
 
 export namespace Mongo {

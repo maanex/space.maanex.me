@@ -5,8 +5,8 @@
 
 import { readFileSync } from 'fs'
 import jwtlib from 'jsonwebtoken'
-import { config } from '..'
-import type { UserAuth } from './user-auth'
+import { config } from '../index.js'
+import type { UserAuth } from './user-auth.js'
 
 
 export default class JWT {

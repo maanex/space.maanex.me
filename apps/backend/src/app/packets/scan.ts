@@ -1,6 +1,6 @@
 import { Packet } from "@maanex/spacelib-common"
-import { EntityManager } from "../../database/entity-manager"
-import { Session } from "../session"
+import { EntityManager } from "../../database/entity-manager.js"
+import { Session } from "../session.js"
 
 
 export async function SCAN(sender: Session.ActiveUser, power: number) {

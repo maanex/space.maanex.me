@@ -1,7 +1,7 @@
 /* eslint-disable spaced-comment */
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
 import { EntityType } from '@maanex/spacelib-common'
-import { EntityManager } from '../entity-manager'
+import { EntityManager } from '../entity-manager.js'
 
 
 export namespace EntityModel {

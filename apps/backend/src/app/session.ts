@@ -1,8 +1,8 @@
 import { Const, Formulas, Packet } from "@maanex/spacelib-common"
 import { Socket } from "socket.io"
-import { UserModel } from "../database/models/user"
-import { GeoUtils } from "../lib/geo-utils"
-import { Realtime } from "./realtime"
+import { UserModel } from "../database/models/user.js"
+import { GeoUtils } from "../lib/geo-utils.js"
+import { Realtime } from "./realtime.js"
 
 
 export namespace Session {

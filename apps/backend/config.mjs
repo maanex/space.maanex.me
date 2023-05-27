@@ -1,19 +1,13 @@
-const fs = require('fs')
-let devConfig
-try { devConfig = require('./dev-config') } catch (ex) { }
-
-const secretPrefix = 'MNXSPACE_'
-const secretSuffix = ''
+import fs from 'fs'
+import devConfig from './dev-config.mjs'
 
 function loadArg(name) {
-  const extName = secretPrefix + name + secretSuffix
-
-  if (devConfig?.env[extName] !== undefined)
-    return devConfig.env[extName]
-  else if (fs.existsSync(`/run/secrets/${extName}`))
-    return fs.readFileSync('/run/secrets/' + extName).toString()
+  if (devConfig?.env[name] !== undefined)
+    return devConfig.env[name]
+  else if (fs.existsSync(`/run/secrets/${name}`))
+    return fs.readFileSync('/run/secrets/' + name).toString()
   else
-    return process.env[extName]
+    return process.env[name]
 }
 
 

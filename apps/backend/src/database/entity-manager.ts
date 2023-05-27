@@ -1,8 +1,8 @@
-import FlipflopCache from "../lib/flipflop-cache"
-import { EntityModel } from "./models/entity"
-import { Mongo } from "./mongo"
-import { config } from "../config"
-import { GeoUtils } from "../lib/geo-utils"
+import FlipflopCache from "../lib/flipflop-cache.js"
+import { EntityModel } from "./models/entity.js"
+import { Mongo } from "./mongo.js"
+import { config } from "../config.js"
+import { GeoUtils } from "../lib/geo-utils.js"
 import { Const, EntityType } from "@maanex/spacelib-common"
 
 

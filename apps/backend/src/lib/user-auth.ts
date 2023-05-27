@@ -1,10 +1,9 @@
-import { Const } from '@maanex/spacelib-common'
-import { config } from '..'
-import { UserModel } from '../database/models/user'
-import { Mongo } from "../database/mongo"
-import { UserManager } from '../database/user-manager'
-import JWT from './jwt'
-import { UnifiedUserObject } from './oauth-strat'
+import { config } from '../index.js'
+import { UserModel } from '../database/models/user.js'
+import { Mongo } from "../database/mongo.js"
+import { UserManager } from '../database/user-manager.js'
+import JWT from './jwt.js'
+import { UnifiedUserObject } from './oauth-strat.js'
 
 
 export namespace UserAuth {

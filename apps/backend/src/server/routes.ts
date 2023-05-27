@@ -1,9 +1,9 @@
 import { Response, Router } from 'express'
 import cors from 'cors'
-import ReqError from '../lib/req-error'
-import gateway from '../middleware/gateway'
-import { config } from '..'
-import { getLogin, getMe, postCode } from './auth'
+import ReqError from '../lib/req-error.js'
+import gateway from '../middleware/gateway.js'
+import { config } from '../config.js'
+import { getLogin, getMe, postCode } from './auth.js'
 
 
 export default class Routes {

@@ -1,5 +1,5 @@
 import { EntityType, Packet } from "@maanex/spacelib-common"
-import { Session } from "./session"
+import { Session } from "./session.js"
 
 
 export namespace Realtime {

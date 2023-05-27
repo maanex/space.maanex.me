@@ -1,6 +1,6 @@
 import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
-import { Session } from "../session"
-import { EntityManager } from "../../database/entity-manager"
+import { Session } from "../session.js"
+import { EntityManager } from "../../database/entity-manager.js"
 
 
 export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {

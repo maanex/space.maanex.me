@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import OAuthStrat, { UnifiedUserObject } from '../lib/oauth-strat'
-import ReqError from '../lib/req-error'
-import { UserAuth } from '../lib/user-auth'
-import { UserModel } from '../database/models/user'
-import JWT from '../lib/jwt'
+import OAuthStrat, { UnifiedUserObject } from '../lib/oauth-strat.js'
+import ReqError from '../lib/req-error.js'
+import { UserAuth } from '../lib/user-auth.js'
+import { UserModel } from '../database/models/user.js'
+import JWT from '../lib/jwt.js'
 import { Packet } from '@maanex/spacelib-common'
 
 

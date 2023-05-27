@@ -1,10 +1,10 @@
 import * as http from 'http'
 import express from 'express'
-import { config } from "."
-import Routes from './server/routes'
-import { Mongo } from './database/mongo'
-import SocketServer from './server/socket'
-import { Session } from './app/session'
+import { config } from "./index.js"
+import Routes from './server/routes.js'
+import { Mongo } from './database/mongo.js'
+import SocketServer from './server/socket.js'
+import { Session } from './app/session.js'
 
 
 export namespace Modules {
@@ -45,7 +45,7 @@ export namespace Modules {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Response } from 'express'
-import { UserModel } from './database/models/user'
+import { UserModel } from './database/models/user.js'
 
 
 declare module 'express' {

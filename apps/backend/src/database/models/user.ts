@@ -1,9 +1,9 @@
 /* eslint-disable spaced-comment */
 import { Schema as MongooseSchema, Document as MongooseDocument } from 'mongoose'
-import { UnifiedUserObject } from '../../lib/oauth-strat'
+import { UnifiedUserObject } from '../../lib/oauth-strat.js'
 import { randomBytes } from 'node:crypto'
 import { Const } from '@maanex/spacelib-common'
-import { World } from '../../app/world'
+import { World } from '../../app/world.js'
 
 
 export namespace UserModel {
