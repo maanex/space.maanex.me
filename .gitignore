@@ -10,5 +10,5 @@ dist
 .yarn/*.gz
 .turbo
 config.js
-config.mjs
+dev-config.mjs
 /out

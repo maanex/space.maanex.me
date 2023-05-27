@@ -36,7 +36,7 @@ export default {
   },
   auth: {
     requireEmail: false,
-    callbackUrl: 'http://localhost:3000/callback',
+    callbackUrl: loadArg('MNXSPACE_CALLBACK_URL'),
     discord: {
       client_id: '1106241051842326669',
       client_secret: loadArg('MNXSPACE_DISCORD_CLIENT_SECRET')
