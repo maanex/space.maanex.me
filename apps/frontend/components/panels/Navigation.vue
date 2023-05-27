@@ -46,6 +46,7 @@ const pilot = ref(null)
 const zoom = ref(null)
 const { x, y } = useMouse()
 const { pressed } = useMousePressed()
+const { space } = useMagicKeys()
 
 const moveHandle = useState<null | 'direction' | 'accl' | 'scan' | 'zoom'>(() => null)
 watch(pressed, (val) => { if (!val) moveHandle.value = null })
@@ -80,6 +81,8 @@ function handleMoveAccl() {
     ? (1 - (-rad / Math.PI))
     : (rad < Math.PI/2 ? 1 : 0)
   handleAccl.value = outVal
+
+  keybindTriggered.value = false
 }
 
 const handleScan = useScanHandle()
@@ -122,6 +125,35 @@ function handleMove() {
 }
 watch(x, handleMove)
 watch(y, handleMove)
+
+const keybindTimer = useState<any>(() => null)
+const keybindTriggered = useState<boolean>(() => false)
+function tickKeybind() {
+  if (space.value && moveHandle.value === 'direction') {
+    handleAccl.value += (1 - handleAccl.value) * 0.01
+    if (!keybindTriggered.value) keybindTriggered.value = true
+  } else if (!space.value && keybindTriggered.value) {
+    handleAccl.value *= 0.98
+    if (handleAccl.value < 0.01) {
+      handleAccl.value = 0
+      keybindTriggered.value = false
+    }
+  }
+}
+
+onMounted(() => {
+  if (keybindTimer.value)
+    clearInterval(keybindTimer.value)
+
+  keybindTimer.value = setInterval(tickKeybind, 20)
+})
+
+onBeforeUnmount(() => {
+  if (keybindTimer.value)
+    clearInterval(keybindTimer.value)
+
+  handleAccl.value = 0
+})
 
 function updateDirection() {
   const bounds = (pilot.value! as Element)?.getBoundingClientRect()

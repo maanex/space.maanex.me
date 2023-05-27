@@ -4,6 +4,7 @@ import { Mongo } from "../database/mongo.js"
 import { UserManager } from '../database/user-manager.js'
 import JWT from './jwt.js'
 import { UnifiedUserObject } from './oauth-strat.js'
+import { sendDiscordWebhook } from './discord.js'
 
 
 export namespace UserAuth {
@@ -35,6 +36,7 @@ export namespace UserAuth {
 
     if (found) {
       UserManager.introduceUser(found)
+      sendDiscordWebhook('USER', `${user.uuid} (${user.username}) logged in`)
       return [ await JWT.signAuth({ id: found._id }), found, false ]
     }
 
@@ -47,6 +49,7 @@ export namespace UserAuth {
       authn
     })
     const obj = await create.save()
+    sendDiscordWebhook('USER', `${user.uuid} (${user.username}) joined newly`)
     return [ await JWT.signAuth({ id: obj._id }), create, true ]
   }
 

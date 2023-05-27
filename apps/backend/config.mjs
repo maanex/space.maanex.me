@@ -20,6 +20,9 @@ export default {
   frontend: {
     url: loadArg('MNXSPACE_FRONTEND_URL')
   },
+  notifications: {
+    discordWebhookUrl: loadArg('MNXSPACE_DISCORD_WEBHOOK_URL')
+  },
   keys: {
     privateKeyUri: loadArg('MNXSPACE_PRIVATE_KEY_URI')
   },

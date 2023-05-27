@@ -1,6 +1,7 @@
 import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
 import { Session } from "../session.js"
 import { EntityManager } from "../../database/entity-manager.js"
+import { sendDiscordWebhook } from "../../lib/discord.js"
 
 
 export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
@@ -40,7 +41,8 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
 
 /** @returns the created entity id */
 async function putEntity(sender: Session.ActiveUser, type: EntityType, x: number, y: number, data: any): Promise<number> {
-  console.log(`${sender.data.id} placed a ${type} at ${x} ${y} with data ${data}`)
+  // console.log(`${sender.data.id} (${sender.data.authn.username}) placed a ${type} at ${x} ${y} with data ${data}`)
+  sendDiscordWebhook('ENTITY SPAWN', `${sender.data.uuid} (${sender.data.authn.username}) spawned a ${type} at ${x} ${y} with data \`${data}\``)
   const ent = await EntityManager.createEntity({
     creator: sender.data.id,
     type,

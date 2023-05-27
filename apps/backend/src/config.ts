@@ -4,6 +4,9 @@ export type configjs = {
   frontend: {
     url: string
   }
+  notifications: {
+    discordWebhookUrl: string
+  }
   keys: {
     privateKeyUri: string
   }
