@@ -1,5 +1,8 @@
 import fs from 'fs'
-import devConfig from './dev-config.mjs'
+
+const devConfig = fs.existsSync('./dev-config.json')
+  ? JSON.parse(fs.readFileSync('./dev-config.json'))
+  : {}
 
 function loadArg(name) {
   if (devConfig?.env[name] !== undefined)
