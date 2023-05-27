@@ -31,6 +31,7 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
   switch (type) {
     case EntityType.MESSAGE:
       if (typeof data !== 'string') return null
+      if (data.split('').some(c => !Const.charsetAllowedInMessages.includes(c))) return null
       return Formulas.simpleWriteCost(data.length)
     default:
       return null

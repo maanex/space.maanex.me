@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { EntityType, Formulas } from '@maanex/spacelib-common'
+import { Const, EntityType, Formulas } from '@maanex/spacelib-common'
 import { Entity } from '~/composables/world';
 
 const x = useState(`diamondpicker-writesimple-pos-x`, () => 0)
@@ -86,6 +86,17 @@ function updateCrosshair() {
 watch(x, updateCrosshair)
 watch(y, updateCrosshair)
 onBeforeUnmount(() => { delete crosshairs.value.writesimple })
+
+watch(text, (val) => {
+  let sanitized = ''
+  for (const char of val) {
+    if (Const.charsetAllowedInMessages.includes(char))
+      sanitized += char
+  }
+  if (sanitized === val)
+    return
+  text.value = sanitized
+})
 </script>
 
 <style scoped lang="scss">

@@ -3,7 +3,7 @@
     <div class="inner" />
     <div class="data">
       <span v-text="'0×' + sig" />
-      <span v-text="mes" />
+      <pre v-text="mes" />
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@ const mes = computed(() => data.slice(4))
     box-sizing: border-box;
     gap: .5vw;
 
-    :first-child {
+    span {
       font-size: .8em;
       text-transform: uppercase;
       font-family: $font-header;
@@ -64,8 +64,10 @@ const mes = computed(() => data.slice(4))
       line-height: 1em;
     }
 
-    :last-child {
+    pre {
       line-height: 1em;
+      margin: 0;
+      padding: 0;
     }
   }
 }

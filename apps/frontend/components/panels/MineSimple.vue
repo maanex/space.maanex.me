@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { Entity } from '~/composables/world'
 import { Vector } from '~/composables/position'
+import { EntityType } from '@maanex/spacelib-common'
 
 const x = useState(`diamondpicker-minesimple-pos-x`, () => 0)
 const y = useState(`diamondpicker-minesimple-pos-y`, () => 0)
@@ -54,6 +55,8 @@ function updateFocusEntity(userPos: Vector) {
   let selEnt = null
   let selDist = 999999
   for (const ent of entities.value.values()) {
+    if (ent.type !== EntityType.RESOURCE) continue
+
     const dist = Math.sqrt((ent.x - (userPos.x + xVal))**2 + (ent.y - (userPos.y - yVal))**2)
     if (dist > 36) continue
     if (dist > selDist) continue
