@@ -2,6 +2,7 @@
   <div class="other">
     <div v-if="id === WorldsEntities.MERCHANT_WESTSIDE_OUTPOST" class="westside" />
     <div v-else-if="id === WorldsEntities.MERCHANT_EASTSIDE_OUTPOST" class="eastside" />
+    <div v-else-if="id === WorldsEntities.MERCHANT_BELOR_TOOLS" class="belortools" />
   </div>
 </template>
 
@@ -34,8 +35,15 @@ const { id, data } = defineProps<{
 
 .westside, .eastside {
   background-image: url('~/assets/img/outpost.svg');
-  width: 90vw;
-  height: 90vw;
+  width: calc(200vw * var(--vws));
+  height: calc(200vw * var(--vws));
   animation: rotate 300s linear infinite;
+}
+
+.belortools {
+  background-image: url('~/assets/img/belortools.svg');
+  width: calc(40vw * var(--vws));
+  height: calc(40vw * var(--vws));
+  transform: rotate(145deg);
 }
 </style>

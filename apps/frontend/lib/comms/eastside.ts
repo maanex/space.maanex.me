@@ -19,7 +19,7 @@ function renderItemInList(item: Item, selected: boolean): string {
   return item ? ((selected ? '> ' : '  ') + item.name.padEnd(maxItemName) + '   ' + `<${item.price.toString()}>`.padStart(7)) : ''
 }
 
-export function commsWestside(state: State | null, pressed: ArrowStr | null): [string, State] {
+export function commsEastside(state: State | null, pressed: ArrowStr | null): [string, State] {
   if (!state)
     state = { cursor: 0, focused: null }
 
@@ -33,7 +33,7 @@ export function commsWestside(state: State | null, pressed: ArrowStr | null): [s
   }
 
   const text = (state.focused === null) ? [
-    'Welcome to Westside Outpost!',
+    'Welcome to Eastside Outpost!',
     '-'.repeat(46),
     renderItemInList(items[0], state.cursor === 0),
     renderItemInList(items[1], state.cursor === 1),

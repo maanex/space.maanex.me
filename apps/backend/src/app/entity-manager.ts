@@ -43,7 +43,7 @@ export namespace EntityManager {
   export async function getEntitiesNear(x: number, y: number, range: number): Promise<EntityModel.DataType[]> {
     const realEnts = await makeEntitiesNearLookup(x, y)
     const naturalEnts = getNaturalEntitiesNearby(x, y, range)
-    return [ ...realEnts, ...naturalEnts ].filter(e => GeoUtils.distancePoint(e.pos, x, y) <= range)
+    return [ ...realEnts, ...naturalEnts ].filter(e => GeoUtils.distancePoint(e.pos, x, y) <= (e.type === EntityType.SPECIAL ? 3*range : range))
   }
 
   export async function makeEntitiesNearLookup(x: number, y: number): Promise<EntityModel.DataType[]> {

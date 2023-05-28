@@ -13,6 +13,8 @@
 import { EntityType, WorldsEntities } from '@maanex/spacelib-common'
 import { Entity } from '../../composables/world'
 import { commsWestside } from '../../lib/comms/westside'
+import { commsEastside } from '../../lib/comms/eastside'
+import { commsBelortools } from '../../lib/comms/belortools'
 
 const ents = useWorldEntities()
 const pos = usePosition()
@@ -26,7 +28,10 @@ const commText = useState<string>(() => '')
 /** (current state, pressed button) => [ output text, new state ] */
 type CommsHandler<T> = (state: T, pressed: 'up' | 'down' | 'left' | 'right' | null) => [string, T]
 const available: Partial<Record<WorldsEntities, CommsHandler<any>>> = {
-  [WorldsEntities.MERCHANT_WESTSIDE_OUTPOST]: (...a) => commsWestside(...a) // ...a is for hot reload, can be simplified
+  // // ...a is for hot reload, can be simplified
+  [WorldsEntities.MERCHANT_WESTSIDE_OUTPOST]: (...a) => commsWestside(...a),
+  [WorldsEntities.MERCHANT_EASTSIDE_OUTPOST]: (...a) => commsEastside(...a),
+  [WorldsEntities.MERCHANT_BELOR_TOOLS]: (...a) => commsBelortools(...a)
 }
 
 const displayText = computed(() => (connected.value && inRange.value) ? commText.value : 'No communication partner nearby. Please get closer.')
@@ -73,6 +78,7 @@ function update() {
 
 watch(ents.value, update)
 watch(pos.value, update)
+onMounted(update)
 </script>
 
 <style scoped lang="scss">
