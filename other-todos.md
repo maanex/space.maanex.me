@@ -7,7 +7,7 @@
   + updated "fetch"/"request" approach to receiving entities
 
 [ ] unlockable ship components
-[ ] npc merchants
+[X] npc merchants
 [ ] auto reconnect players if socket is lost for longer
 [ ] let users accept tos
 [ ] only start sound once "ingame"
@@ -26,9 +26,9 @@
   * find formula that works
   * communicate this through the ui
 
-[ ] points of interest
-  * show on map
-  * shopping?
+[X] points of interest
+  + show on map
+  + shopping?
 
 [X] radiation
   + calc radiation score
@@ -37,15 +37,15 @@
   + add sound
   + make movement unpredictable
 
-[ ] add more journal hints
+[X] add more journal hints
   + basic movement
   + next: how to read and write messages
   + when entering ring1: radiation and dangers
   + when entering ring3: outer world explained
   + when seeing another person
   + mining tutorial
+  + points of interest
   * after some unlocks or time: different ship components
-  * points of interest
 
 [X] update messages to have support for bigger ones + show author
 [X] render other users properly
