@@ -35,18 +35,18 @@
 import PanelsLocation from './Location.vue'
 import PanelsNavigation from './Navigation.vue'
 import PanelsTest from './Test.vue'
-import PanelsTool from './Tool.vue'
 import PanelsWriteSimple from './WriteSimple.vue'
 import PanelsMineSimple from './MineSimple.vue'
+import PanelsComs from './Coms.vue'
 
 const { state } = defineProps<{
   state: 0 | 1 | 2
 }>()
 
 const availablePanels = [
-  [ 'location' ],
+  [ 'location', 'test1' ],
   [ 'navigation' ],
-  [ 'test1', 'test2', 'write-simple', 'mine-simple' ]
+  [ 'write-simple', 'mine-simple', 'coms' ]
 ] as const
 type availablePanelsType = typeof availablePanels[number][number]
 
@@ -55,9 +55,9 @@ const renderPanel: Record<availablePanelsType | 'none', any> = {
   'location': PanelsLocation,
   'navigation': PanelsNavigation,
   'test1': PanelsTest,
-  'test2': PanelsTool,
   'write-simple': PanelsWriteSimple,
   'mine-simple': PanelsMineSimple,
+  'coms': PanelsComs,
 }
 
 const defaultPages = [ 'location', 'navigation', 'write-simple' ] as const
@@ -86,9 +86,9 @@ const panelDisplayName: Record<availablePanelsType, string> = {
   'location': 'location',
   'navigation': 'navigation',
   'test1': 'debug',
-  'test2': 'debug',
   'write-simple': 'primitive engraver',
   'mine-simple': 'primitive harvester',
+  'coms': 'comms terminal',
 }
 </script>
 

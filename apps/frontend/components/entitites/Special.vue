@@ -16,7 +16,8 @@ const { id, data } = defineProps<{
 
 <style scoped lang="scss">
 .other {
-  animation: entin 2s ease-out forwards;
+  opacity: 0;
+  animation: entin 4s ease forwards;
 }
 
 @keyframes entin {

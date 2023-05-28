@@ -92,7 +92,7 @@ onBeforeUnmount(() => { delete crosshairs.value.minesimple })
   animation: bg-jitter 1s steps(1) forwards infinite;
   width: 100%;
   height: 100%;
-  padding: 1vw;
+  padding: calc(1.5vw * var(--vws));;
   display: grid;
   grid-template-columns: 40% 50%;
   column-gap: 10%;
