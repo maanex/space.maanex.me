@@ -23,7 +23,8 @@ export default class Routes {
     /* GATEWAY */
 
     r.use(cors({
-      origin: config.frontend.url ?? 'http://localhost:3000'
+      origin: config.frontend.url ?? 'http://localhost:3000',
+      credentials: true
     }))
 
 
