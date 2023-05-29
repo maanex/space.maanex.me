@@ -46,7 +46,12 @@ export async function postCode(req: Request, res: Response) {
   if ('error' in authUser)
     return res.status(400).send({ success: false, error: authUser.error, message: 'An error occurred' })
 
-  const [ token, user, initial ] = await UserAuth.loginOrRegisterUser(authUser)
+  const authed = await UserAuth.loginOrRegisterUser(authUser)
+
+  if (typeof authed === 'string')
+    return res.status(400).send({ success: false, error: authed, message: 'error in userauth' })
+
+  const [ token, user, initial ] = authed
 
   res.status(200).send({
     token,

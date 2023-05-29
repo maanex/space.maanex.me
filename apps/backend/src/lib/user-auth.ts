@@ -29,10 +29,13 @@ export namespace UserAuth {
    * @param user user to login or register
    * @returns tupel with JWT, user object and boolean whether setup is required or not
    */
-  export async function loginOrRegisterUser(user: UnifiedUserObject): Promise<[string, UserModel.Type, boolean]> {
-    if (config.auth.requireEmail && !user.email_verified) return
+  export async function loginOrRegisterUser(user: UnifiedUserObject): Promise<[string, UserModel.Type, boolean] | 'bad_gateway' | 'missing_permissions'> {
+    if (config.auth.requireEmail && !user.email_verified) return 'missing_permissions'
 
-    const found: UserModel.Type = await Mongo.User.findOne({ uuid: user.uuid }).exec()
+    const found: UserModel.Type | 0 = await Mongo.User.findOne({ uuid: user.uuid }).exec().catch(() => 0)
+
+    if (found === 0)
+      return 'bad_gateway'
 
     if (found) {
       UserManager.introduceUser(found)
