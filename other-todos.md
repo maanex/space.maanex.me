@@ -6,12 +6,13 @@
   + scanning animation
   + updated "fetch"/"request" approach to receiving entities
 
-[ ] unlockable ship components
+[X] unlockable ship components
 [X] npc merchants
 [ ] auto reconnect players if socket is lost for longer
 [ ] let users accept tos
 [ ] only start sound once "ingame"
 [ ] add volume options
+[ ] desktop only screen
 [X] discord webhook when someone writes something
 [X] only allow ascii on messages
 [X] allow messages to be multiline in rendering

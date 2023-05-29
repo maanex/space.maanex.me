@@ -71,7 +71,7 @@ export namespace EntityManager {
 
   //
 
-  const naturalsChuckSize = 3000
+  const naturalsChuckSize = 2000
   export const naturalsRichness: FlipflopCache<number> = new FlipflopCache(config.caches.naturalEntitiesTtl)
 
   function naturalsSeededRandom(seed: number) {

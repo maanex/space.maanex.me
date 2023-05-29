@@ -20,7 +20,7 @@ const docsData = [
   {
     key: 'mining',
     title: 'Intro: Getting resources',
-    text: 'Sooner or later you will run out of resources. To get more you need to harvest them. For that you need to know that each of your panels can be unplugged. Click the icon on the bottom left of a panel to do so. Once unplugged you can plug in a different panel. Switch one panel to the harvester. Fly around and locate a blue entity, those are resources. Use your cursor to focus on the resource and start harvesting.'
+    text: 'Sooner or later you will run out of resources. To get more you need to harvest them. For that you need to know that each of your panels can be unplugged. Click the icon on the bottom left of a panel to do so. Once unplugged you can plug in a different panel. Switch one panel to the harvester. Fly around and locate a blue entity, those are resources. If you can\'t find any, remember that only ring 2 contains natural resources. Once found, use your cursor to focus on the resource and start harvesting.'
   },
   // TUTORIAL-ISH
   {
@@ -92,7 +92,7 @@ export type DocumentId = (typeof docsData)[number]['key']
 
 //
 
-export const useDocumentData = () => useState<Document<DocumentId>[]>('document-data', () => [...docsData] as Document[])
+export const useDocumentData = () => useState<Document<DocumentId>[]>('document-data', () => [...docsData] as Document<any>[])
 
 /** document key -> has been read, false means it is new. not unlocked = not in record */
 export const useDocuments = () => useState<Map<DocumentId, boolean>>('documents', () => new Map())

@@ -1,4 +1,4 @@
-import { Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
+import { Color, Const, EntityType, Formulas, Packet } from "@maanex/spacelib-common"
 import { Session } from "../session.js"
 import { EntityManager } from "../entity-manager.js"
 import { sendDiscordWebhook } from "../../lib/discord.js"
@@ -35,7 +35,8 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
     case EntityType.MESSAGE:
       if (typeof data !== 'string') return null
       if (data.split('').some(c => !Const.charsetAllowedInMessages.includes(c))) return null
-      return Formulas.simpleWriteCost(data.length)
+      if (![ Color.BLACK, Color.BLUE, Color.BROWN, Color.GREEN, Color.MINT, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW ].includes(data[0] as any)) return null
+      return Formulas.simpleWriteCost(data.length-1)
     default:
       return null
   }

@@ -73,6 +73,7 @@ function cheatcode() {
   color: #000000;
   padding: 1vw 0;
   border-radius: 1.2vw;
+  overflow-y: scroll;
 
   & > * {
     opacity: .7;

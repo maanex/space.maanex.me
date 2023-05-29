@@ -12,7 +12,7 @@
   <div v-else class="select">
     <div class="buttons">
       <button
-        v-for="p in availablePanels[browsingPage]"
+        v-for="p in visiblePanels"
         :key="p"
         @click="showing = p"
         :disabled="alreadyUsed.includes(p)"
@@ -38,15 +38,19 @@ import PanelsTest from './Test.vue'
 import PanelsWriteSimple from './WriteSimple.vue'
 import PanelsMineSimple from './MineSimple.vue'
 import PanelsComs from './Coms.vue'
+import LinePainter from './LinePainter.vue'
+import { UserUnlocks } from '@maanex/spacelib-common'
 
 const { state } = defineProps<{
   state: 0 | 1 | 2
 }>()
 
+const props = useProps()
+
 const availablePanels = [
   [ 'location', 'test1' ],
   [ 'navigation' ],
-  [ 'write-simple', 'mine-simple', 'coms' ]
+  [ 'write-simple', 'mine-simple', 'coms', 'line-painter' ]
 ] as const
 type availablePanelsType = typeof availablePanels[number][number]
 
@@ -58,6 +62,7 @@ const renderPanel: Record<availablePanelsType | 'none', any> = {
   'write-simple': PanelsWriteSimple,
   'mine-simple': PanelsMineSimple,
   'coms': PanelsComs,
+  'line-painter': LinePainter
 }
 
 const defaultPages = [ 'location', 'navigation', 'write-simple' ] as const
@@ -77,6 +82,11 @@ function getPageFor(panel: availablePanelsType | 'none'): number {
 
 const browsingPage = useState<number>(`universal-panel-browse-${state}`, () => state)
 
+const visiblePanels = computed(() => {
+  return (availablePanels[browsingPage.value] as readonly string[])
+    .filter((p) => !(p in panelVisibilityRequirements) || props.value.unlocks.includes((panelVisibilityRequirements as any)[p])) as availablePanelsType[]
+})
+
 function dismount() {
   browsingPage.value = getPageFor(showing.value)
   showing.value = 'none'
@@ -89,6 +99,11 @@ const panelDisplayName: Record<availablePanelsType, string> = {
   'write-simple': 'primitive engraver',
   'mine-simple': 'primitive harvester',
   'coms': 'comms terminal',
+  'line-painter': 'line painter'
+}
+
+const panelVisibilityRequirements: Partial<Record<availablePanelsType, UserUnlocks>> = {
+  'line-painter': UserUnlocks.LINE_PAINTER
 }
 </script>
 

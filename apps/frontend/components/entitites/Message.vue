@@ -1,6 +1,6 @@
 <template>
   <div class="message">
-    <div class="inner" />
+    <div class="inner" :style="`--c1:var(--col-${color});--c0:var(--col-${color}0)`" />
     <div class="data">
       <span v-text="'0×' + sig" />
       <pre v-text="mes" />
@@ -14,7 +14,8 @@ const { data } = defineProps<{
 }>()
 
 const sig = computed(() => data.slice(0, 4))
-const mes = computed(() => data.slice(4))
+const color = computed(() => data.charAt(4))
+const mes = computed(() => data.slice(5))
 </script>
 
 <style scoped lang="scss">
@@ -68,13 +69,15 @@ const mes = computed(() => data.slice(4))
       line-height: 1em;
       margin: 0;
       padding: 0;
+      white-space: pre-wrap;
+      width: 100%;
     }
   }
 }
 
 @keyframes entin {
-  0% { transform: rotate(0deg); height: 0; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 0.4; }
-  50% { transform: rotate(0deg); height: 1vw; border-width: 1px; background-color: #169b6400; border-radius: 0; opacity: 1; }
-  100% { transform: rotate(45deg); height: 1vw; border-width: .2vw; background-color: #169b64; border-radius: .3vw; opacity: 1; }
+  0% { transform: rotate(0deg); height: 0; border-width: 1px; background-color: var(--c0); border-radius: 0; opacity: 0.4; }
+  50% { transform: rotate(0deg); height: 1vw; border-width: 1px; background-color: var(--c0); border-radius: 0; opacity: 1; }
+  100% { transform: rotate(45deg); height: 1vw; border-width: .2vw; background-color: var(--c1); border-radius: .3vw; opacity: 1; }
 }
 </style>
