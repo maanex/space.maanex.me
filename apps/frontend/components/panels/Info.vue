@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- <h2>Lexicon</h2> -->
-    <h2>Journal</h2>
+    <h2 @dblclick="cheatcode">Journal</h2>
     <div
       v-for="doc,i of visibleDocs"
       :key="i"
@@ -29,6 +29,7 @@ import { useStorage } from '@vueuse/core'
 const open = useState(() => -1)
 const account = useAccount()
 
+const sock = useSocket()
 const docs = useDocuments()
 const docData = useDocumentData()
 const storage = useStorage<any>('documents', [ ['intro', false] ])
@@ -54,6 +55,12 @@ const visibleDocs = computed(() => docData.value
 function logout() {
   localStorage.removeItem('token')
   window.location.reload()
+}
+
+function cheatcode() {
+  const code = prompt('Enter cheat code')
+  if (!code) return
+  sock.sendCheatCode(code)
 }
 </script>
 

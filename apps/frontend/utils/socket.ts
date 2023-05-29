@@ -1,5 +1,6 @@
-import { EntityType, Packet } from '@maanex/spacelib-common'
+import { EntityType, Packet, WorldsEntities } from '@maanex/spacelib-common'
 import * as SocketIO from 'socket.io-client'
+import { ALERT } from '~/lib/packets/alert'
 import { EACK } from '~/lib/packets/eack'
 import { JOURNAL } from '~/lib/packets/journal'
 import { POI } from '~/lib/packets/poi'
@@ -10,6 +11,7 @@ import { UPDATE } from '~/lib/packets/update'
 
 
 const packetHandlers: Record<string, (...args: any) => void> = {
+  ALERT,
   EACK,
   JOURNAL,
   POI,
@@ -157,5 +159,11 @@ export const useSocket = () => ({
   },
   sendMinePacket(entity: number, amount: number) {
     useSocket().send(Packet.CS.MINE(entity, amount))
+  },
+  sendCheatCode(code: string) {
+    useSocket().send(Packet.CS.CHEAT(code))
+  },
+  sendPurchasePacket(shop: WorldsEntities, itemName: string) {
+    useSocket().send(Packet.CS.PURCHASE(shop, itemName))
   }
 })

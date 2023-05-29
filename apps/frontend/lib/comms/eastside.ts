@@ -33,7 +33,7 @@ export function commsEastside(state: State | null, pressed: ArrowStr | null): [s
   }
 
   const text = (state.focused === null) ? [
-    'Welcome to Eastside Outpost!',
+    'Welcome to Eastside!',
     '-'.repeat(46),
     renderItemInList(items[0], state.cursor === 0),
     renderItemInList(items[1], state.cursor === 1),

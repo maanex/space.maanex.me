@@ -5,6 +5,8 @@ import { World } from "../world.js"
 
 
 export async function SCAN(sender: Session.ActiveUser, power: number) {
+  if (typeof power !== 'number') return
+
   // TODO: cheat detection stuffies
 
   const range = Math.min(2000, ~~(power * 2500) + 160)

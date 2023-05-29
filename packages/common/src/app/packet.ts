@@ -1,4 +1,4 @@
-import { PoiType, UserUnlocks } from "./enums.js"
+import { PoiType, UserUnlocks, WorldsEntities } from "./enums.js"
 
 
 export namespace Packet {
@@ -69,6 +69,11 @@ export namespace Packet {
       return [ 'JOURNAL', name ]
     }
 
+    /** STRAIGHT UP ALERT SOMETHING */
+    export function ALERT(text: string): Data {
+      return [ 'ALERT', text ]
+    }
+
   }
 
   export namespace CS {
@@ -91,6 +96,16 @@ export namespace Packet {
     /** SAY YOU MINED SOMETHING */
     export function MINE(entity: number, amount: number): Data {
       return [ 'MINE', entity, amount ]
+    }
+
+    /** SEND CHEAT CODE */
+    export function CHEAT(code: string): Data {
+      return [ 'CHEAT', code ]
+    }
+
+    /** PURCHASE AN ITEM */
+    export function PURCHASE(shop: WorldsEntities, itemName: string): Data {
+      return [ 'PURCHASE', shop, itemName ]
     }
 
   }

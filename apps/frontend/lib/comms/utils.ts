@@ -1,7 +1,4 @@
 
-
-export type Item = { name: string, price: number, details: string }
-
 export type ArrowStr = 'up' | 'down' | 'left' | 'right'
 
 

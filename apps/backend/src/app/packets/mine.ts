@@ -4,6 +4,8 @@ import { Session } from "../session.js"
 
 
 export function MINE(sender: Session.ActiveUser, entity: number, amount: number) {
+  if (typeof entity !== 'number' || typeof amount !== 'number') return
+
   if (amount > 5) return
 
   const oldVal = EntityManager.naturalsRichness.get(String(entity))

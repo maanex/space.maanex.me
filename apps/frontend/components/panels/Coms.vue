@@ -10,14 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import { EntityType, WorldsEntities } from '@maanex/spacelib-common'
+import { EntityType, UserUnlocks, WorldsEntities } from '@maanex/spacelib-common'
 import { Entity } from '../../composables/world'
 import { commsWestside } from '../../lib/comms/westside'
 import { commsEastside } from '../../lib/comms/eastside'
 import { commsBelortools } from '../../lib/comms/belortools'
+import { ArrowStr } from '../../lib/comms/utils'
 
 const ents = useWorldEntities()
 const pos = usePosition()
+const props = useProps()
 
 const connected = useState<Entity | null>(() => null)
 const inRange = useState<boolean>(() => false)
@@ -26,12 +28,12 @@ const commState = useState<any>(() => null)
 const commText = useState<string>(() => '')
 
 /** (current state, pressed button) => [ output text, new state ] */
-type CommsHandler<T> = (state: T, pressed: 'up' | 'down' | 'left' | 'right' | null) => [string, T]
+type CommsHandler<T> = (state: T, pressed: ArrowStr | null, userResources: number, userUnlocks: UserUnlocks[]) => [string, T]
 const available: Partial<Record<WorldsEntities, CommsHandler<any>>> = {
   // // ...a is for hot reload, can be simplified
   [WorldsEntities.MERCHANT_WESTSIDE_OUTPOST]: (...a) => commsWestside(...a),
-  [WorldsEntities.MERCHANT_EASTSIDE_OUTPOST]: (...a) => commsEastside(...a),
-  [WorldsEntities.MERCHANT_BELOR_TOOLS]: (...a) => commsBelortools(...a)
+  // [WorldsEntities.MERCHANT_EASTSIDE_OUTPOST]: (...a) => commsEastside(...a),
+  // [WorldsEntities.MERCHANT_BELOR_TOOLS]: (...a) => commsBelortools(...a)
 }
 
 const displayText = computed(() => (connected.value && inRange.value) ? commText.value : 'No communication partner nearby. Please get closer.')
@@ -39,7 +41,7 @@ const displayText = computed(() => (connected.value && inRange.value) ? commText
 function clicked(direction: 'up' | 'down' | 'left' | 'right') {
   if (!connected.value || !inRange.value) return
   const handler = available[connected.value!.id as WorldsEntities]!
-  const [ text, state ] = handler(commState.value, direction)
+  const [ text, state ] = handler(commState.value, direction, props.value.resources, props.value.unlocks)
   commText.value = text
   commState.value = state
 }
@@ -48,7 +50,7 @@ function clicked(direction: 'up' | 'down' | 'left' | 'right') {
 
 function newCommEntity() {
   const handler = available[connected.value!.id as WorldsEntities]!
-  const [ text, state ] = handler(null, null)
+  const [ text, state ] = handler(null, null, props.value.resources, props.value.unlocks)
   commText.value = text
   commState.value = state
 }

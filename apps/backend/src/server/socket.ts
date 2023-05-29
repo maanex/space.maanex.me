@@ -5,8 +5,10 @@ import { Server, Socket } from 'socket.io'
 import { Session } from '../app/session.js'
 import { UserManager } from '../app/user-manager.js'
 import { UserAuth } from '../lib/user-auth.js'
+import { CHEAT } from '../app/packets/cheat.js'
 import { MINE } from '../app/packets/mine.js'
 import { POS } from '../app/packets/pos.js'
+import { PURCHASE } from '../app/packets/purchase.js'
 import { SCAN } from '../app/packets/scan.js'
 import { SPAWN } from '../app/packets/spawn.js'
 import { EntityManager } from '../app/entity-manager.js'
@@ -17,8 +19,10 @@ import { config } from '../config.js'
 export default class SocketServer {
 
   private static packetHandlers: Record<string, (sender: Session.ActiveUser, ...args: any) => void> = {
+    CHEAT,
     MINE,
     POS,
+    PURCHASE,
     SCAN,
     SPAWN
   }

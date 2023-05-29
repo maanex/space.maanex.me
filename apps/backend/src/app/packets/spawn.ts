@@ -5,6 +5,8 @@ import { sendDiscordWebhook } from "../../lib/discord.js"
 
 
 export async function SPAWN(sender: Session.ActiveUser, transaction: number, type: EntityType, x: number, y: number, data: any) {
+  if (typeof transaction !== 'number' || typeof type !== 'number' || typeof x !== 'number' || typeof y !== 'number') return
+
   const distanceToAuthor = Math.sqrt((sender.data.posX - x)**2 + (sender.data.posY - y)**2)
   if (distanceToAuthor > 100) // yes. this is "cheat detecition". very professional.
     return declineInteraction(sender, transaction)

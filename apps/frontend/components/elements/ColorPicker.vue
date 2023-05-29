@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="color-container">
     <p>Select color</p>
     <div class="buttons">
       <button
@@ -36,7 +36,12 @@ const names: Record<Color, string> = {
 </script>
 
 <style scoped lang="scss">
-.container {
+.color-container {
+  background-color: $color-beige;
+  background-image: url('~/assets/img/noise-10p.png');
+  animation: bg-jitter 1s steps(1) forwards infinite;
+  width: 100%;
+  height: 100%;
   padding: calc(1.5vw * var(--vws));
   display: flex;
   flex-direction: column;

@@ -1,7 +1,7 @@
 
 
-type Document = {
-  key: string
+type Document<Key extends string> = {
+  key: Key
   title: string
   text: string
 }
@@ -92,7 +92,7 @@ export type DocumentId = (typeof docsData)[number]['key']
 
 //
 
-export const useDocumentData = () => useState<Document[]>('document-data', () => [...docsData] as Document[])
+export const useDocumentData = () => useState<Document<DocumentId>[]>('document-data', () => [...docsData] as Document[])
 
 /** document key -> has been read, false means it is new. not unlocked = not in record */
 export const useDocuments = () => useState<Map<DocumentId, boolean>>('documents', () => new Map())
