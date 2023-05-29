@@ -70,7 +70,7 @@ export async function postCode(req: Request, res: Response) {
       props: {
         resources: user.resources,
         extraRadiation: 0,
-        unlocks: res.locals.user.unlocks
+        unlocks: user.unlocks
       } satisfies Packet.SC.UserPropsUpdate
     }
   })
