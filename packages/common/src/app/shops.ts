@@ -81,7 +81,7 @@ const outpostsSortiment = [
   ...simpleWriteColors,
   {
     name: 'Line Painter',
-    price: () => 2000,
+    price: () => 600,
     details: 'Attach this module to your ship and you will be able to draw the line wherever you want. Quite literally.',
     unlocks: [ UserUnlocks.LINE_PAINTER ],
     requires: []
