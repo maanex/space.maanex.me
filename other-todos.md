@@ -8,7 +8,7 @@
 
 [X] unlockable ship components
 [X] npc merchants
-[ ] auto reconnect players if socket is lost for longer   <---------
+[X] auto reconnect players if socket is lost for longer
 [X] let users accept tos
 [X] only start sound once "ingame"
 [ ] add volume options

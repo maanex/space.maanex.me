@@ -67,11 +67,16 @@ function disconnect() {
 
 //
 
+let reconIdleTimeout: any = null
+
 function onConnect() {
   connectionPromise?.(true)
   useWebsocketInfo().value.connected = true
 
   console.log('connected')
+
+  if (reconIdleTimeout)
+    clearTimeout(reconIdleTimeout)
 }
 
 function onDisconnect() {
@@ -94,6 +99,10 @@ function onDisconnect() {
   }
 
   console.log('disconnected', intended ? '(intentional)' : '(unintended)')
+
+  reconIdleTimeout = setTimeout(() => {
+    location.reload()
+  }, 4000)
 }
 
 function send(packet: Packet.Data): void
