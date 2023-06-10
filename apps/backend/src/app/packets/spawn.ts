@@ -35,8 +35,18 @@ function verifyAndGetCost(sender: Session.ActiveUser, type: EntityType, x: numbe
     case EntityType.MESSAGE:
       if (typeof data !== 'string') return null
       if (data.split('').some(c => !Const.charsetAllowedInMessages.includes(c))) return null
+      // We aren't even checking here if the user actually owns the upgrade to paint in that color but hey. whatever.
       if (![ Color.BLACK, Color.BLUE, Color.BROWN, Color.GREEN, Color.MINT, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW ].includes(data[0] as any)) return null
       return Formulas.simpleWriteCost(data.length-1)
+    case EntityType.LINE:
+      if (typeof data !== 'string') return null
+      if (![ Color.BLACK, Color.BLUE, Color.BROWN, Color.GREEN, Color.MINT, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW ].includes(data[0] as any)) return null
+      if (data[1] !== '0' && data[1] !== '1') return null
+      const [ bx, by ] = data.slice(2).split(',').map(Number)
+      if (!bx || isNaN(bx) || !by || isNaN(by)) return null
+      const length = Math.sqrt((bx-x)**2 + (by-y)**2)
+      if (length > 200) return null
+      return Formulas.linePainterCost(length, data[1] === '1')
     default:
       return null
   }

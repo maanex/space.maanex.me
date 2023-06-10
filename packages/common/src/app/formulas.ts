@@ -12,7 +12,7 @@ export namespace Formulas {
   }
 
   export function linePainterCost(length: number, thick: boolean): number {
-    return (15 + length**2 / 300) * (thick ? 2 : 1)
+    return Math.floor((8 + length**2 / 300) * (thick ? 2 : 1))
   }
 
 }

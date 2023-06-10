@@ -18,5 +18,13 @@ export function CHEAT(sender: Session.ActiveUser, code: string) {
     return
   }
 
+  if (code.startsWith('teleporations')) {
+    const [ _, x, y ] = code.split(' ').map(Number)
+    sender.data.posX = x || 0
+    sender.data.posY = y || 0
+    sender.send(Packet.SC.POS(x, y, null))
+    return
+  }
+
   sender.send(Packet.SC.ALERT('Invalid cheat code'))
 }

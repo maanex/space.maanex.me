@@ -2,7 +2,12 @@
   <div
     ref="container"
     class="container"
-    :style="{ '--zoom': zoomFactor, '--scale': scaleFactor * 2, '--ambiance': ambianceColor, '--pxpertile': pixelsPerTileGlob }"
+    :style="{
+      '--zoom': zoomFactor,
+      '--scale': scaleFactor * 2,
+      '--ambiance': ambianceColor,
+      '--pxdensity': radarWidth / unitspervw / 2,
+    }"
   >
     <div class="grid" :style="{ opacity: 1 - rad }">
       <div
@@ -95,6 +100,8 @@ const hLines = useState<number[]>(() => ([]))
 const entities = useState<(Entity & { screenX: number, screenY: number })[]>(() => ([]))
 const ambianceColor = useState<string>(() => '#00000000')
 const pixelsPerTileGlob = useState<number>(() => 1)
+const unitspervw = BASE_TILE_COUNT*2
+const radarWidth = useState<number>(() => 100)
 
 const poisToPointAt = computed(() => [...worldPois.value.values()].map(p => {
   const dist = Math.sqrt((position.value.x - p[0])**2 + (position.value.y - p[1])**2)
@@ -109,6 +116,7 @@ const poisToPointAt = computed(() => [...worldPois.value.values()].map(p => {
 
 function update() {
   const bounds = (container.value! as Element)?.getBoundingClientRect()
+  radarWidth.value = bounds.width
   const tileCount = 2 * BASE_TILE_COUNT * zoomFactor.value
   const pixelsPerTile = (bounds.width / tileCount)
   pixelsPerTileGlob.value = pixelsPerTile
@@ -266,7 +274,6 @@ watch(worldEntities.value, update)
   transform: translate(-50%, -50%) scale(var(--scale));
 
   &:not(.other):hover { z-index: 30; }
-  &[data-type="5"] { transform: none !important; }
 }
 
 @keyframes scanner {

@@ -1,9 +1,6 @@
 <template>
-  <div class="line">
-    <svg :viewBox="visuals.viewBox" :style="visuals.css">
-      <path :d="visuals.path" :stroke-width="visuals.swidth" stroke="#bc9a6e" />
-      <!-- YEAH NO -->
-    </svg>
+  <div class="line" :style="visuals.outerCss">
+    <div class="inner" :style="visuals.innerCss" />
   </div>
 </template>
 
@@ -15,33 +12,43 @@ const props = defineProps<{
   ey: number
 }>()
 
+const stroke = 0.4
+
 const visuals = computed(() => {
   const x2 = Number(props.data.substring(6).split(',')[0])
   const y2 = Number(props.data.substring(6).split(',')[1])
 
   const w = x2 - props.ex
   const h = y2 - props.ey
-  const aw = Math.abs(w)
-  const ah = Math.abs(h)
-
-  const stroke = Math.min(aw, ah) / 10
+  const len = Math.sqrt(w**2 + h**2)
+  const angle = Math.atan2(-h, w)
+  const color = props.data.charAt(4)
 
   return {
-    css: {
-      width: `calc(${aw}px * var(--pxpertile))`,
-      height: `calc(${ah}px * var(--pxpertile))`,
-      transform: `translate(${w < 0 ? w : 0}, ${h < 0 ? h : 0})`
+    outerCss: {
+      '--height': (props.data[5] === '1' ? stroke*3 : stroke) + 'vh',
     },
-    viewBox: `0 0 ${aw} ${ah}`,
-    path: (w<0) === (h<0) ? `M0,${ah} L${aw},0` : `M0,0 L${aw},${ah}`,
-    swidth: (props.data[5] === '1' ? stroke*3 : stroke) + 'px'
+    innerCss: {
+      width: `calc(${len}px * var(--pxdensity))`,
+      transform: `rotate(${angle}rad)`,
+      '--color': `var(--col-${color})`
+    }
   }
 })
 </script>
 
 <style scoped lang="scss">
 .line {
-  svg {
+  position: relative;
+  width: var(--height);
+  height: var(--height);
+  animation: entin .7s ease-in-out forwards;
+
+  .inner {
+    height: 100%;
+    border-radius: 100vw;
+    background-color: var(--color);
+    transform-origin: calc(var(--height) * 0.5) 50%;
   }
 }
 

@@ -1,27 +1,19 @@
-import { ArrowStr, Item, renderTextBlock } from "./utils"
+import { Item, UserUnlocks, WorldsEntities, shopItems, userMeetsRequirements } from "@maanex/spacelib-common"
+import { ArrowStr, renderTextBlock } from "./utils"
 
 
 type State = {
   page: null | 'guides' | 'gear' | 'upgrades'
   cursor: number
+  selectedItem: Item | null
 }
 
 const guides: Item[] = [
-  { name: 'How to not die from death', price: 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a' },
-  { name: 'Tutorial 2', price: 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a' },
-  { name: 'AHAHAHAHAHAHAHH', price: 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a' },
-  { name: 'This is another entry to the list with a slightly longer name', price: 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a' },
+  { name: 'How to not die from death', price: () => 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a', unlocks: [], requires: [] },
+  { name: 'Tutorial 2', price: () => 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a', unlocks: [], requires: [] },
+  { name: 'AHAHAHAHAHAHAHH', price: () => 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a', unlocks: [], requires: [] },
+  { name: 'This is another entry to the list with a slightly longer name', price: () => 0, details: 'lorem deez nutzs in my lorem lmao morelemroemauhdiuw ahidwhau aiwudhihafiesuhf ksajfeh isufhlvbk bhgfb jahsgb gasjhbsfaiga zfasuef g awhh aw awudha dadhadahwdiahdaiw dawudhaw diua a wduhaiw dhaw duahd a', unlocks: [], requires: [] },
 ]
-
-const gear: Item[] = [
-  { name: 'Other item', price: 1740, details: 'Lmao item 2 doesnt even have a name' },
-  { name: 'Item 3', price: 899, details: 'Lmao item 3 doesnt even have a name either what is this lmao funny shit' },
-]
-
-const upgrades: Item[] = [
-]
-
-const lists = { guides, gear, upgrades }
 
 //
 
@@ -67,6 +59,17 @@ function renderMenu(state: State): string[] {
   ]
 }
 
+function renderItem(state: State, userResources: number, userUnlocks: UserUnlocks[]): string[] {
+  return [
+    '← Back                              Purchase →',
+    '.'.repeat(46),
+    'Name: ' + state.selectedItem!.name,
+    'Price: ' + state.selectedItem!.price(userResources, userUnlocks),
+    '',
+    ...renderTextBlock(state.selectedItem!.details, '', '', 46, 4)
+  ]
+}
+
 function renderListItem(text: string, focus: boolean, width: number): string[] {
   return renderTextBlock(text, focus ? ' > ' : '  ', focus ? ' ' : '  ', width, 2)
 }
@@ -83,9 +86,17 @@ function renderList(items: string[], width: number, height: number, selected: nu
     : [ '.'.repeat(width), '                 Out of stock                 ' ]
 }
 
-export function commsBelortools(state: State | null, pressed: ArrowStr | null): [string, State] {
+export function commsBelortools(state: State | null, pressed: ArrowStr | null, userResources: number, userUnlocks: UserUnlocks[]): [string, State] {
   if (!state)
-    state = { page: null, cursor: 0 }
+    state = { page: null, cursor: 0, selectedItem: null }
+
+  const items = shopItems[WorldsEntities.MERCHANT_BELOR_TOOLS]!.filter(i => userMeetsRequirements(i.requires, userUnlocks) && i.unlocks.some(i => !userUnlocks.includes(i)))
+  const gearItems = [ UserUnlocks.LINE_PAINTER ]
+  const lists = {
+    guides,
+    gear: items.filter(i => i.unlocks.some(u => gearItems.includes(u))),
+    upgrades: items.filter(i => !i.unlocks.some(u => gearItems.includes(u)))
+  }
 
   if (state.page === null) {
     if (pressed === 'right') state.cursor = Math.min(state.cursor + 1, 2)
@@ -97,6 +108,16 @@ export function commsBelortools(state: State | null, pressed: ArrowStr | null): 
 
       state.cursor = 0
     }
+  } else if (state.selectedItem) {
+    if (pressed === 'left') state.selectedItem = null
+    else if (pressed === 'right') {
+      useSocket().sendPurchasePacket(WorldsEntities.MERCHANT_BELOR_TOOLS, state.selectedItem.name)
+
+      return [
+        '\n\n\n        ----------------------------\n        Thank you for your purchase!\n        ----------------------------\n\n\n',
+        { cursor: state.cursor, page: state.page, selectedItem: null }
+      ]
+    }
   } else {
     if (pressed === 'left') {
       if (state.page === 'guides') state.cursor = 0
@@ -107,14 +128,13 @@ export function commsBelortools(state: State | null, pressed: ArrowStr | null): 
     }
     else if (pressed === 'down') state.cursor = Math.min(state.cursor + 1, lists[state.page].length - 1)
     else if (pressed === 'up') state.cursor = Math.max(state.cursor - 1, 0)
+    else if (pressed === 'right') state.selectedItem = lists[state.page][state.cursor]
   }
 
   let text: string[] = []
   if (!state.page) text = renderMenu(state)
-  else text = [
-    '← Back                                Select →',
-    ...renderList(lists[state.page].map(i => i.name), 46, 8, state.cursor)
-  ]
+  else if (state.selectedItem) text = renderItem(state, userResources, userUnlocks)
+  else text = [ '← Back                                Select →', ...renderList(lists[state.page].map(i => i.name), 46, 8, state.cursor) ]
 
   return [ text.join('\n'), state ]
 }

@@ -32,8 +32,8 @@ type CommsHandler<T> = (state: T, pressed: ArrowStr | null, userResources: numbe
 const available: Partial<Record<WorldsEntities, CommsHandler<any>>> = {
   // // ...a is for hot reload, can be simplified
   [WorldsEntities.MERCHANT_WESTSIDE_OUTPOST]: (...a) => commsWestside(...a),
-  // [WorldsEntities.MERCHANT_EASTSIDE_OUTPOST]: (...a) => commsEastside(...a),
-  // [WorldsEntities.MERCHANT_BELOR_TOOLS]: (...a) => commsBelortools(...a)
+  [WorldsEntities.MERCHANT_EASTSIDE_OUTPOST]: (...a) => commsEastside(...a),
+  [WorldsEntities.MERCHANT_BELOR_TOOLS]: (...a) => commsBelortools(...a)
 }
 
 const displayText = computed(() => (connected.value && inRange.value) ? commText.value : 'No communication partner nearby. Please get closer.')

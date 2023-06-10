@@ -7,23 +7,25 @@
     </div>
     <div class="pos2">
       <ElementsDiamondPicker uuid="linepainter-pos2" />
-      <button class="thick" v-text="thick ? '#' : '|'" @click="thick = !thick" />
+      <button v-if="canPaintTick" class="thick" v-text="thick ? '#' : '|'" @click="thick = !thick" />
     </div>
 
     <button @click="reset()" v-text="(x1 || y1 || x2 || y2) ? 'Reset' : '-'" />
     <button @click="paint()" v-text="painting ? (tooExpensive ? 'EXPEN' : 'PAINT') : '-'" />
+
+    <p class="cost" v-text="painting ? cost : ''" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Color, Const, EntityType, Formulas, UserUnlocks } from '@maanex/spacelib-common'
+import { Color, EntityType, Formulas, UserUnlocks } from '@maanex/spacelib-common'
 import { Entity } from '~/composables/world';
 
 const x1 = useState(`diamondpicker-linepainter-pos1-x`, () => 0)
 const y1 = useState(`diamondpicker-linepainter-pos1-y`, () => 0)
 const x2 = useState(`diamondpicker-linepainter-pos2-x`, () => 0)
 const y2 = useState(`diamondpicker-linepainter-pos2-y`, () => 0)
-const color = useState<Color | null>(`diamondpicker-linepainter-color`, () => Color.GREEN)
+const color = useState<Color | null>(`diamondpicker-linepainter-color`, () => Color.WHITE)
 const thick = useState<boolean>(`diamondpicker-linepainter-thick`, () => false)
 
 const entities = useWorldEntities()
@@ -33,10 +35,11 @@ const crosshairs = useCrosshairs()
 const sock = useSocket()
 const account = useAccount()
 
-const length = computed(() => Math.abs((x1.value - x2.value)**2 + (y1.value - y2.value)**2))
+const length = computed(() => Math.sqrt((x1.value - x2.value)**2 + (y1.value - y2.value)**2) * 64)
 const cost = computed(() => Formulas.linePainterCost(length.value, thick.value))
 const painting = computed(() => (x1.value || y1.value) && (x2.value || y2.value))
 const tooExpensive = computed(() => (painting.value && cost.value > props.value.resources))
+const canPaintTick = computed(() => props.value.unlocks.includes(UserUnlocks.LINEPAINT_THICK_STROKES))
 
 const availableColors = computed(() => {
   const out: Color[] = [ Color.WHITE ]
@@ -70,22 +73,22 @@ function paint() {
   const ex2 = ~~(pos.value.x + x2.value * 64)
   const ey2 = ~~(pos.value.y - y2.value * 64)
 
-  // const [ tempid, actual ] = sock.sendEntityPacket(EntityType.MESSAGE, ex, ey, color.value + text.value)
-  const tempid = 123
+  const data = color.value + (thick.value ? '1' : '0') + ex2 + ',' + ey2
+  const [ tempid, actual ] = sock.sendEntityPacket(EntityType.LINE, ex1, ey1, data)
   const entity: Entity = {
     id: tempid,
     x: ex1,
     y: ey1,
     type: EntityType.LINE,
-    data: (account.value?.sig ?? '0000') + color.value + (thick.value ? '1' : '0') + ex2 + ',' + ey2
+    data: (account.value?.sig ?? '0000') + data
   }
   entities.value.set(tempid, entity)
   props.value.resources -= cost.value
 
-  // actual.then((val) => {
-  //   entities.value.delete(tempid)
-  //   if (typeof val === 'number') entities.value.set(val, entity)
-  // })
+  actual.then((val) => {
+    entities.value.delete(tempid)
+    if (typeof val === 'number') entities.value.set(val, entity)
+  })
 
   reset()
 }
@@ -169,5 +172,13 @@ button {
 
   &.colors { left: 43%; }
   &.thick { right: 43%; }
+}
+
+.cost {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  width: 40%;
+  text-align: center;
 }
 </style>

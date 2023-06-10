@@ -19,15 +19,15 @@ export namespace World {
   //
 
   export const worldsEntities: (EntityModel.DataType & { _poit: PoiType })[] = [
-    {
-      // boujin is an exotic trader selling rare goods. he is far out in the unknown regions
-      _id: WorldsEntities.MERCHANT_BOUJIN,
-      _poit: PoiType.MERCHANT,
-      creator: '',
-      type: EntityType.SPECIAL,
-      pos: [ 900000, 900000 ],
-      data: 'Boujin (WIP)'
-    },
+    // {
+    //   // boujin is an exotic trader selling rare goods. he is far out in the unknown regions
+    //   _id: WorldsEntities.MERCHANT_BOUJIN,
+    //   _poit: PoiType.MERCHANT,
+    //   creator: '',
+    //   type: EntityType.SPECIAL,
+    //   pos: [ 900000, 900000 ],
+    //   data: 'Boujin (WIP)'
+    // },
     {
       // the outpost is a larger merchant selling various goods
       _id: WorldsEntities.MERCHANT_WESTSIDE_OUTPOST,
@@ -44,7 +44,7 @@ export namespace World {
       creator: '',
       type: EntityType.SPECIAL,
       pos: [ 541000, -601000 ],
-      data: 'Belor Rift (WIP)'
+      data: 'Belor Rift'
     },
     {
       // Vanor Rift is dark Smudge
@@ -53,7 +53,7 @@ export namespace World {
       creator: '',
       type: EntityType.SPECIAL,
       pos: [ 498000, -662000 ],
-      data: 'Vanor Rift (WIP)'
+      data: 'Vanor Rift'
     },
     {
       // Smaar Rift is dark Smudge
@@ -62,17 +62,17 @@ export namespace World {
       creator: '',
       type: EntityType.SPECIAL,
       pos: [ 144000, 484000 ],
-      data: 'Smaar Rift (WIP)'
+      data: 'Smaar Rift'
     },
-    {
-      // Central Market has the biggest sortiment of items
-      _id: WorldsEntities.MERCHANT_CENTRAL_MARKET,
-      _poit: PoiType.MERCHANT,
-      creator: '',
-      type: EntityType.SPECIAL,
-      pos: [ -84000, 313000 ],
-      data: 'Central Market (WIP)'
-    },
+    // {
+    //   // Central Market has the biggest sortiment of items
+    //   _id: WorldsEntities.MERCHANT_CENTRAL_MARKET,
+    //   _poit: PoiType.MERCHANT,
+    //   creator: '',
+    //   type: EntityType.SPECIAL,
+    //   pos: [ -84000, 313000 ],
+    //   data: 'Central Market (WIP)'
+    // },
     {
       // Belor Tools is a small indie shop
       _id: WorldsEntities.MERCHANT_BELOR_TOOLS,
@@ -91,15 +91,15 @@ export namespace World {
       pos: [ 489000, 322000 ],
       data: 'Eastside Outpost'
     },
-    {
-      // Third sector goods is a small indie shop
-      _id: WorldsEntities.MERCHANT_THIRD_SECTOR,
-      _poit: PoiType.MERCHANT,
-      creator: '',
-      type: EntityType.SPECIAL,
-      pos: [ -424000, 791000 ],
-      data: '3rd Sector Goods (WIP)'
-    },
+    // {
+    //   // Third sector goods is a small indie shop
+    //   _id: WorldsEntities.MERCHANT_THIRD_SECTOR,
+    //   _poit: PoiType.MERCHANT,
+    //   creator: '',
+    //   type: EntityType.SPECIAL,
+    //   pos: [ -424000, 791000 ],
+    //   data: '3rd Sector Goods (WIP)'
+    // },
   ]
 
   export const pointsOfInterest: Packet.SC.Poi[] = [
