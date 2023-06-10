@@ -8,11 +8,12 @@
 
 [X] unlockable ship components
 [X] npc merchants
-[ ] auto reconnect players if socket is lost for longer
-[ ] let users accept tos
-[ ] only start sound once "ingame"
+[ ] auto reconnect players if socket is lost for longer   <---------
+[X] let users accept tos
+[X] only start sound once "ingame"
 [ ] add volume options
-[ ] desktop only screen
+[X] desktop only screen
+[ ] Casino?
 [X] discord webhook when someone writes something
 [X] only allow ascii on messages
 [X] allow messages to be multiline in rendering
@@ -52,6 +53,54 @@
 [X] render other users properly
 [X] sidebar resizeable
 [X] update world spawn
+
+
+
+
+
+
+unlockables:
+
+- write messages
+  * blue color
+    * brown color
+  * yellow color
+    * red color
+      * black color
+      * white color
+      * pink color
+      * orange color
+      * mint color
+
+- scanner
+  * scan unknown regions upgrade (extra module)
+
+* hangar
+  * rift magnet
+  * deploy port (deploy consumeables)
+
+* line painter
+  * blue color
+  * green color
+  * yellow color
+  * red color
+    * pink color
+    * orange color
+    * mint color
+    * brown color
+  * thick strokes
+  * curved lines
+
+  * text painter
+    * ...colors
+
+(consumeables)
+  + dropable portal
+  + dropable shield (no writing)
+
+[central market]
+  + create guilds
+
 
 
 

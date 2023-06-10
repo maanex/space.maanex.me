@@ -33,7 +33,6 @@ const providers: Provider[] = [
 ]
 
 const api = useApi()
-const router = useRouter()
 
 async function click(id: string) {
   const { status, data } = await api.makeLoginRequest(id)

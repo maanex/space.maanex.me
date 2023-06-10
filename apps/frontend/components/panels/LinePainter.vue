@@ -3,12 +3,15 @@
   <div v-else class="container">
     <div class="pos1">
       <ElementsDiamondPicker uuid="linepainter-pos1" />
+      <button class="colors" v-text="color" @click="color = null" />
     </div>
     <div class="pos2">
       <ElementsDiamondPicker uuid="linepainter-pos2" />
+      <button class="thick" v-text="thick ? '#' : '|'" @click="thick = !thick" />
     </div>
 
-    <button @click="">AAA</button>
+    <button @click="reset()" v-text="(x1 || y1 || x2 || y2) ? 'Reset' : '-'" />
+    <button @click="paint()" v-text="painting ? (tooExpensive ? 'EXPEN' : 'PAINT') : '-'" />
   </div>
 </template>
 
@@ -16,12 +19,12 @@
 import { Color, Const, EntityType, Formulas, UserUnlocks } from '@maanex/spacelib-common'
 import { Entity } from '~/composables/world';
 
-const x1 = useState(`diamondpicker-writesimple-pos1-x`, () => 0)
-const y1 = useState(`diamondpicker-writesimple-pos1-y`, () => 0)
-const x2 = useState(`diamondpicker-writesimple-pos2-x`, () => 0)
-const y2 = useState(`diamondpicker-writesimple-pos2-y`, () => 0)
-const text = useState(`diamondpicker-writesimple-text`, () => '')
-const color = useState<Color | null>(`diamondpicker-writesimple-color`, () => Color.GREEN)
+const x1 = useState(`diamondpicker-linepainter-pos1-x`, () => 0)
+const y1 = useState(`diamondpicker-linepainter-pos1-y`, () => 0)
+const x2 = useState(`diamondpicker-linepainter-pos2-x`, () => 0)
+const y2 = useState(`diamondpicker-linepainter-pos2-y`, () => 0)
+const color = useState<Color | null>(`diamondpicker-linepainter-color`, () => Color.GREEN)
+const thick = useState<boolean>(`diamondpicker-linepainter-thick`, () => false)
 
 const entities = useWorldEntities()
 const pos = usePosition()
@@ -29,24 +32,63 @@ const props = useProps()
 const crosshairs = useCrosshairs()
 const sock = useSocket()
 const account = useAccount()
-const docs = useDocuments()
 
-const cost = computed(() => Formulas.simpleWriteCost(text.value.length))
-const tooExpensive = computed(() => (text.value.length && cost.value > props.value.resources))
+const length = computed(() => Math.abs((x1.value - x2.value)**2 + (y1.value - y2.value)**2))
+const cost = computed(() => Formulas.linePainterCost(length.value, thick.value))
+const painting = computed(() => (x1.value || y1.value) && (x2.value || y2.value))
+const tooExpensive = computed(() => (painting.value && cost.value > props.value.resources))
 
 const availableColors = computed(() => {
-  const out: Color[] = [ Color.GREEN ]
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_BLUE)) out.push(Color.BLUE)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_BROWN)) out.push(Color.BROWN)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_YELLOW)) out.push(Color.YELLOW)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_RED)) out.push(Color.RED)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_BLACK)) out.push(Color.BLACK)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_WHITE)) out.push(Color.WHITE)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_PINK)) out.push(Color.PINK)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_ORANGE)) out.push(Color.ORANGE)
-  if (props.value.unlocks.includes(UserUnlocks.SIMPLEWRITE_COLOR_MINT)) out.push(Color.MINT)
+  const out: Color[] = [ Color.WHITE ]
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_BLUE)) out.push(Color.BLUE)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_BROWN)) out.push(Color.BROWN)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_YELLOW)) out.push(Color.YELLOW)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_RED)) out.push(Color.RED)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_BLACK)) out.push(Color.BLACK)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_GREEN)) out.push(Color.GREEN)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_PINK)) out.push(Color.PINK)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_ORANGE)) out.push(Color.ORANGE)
+  if (props.value.unlocks.includes(UserUnlocks.LINEPAINT_COLOR_MINT)) out.push(Color.MINT)
   return out
 })
+
+function reset() {
+  x1.value = 0
+  x2.value = 0
+  y1.value = 0
+  y2.value = 0
+  delete crosshairs.value.linepainter1
+  delete crosshairs.value.linepainter2
+}
+
+function paint() {
+  if (!painting.value) return
+  if (tooExpensive.value) return
+
+  const ex1 = ~~(pos.value.x + x1.value * 64)
+  const ey1 = ~~(pos.value.y - y1.value * 64)
+  const ex2 = ~~(pos.value.x + x2.value * 64)
+  const ey2 = ~~(pos.value.y - y2.value * 64)
+
+  // const [ tempid, actual ] = sock.sendEntityPacket(EntityType.MESSAGE, ex, ey, color.value + text.value)
+  const tempid = 123
+  const entity: Entity = {
+    id: tempid,
+    x: ex1,
+    y: ey1,
+    type: EntityType.LINE,
+    data: (account.value?.sig ?? '0000') + color.value + (thick.value ? '1' : '0') + ex2 + ',' + ey2
+  }
+  entities.value.set(tempid, entity)
+  props.value.resources -= cost.value
+
+  // actual.then((val) => {
+  //   entities.value.delete(tempid)
+  //   if (typeof val === 'number') entities.value.set(val, entity)
+  // })
+
+  reset()
+}
 
 function updateCrosshair1() {
   if (!x1.value && !y1.value)
@@ -85,7 +127,7 @@ onBeforeUnmount(() => {
   height: 100%;
   padding: calc(1vw * var(--vws));
   display: grid;
-  grid-template-columns: 40% 50%;
+  grid-template-columns: 45% 45%;
   column-gap: 10%;
   box-sizing: border-box;
 }
@@ -115,15 +157,17 @@ button {
     border-color: #000000;
   }
 
-  &.colors {
+  &.colors, &.thick {
     position: absolute;
     top: 4%;
-    left: 40%;
     margin: 0;
     padding: 0;
     width: calc(2vw * var(--vws));
     height: calc(3vw * var(--vws));
     text-transform: uppercase;
   }
+
+  &.colors { left: 43%; }
+  &.thick { right: 43%; }
 }
 </style>

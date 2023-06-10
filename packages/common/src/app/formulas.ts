@@ -11,4 +11,8 @@ export namespace Formulas {
     return 1 / ((distance * 2 / Const.mapRing1)**6 + 1)
   }
 
+  export function linePainterCost(length: number, thick: boolean): number {
+    return (15 + length**2 / 300) * (thick ? 2 : 1)
+  }
+
 }

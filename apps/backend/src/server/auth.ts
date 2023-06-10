@@ -61,7 +61,8 @@ export async function postCode(req: Request, res: Response) {
       token,
       account: {
         name: authUser.username,
-        sig: user.id.slice(-4)
+        sig: user.id.slice(-4),
+        tos: user.tos
       },
       pos: {
         x: user.posX,
@@ -77,16 +78,14 @@ export async function postCode(req: Request, res: Response) {
 }
 
 export async function getMe(_req: Request, res: Response) {
-  if (!res.locals.user)
-    return ReqError.invalidAuth(res)
-
   return res.status(200).json({
     ...UserModel.sanitize(res.locals.user),
     $update: {
       token: await JWT.signAuth({ id: res.locals.user._id }),
       account: {
         name: res.locals.user.authn.username,
-        sig: res.locals.user.id.slice(-4)
+        sig: res.locals.user.id.slice(-4),
+        tos: res.locals.user.tos
       },
       pos: {
         x: res.locals.user.posX,
@@ -97,6 +96,22 @@ export async function getMe(_req: Request, res: Response) {
         extraRadiation: 0,
         unlocks: res.locals.user.unlocks
       } satisfies Packet.SC.UserPropsUpdate
+    }
+  })
+}
+
+export async function postTos(req: Request, res: Response) {
+  if (!req.body?.accept)
+    return ReqError.badRequest(res, 'TOS not accepted', 'Please accept the Terms of Service')
+
+  res.locals.user.tos = true
+  await res.locals.user.save()
+  res.status(200).json({
+    success: true,
+    $update: {
+      account: {
+        tos: res.locals.user.tos
+      }
     }
   })
 }

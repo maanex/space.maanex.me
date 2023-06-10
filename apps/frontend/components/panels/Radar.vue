@@ -2,7 +2,7 @@
   <div
     ref="container"
     class="container"
-    :style="{ '--zoom': zoomFactor, '--scale': scaleFactor * 2, '--ambiance': ambianceColor }"
+    :style="{ '--zoom': zoomFactor, '--scale': scaleFactor * 2, '--ambiance': ambianceColor, '--pxpertile': pixelsPerTileGlob }"
   >
     <div class="grid" :style="{ opacity: 1 - rad }">
       <div
@@ -23,9 +23,12 @@
         v-for="e of entities"
         :is="renderEntities[e.type]"
         :key="e.id"
-        :style="{ top: `${~~e.y}px`, left: `${~~e.x}px` }"
+        :data-type="e.type"
+        :style="{ top: `${~~e.screenY}px`, left: `${~~e.screenX}px` }"
         :data="e.data"
         :id="e.id"
+        :ex="e.x"
+        :ey="e.y"
       />
     </div>
     <div class="ship">
@@ -58,6 +61,7 @@ import EntititesPerson from '~/components/entitites/Person.vue'
 import EntititesMessage from '~/components/entitites/Message.vue'
 import EntitiesResource from '~/components/entitites/Resource.vue'
 import EntitiesSpecial from '~/components/entitites/Special.vue'
+import EntitiesLine from '~/components/entitites/Line.vue'
 
 const renderEntities: Record<EntityType, any> = {
   [ EntityType.UNKNOWN ]: undefined,
@@ -65,6 +69,7 @@ const renderEntities: Record<EntityType, any> = {
   [ EntityType.MESSAGE ]: EntititesMessage,
   [ EntityType.RESOURCE ]: EntitiesResource,
   [ EntityType.SPECIAL ]: EntitiesSpecial,
+  [ EntityType.LINE ]: EntitiesLine,
 }
 
 /** after how many tiles there is a grid cell drawn */
@@ -87,8 +92,7 @@ const scaneff = useScanEffects()
 
 const vLines = useState<number[]>(() => ([]))
 const hLines = useState<number[]>(() => ([]))
-/** entities but their x and y pos are screen coords and not world coords */
-const entities = useState<Entity[]>(() => ([]))
+const entities = useState<(Entity & { screenX: number, screenY: number })[]>(() => ([]))
 const ambianceColor = useState<string>(() => '#00000000')
 const pixelsPerTileGlob = useState<number>(() => 1)
 
@@ -129,11 +133,11 @@ function update() {
   const newEntities = []
   const padding = Math.max(bounds.width, bounds.height) * 0.01
   for (const e of worldEntities.value.values()) {
-    const x = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
-    const y = bounds.height / 2 + (-e.y + position.value.y) * pixelsPerTile
+    const screenX = bounds.width / 2 + (e.x - position.value.x) * pixelsPerTile
+    const screenY = bounds.height / 2 + (-e.y + position.value.y) * pixelsPerTile
 
-    if (e.type === EntityType.SPECIAL || (x >= -padding && y >= -padding && x <= bounds.width + padding && y <= bounds.height + padding))
-      newEntities.push({ ...e, x, y })
+    if (e.type === EntityType.SPECIAL || (screenX >= -padding && screenY >= -padding && screenX <= bounds.width + padding && screenY <= bounds.height + padding))
+      newEntities.push({ ...e, screenX, screenY })
   }
   entities.value = newEntities
 
@@ -262,6 +266,7 @@ watch(worldEntities.value, update)
   transform: translate(-50%, -50%) scale(var(--scale));
 
   &:not(.other):hover { z-index: 30; }
+  &[data-type="5"] { transform: none !important; }
 }
 
 @keyframes scanner {

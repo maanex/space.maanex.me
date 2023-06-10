@@ -3,7 +3,7 @@ import cors from 'cors'
 import ReqError from '../lib/req-error.js'
 import gateway from '../middleware/gateway.js'
 import { config } from '../config.js'
-import { getLogin, getMe, postCode } from './auth.js'
+import { getLogin, getMe, postCode, postTos } from './auth.js'
 
 
 export default class Routes {
@@ -33,7 +33,8 @@ export default class Routes {
     // auth
     r.get(  '/auth/login/:provider',  gateway(false),  getLogin )
     r.post( '/auth/code/:provider',   gateway(false),  postCode )
-    r.get(  '/auth/me',               gateway(false),  getMe    )
+    r.get(  '/auth/me',               gateway(true),   getMe    )
+    r.post( '/account/tos',           gateway(true),   postTos  )
 
 
 

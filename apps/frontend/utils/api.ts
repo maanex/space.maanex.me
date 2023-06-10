@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import { Account } from "../composables/account"
 
 
 export type ErrorData = { error: string }
@@ -52,9 +53,12 @@ function handleResponseUpdateCall(data: any) {
   if (!data) return
 
   if (data.token) localStorage.setItem('token', data.token)
-  if (data.account) useAccount().value = data.account
   if (data.pos) usePosition().value = data.pos
   if (data.props) useProps().value = data.props
+  if (data.account) {
+    for (const key of Object.keys(data.account))
+      (useAccount().value as any)[key] = data.account[key]
+  }
 }
 
 async function rawRequest(method: 'get' | 'post' | 'patch' | 'put' | 'delete', url: string, body?: any, headers?: any): Promise<AxiosResponse & ErrorData> {
@@ -93,6 +97,10 @@ export const useApi = () => ({
 
   makeLoginRequest(provider: string) {
     return rawRequest('get', `/auth/login/${provider.toLowerCase()}`)
+  },
+
+  acceptTos() {
+    return rawRequest('post', '/account/tos', { accept: true })
   },
 
 })

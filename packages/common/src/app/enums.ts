@@ -5,6 +5,7 @@ export enum EntityType {
   MESSAGE = 2,
   RESOURCE = 3,
   SPECIAL = 4,
+  LINE = 5,
 }
 
 export enum PoiType {

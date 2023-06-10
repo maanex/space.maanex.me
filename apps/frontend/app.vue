@@ -1,6 +1,16 @@
 <template>
+  <div v-if="authorized === true && !acc?.tos" class="tosscreen">
+    <img src="~/assets/img/moon.svg" alt="">
+    <span>TO ENJOY SPACE.MAANEX.ME PLEASE AGREE TO THE FOLLOWING TERMS OF SERVICE:</span>
+    <span>YOU AGREE THAT YOU WILL BE EXPOSED TO USER CREATED CONTENT. WHILE WE REMOVE ALL INAPPROPRIATE CONTENT AS SOON AS POSSIBLE, NO FILTER IS PERFECT AND YOU MIGHT BE TEMPORARILY EXPOSED TO OFFENSIVE OR OTHERWISE INAPPROPRIATE CONTENT. THE OPERATORS OF THIS WEBSITE CANNOT BE HELD RESPONSIBLE FOR ANY USER GENERATED CONTENT SHOWN OR ANY HARM INDUCED BY VIEWING SAID USER GENERATED CONTENT. IF YOU FIND CONTENT THAT DOES NOT OBAY THESE TERMS YOU ARE OBLIGATED TO REPORT IT IMMEDIATELY.</span>
+    <span>YOU AGREE THAT ANY CONTENT YOU CREATE AND SUBMIT IS LEGAL UNDER EUROPEAN AND LOCAL LAW, DOES NOT INCLUDE ANY HATE SPEECH, DOES NOT INCLUDE PERSONAL INFORMATION OF ANY KIND, AND IS NOT OTHERWISE UNSAFE OR INAPPROPRIATE.</span>
+    <span>YOU AGREE THAT WHILE YOUR IDENTITY IS ANNONYMOUS TO OTHER USERS ON THIS WEBSITE, THE ADMINISTRATORS ARE ABLE TO TRACE BACK ANY VIOLATIONS AND WILL TAKE ACTION AGAINST ANY INDIVIDUAL VIOLATING THESE TERMS AND CONDITIONS.</span>
+    <span>YOU AGREE THAT WE STORE COOKIES AND OTHER SESSION DATA ON YOUR DEVICE TO DELIVER YOU THIS EXPERIENCE. WE ALSO STORE INFORMATION ABOUT YOU ON OUR SERVERS TO PROVIDE THIS SERVICE, INCLUDING YOUR LOGIN INFORMATION, IP ADDRESS, AND ACTIONS TAKEN THROUGH YOUR ACCOUNT. THIS DATA IS ONLY STORED FOR AS LONG AS NEEDED TO PROVIDE THE SERVICE AND ENFORCE THESE TERMS AND CONDITIONS. NO USER DATA IS EVER SOLD OR SHARED WITH THIRD PARTIES OR USED FOR ADVERTISEMENT OR PROFILING. IF YOU WOULD LIKE TO GET YOUR DATA REMOVED CONTACT THE ADMINISTRATORS AT space@maanex.me</span>
+    <span>BY PRESSING CONFIRM YOU AGREE TO BE BOUND BY ALL THE TERMS LISTED ABOVE AND YOU CONFIRM ARE OVER THE AGE OF 18.</span>
+    <button @click="acceptTos()">CONFIRM AND CONTINUE</button>
+  </div>
   <div
-    v-if="authorized === true"
+    v-else-if="authorized === true"
     class="cockpit"
     :style="{
       gridTemplateColumns: `1fr 1fr 1fr ${sidebarWidth * 100}vw`,
@@ -32,6 +42,10 @@
     <img src="~/assets/img/moon.svg" alt="">
     <span>LOADING</span>
   </div>
+  <div class="desktoponly">
+    <img src="~/assets/img/moon.svg" alt="">
+    <span>SORRY BUT THIS IS A DESKTOP ONLY EXPERIENCE<br><br>PLEASE OPEN THIS PAGE ON A LARGER DEVICE LIKE A LAPTOP OR TABLET</span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +53,7 @@ const route = useRoute()
 const router = useRouter()
 const api = useApi()
 const audioManager = useAudioManager()
+const acc = useAccount()
 
 const sidebarWidth = useState(() => 0.18)
 const sidebarDragged = useState(() => false)
@@ -89,11 +104,18 @@ async function testAuth() {
 function onAuthCompleted(success: boolean) {
   if (!success) return
   useSocket().connect()
+  if (firstClickDone)
+    audioManager.init()
 }
 
 function onFirstClick() {
   firstClickDone = true
-  audioManager.init()
+  if (authorized.value)
+    audioManager.init()
+}
+
+function acceptTos() {
+  api.acceptTos()
 }
 
 onMounted(() => {
@@ -113,7 +135,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.cockpit, .auth, .loading {
+.cockpit, .auth, .loading, .tosscreen {
   margin: 0;
   height: 100vh;
   width: 100vw;
@@ -182,7 +204,7 @@ onBeforeUnmount(() => {
   }
 }
 
-.loading, .auth {
+.loading, .auth, .desktoponly, .tosscreen {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -194,6 +216,68 @@ onBeforeUnmount(() => {
   
   img {
     width: 40pt;
+  }
+}
+
+.tosscreen {
+  gap: $gap;
+  // overflow-y: scroll;
+  height: auto;
+  min-height: 100vh;
+  padding: 100pt 0;
+
+  img {
+    margin-bottom: calc($gap * 4);
+  }
+
+  span {
+    width: 80%;
+    max-width: 350pt;
+    font-size: 10pt;
+  }
+
+  button {
+    background-color: $color-beige;
+    color: #000000dd;
+    padding: 10pt 16pt;
+    gap: 16pt;
+    margin-top: calc($gap * 4);
+    border-radius: 4pt;
+    font-size: 11pt;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity .1s ease;
+    border: none;
+    outline: none;
+    font-family: $font-regular;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+}
+
+.desktoponly {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $backpage;
+  z-index: 999;
+  pointer-events: all;
+
+  span {
+    width: 80%;
+    max-width: 350pt;
+  }
+
+  @media screen and (min-width: 100vh) {
+    display: none;
+    width: 0;
+    height: 0;
+    pointer-events: none;
   }
 }
 

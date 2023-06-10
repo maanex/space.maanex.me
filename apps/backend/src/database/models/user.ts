@@ -25,6 +25,7 @@ export namespace UserModel {
     _id: string
     uuid: string
     authn: UnifiedUserObject
+    tos: boolean
     posX: number
     posY: number
     resources: number
@@ -38,6 +39,7 @@ export namespace UserModel {
   export type SanitizedType = {
     id: string
     uuid: string
+    tos: boolean
     posX: number
     posY: number
     resources: number
@@ -59,6 +61,10 @@ export namespace UserModel {
     authn: {
       type: Object,
       required: true
+    },
+    tos: {
+      type: Boolean,
+      default: () => false
     },
     posX: {
       type: Number,
@@ -88,6 +94,7 @@ export namespace UserModel {
     return {
       id: raw._id,
       uuid: raw.uuid,
+      tos: raw.tos,
       posX: raw.posX,
       posY: raw.posY,
       resources: raw.resources,

@@ -70,7 +70,7 @@ function write() {
       id: tempid,
       x: ex,
       y: ey,
-      type: 2,
+      type: EntityType.MESSAGE,
       data: (account.value?.sig ?? '0000') + color.value + text.value
     }
     entities.value.set(tempid, entity)
