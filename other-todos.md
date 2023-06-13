@@ -20,7 +20,7 @@
 [X] allow messages to be multiline in rendering
 [X] only activate miner if the target resource is actually mineable
 [ ] Cut content: Boujin (sells portals)
-[ ] Cut content: Central Market (sells a lot of stuff but more expensive. has sales. has clean interface. has "ads")
+[ ] Cut content: Central Market (sells a lot of stuff but more expensive. has sales. has clean interface)
 [ ] Cut content: 3rd Sector Goods (sells advanced scanning devices)
 
 [X] line entities
