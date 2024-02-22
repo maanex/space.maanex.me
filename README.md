@@ -1,42 +1,17 @@
-# Nuxt 3 Minimal Starter
+# space.maanex.me
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+![screenshot](./.github/screenshot.png)
 
-## Setup
+space.maanex.me is an experimental game / experience / website / weekend project / whatever whenever.
 
-Make sure to install the dependencies:
+You control a spaceship-like object through various weird control panels to find resources, messages left by other people and potentially more.
 
-```bash
-# yarn
-yarn install
+This experience is online and realtime.
 
-# npm
-npm install
+It's built using nuxt and deployed as a jamstack application with a static frontend and a websocket serving backend.
 
-# pnpm
-pnpm install --shamefully-hoist
-```
+Unless I had to take it down due to abuse, you can try it out live at https://space.maanex.me/
 
-## Development Server
+### License
 
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Please contact me if you'd like to use code, assets, or anything else from this repo. Thanks!
